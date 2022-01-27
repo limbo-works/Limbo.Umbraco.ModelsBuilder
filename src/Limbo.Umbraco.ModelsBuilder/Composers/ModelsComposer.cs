@@ -14,9 +14,9 @@ namespace Limbo.Umbraco.ModelsBuilder.Composers {
         public void Compose(IUmbracoBuilder builder) {
 
             builder.Services
-                .AddTransient<ModelsGenerator>()
-                .AddTransient<ModelsGeneratorDependencies>()
-                .AddTransient<ModelsSourceGenerator>();
+                .AddSingleton<ModelsGenerator>()
+                .AddSingleton<ModelsGeneratorDependencies>()
+                .AddSingleton<ModelsSourceGenerator>();
 
             builder.AddUmbracoOptions<LimboModelsBuilderSettings>();
 
