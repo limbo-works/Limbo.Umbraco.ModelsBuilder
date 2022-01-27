@@ -1,5 +1,6 @@
 ﻿using Limbo.Umbraco.ModelsBuilder.Events;
 using Limbo.Umbraco.ModelsBuilder.Models;
+using Limbo.Umbraco.ModelsBuilder.Notifications;
 using Limbo.Umbraco.ModelsBuilder.Settings;
 using Microsoft.Extensions.Options;
 using Skybrud.Essentials.Common;
@@ -18,7 +19,8 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
     /// Primary class for the models generator. The class is available via dependency injection as a transitient service.
     /// </summary>
     public class ModelsGenerator {
-
+        
+        private readonly ModelsGeneratorDependencies _dependencies;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IContentTypeService _contentTypeService;
         private readonly IMemberTypeService _memberTypeService;
@@ -38,6 +40,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// </summary>
         /// <param name="dependencies">The dependencies for this class.</param>
         public ModelsGenerator(ModelsGeneratorDependencies dependencies) {
+            _dependencies = dependencies;
             _hostingEnvironment = dependencies.HostingEnvironment;
             _contentTypeService = dependencies.ContentTypeService;
             _memberTypeService = dependencies.MemberTypeService;
@@ -50,8 +53,26 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
         #region Member methods
 
-        void OnGetModelsReturning(GetModelsEventArgs args) {
+        void OnGetModelsReturning(ref List<TypeModel> models, ModelsGeneratorSettings settings) {
+            
+            // Initialize the event arguments
+            GetModelsEventArgs args = new(models, settings);
+            
+            // Invoke the event handlers (if any)
             GetModelsReturning?.Invoke(this, args);
+            
+            // Set "models" in case an event handler replaced the list
+            models = args.Models;
+
+            // Initialize a new notification object
+            GetModelsNotification notification = new(models, settings);
+
+            // Publish/broadcast the notification via the event aggregator
+            _dependencies.EventAggregator.Publish(notification);
+            
+            // Set "models" in case a notification handler replaced the list
+            models = args.Models;
+
         }
 
         /// <summary>
@@ -97,12 +118,10 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             BuildModelRelations(types, settings);
 
             UpdateModels(types, settings);
+            
+            OnGetModelsReturning(ref types, settings);
 
-            GetModelsEventArgs args = new() { Types = types };
-
-            OnGetModelsReturning(args);
-
-            foreach (TypeModel type in args.Types) {
+            foreach (TypeModel type in types) {
 
                 // If "Path" has a value at this point, it means the user explicitly set one from an event handler,
                 // and if so, we shouldn't overwrite the value
@@ -120,7 +139,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
             }
 
-            return new TypeModelList(args.Types);
+            return new TypeModelList(types);
 
         }
 

@@ -2,13 +2,14 @@
 using Limbo.Umbraco.ModelsBuilder.Services;
 using Limbo.Umbraco.ModelsBuilder.Settings;
 using System.Collections.Generic;
+using Umbraco.Cms.Core.Notifications;
 
-namespace Limbo.Umbraco.ModelsBuilder.Events {
+namespace Limbo.Umbraco.ModelsBuilder.Notifications {
     
     /// <summary>
-    /// Event arguments that is broadcasted by the <see cref="ModelsGenerator.GetModels(ModelsGeneratorSettings)"/> method.
+    /// Notification that is broadcasted by the <see cref="ModelsGenerator.GetModels(ModelsGeneratorSettings)"/> method.
     /// </summary>
-    public class GetModelsEventArgs {
+    public class GetModelsNotification : INotification {
         
         /// <summary>
         /// Gets or sets the list of models.
@@ -25,7 +26,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Events {
         /// </summary>
         /// <param name="models">The models.</param>
         /// <param name="settings">The models generator settings.</param>
-        public GetModelsEventArgs(List<TypeModel> models, ModelsGeneratorSettings settings) {
+        public GetModelsNotification(List<TypeModel> models, ModelsGeneratorSettings settings) {
             Models = models;
             Settings = settings;
         }

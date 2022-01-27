@@ -1,5 +1,6 @@
 ﻿using Limbo.Umbraco.ModelsBuilder.Settings;
 using Microsoft.Extensions.Options;
+using Umbraco.Cms.Core.Events;
 using Umbraco.Cms.Core.Hosting;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.Services;
@@ -15,6 +16,11 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
         #region Properties
         
+        /// <summary>
+        /// Gets a reference to the current <see cref="IEventAggregator"/>.
+        /// </summary>
+        public IEventAggregator EventAggregator { get; }
+
         /// <summary>
         /// Gets a reference to the current <see cref="IHostingEnvironment"/>.
         /// </summary>
@@ -59,12 +65,14 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="publishedContentTypeFactory"></param>
         /// <param name="modelsBuilderSettings"></param>
         public ModelsGeneratorDependencies(
+            IEventAggregator eventAggregator,
             IHostingEnvironment hostingEnvironment,
             IContentTypeService contentTypeService,
             IMemberTypeService memberTypeService,
             IMediaTypeService mediaTypeService,
             IPublishedContentTypeFactory publishedContentTypeFactory,
             IOptions<LimboModelsBuilderSettings> modelsBuilderSettings) {
+            EventAggregator = eventAggregator;
             HostingEnvironment = hostingEnvironment;
             ContentTypeService = contentTypeService;
             MemberTypeService = memberTypeService;
