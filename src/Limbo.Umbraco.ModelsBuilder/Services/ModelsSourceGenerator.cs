@@ -11,6 +11,9 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using Umbraco.Cms.Core.Models.PublishedContent;
+using Umbraco.Cms.Infrastructure.ModelsBuilder;
+
+#pragma warning disable 1591
 
 // ReSharper disable PatternAlwaysOfType
 // ReSharper disable AssignNullToNotNullAttribute
@@ -21,6 +24,8 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
     /// Primary class servering as the models source generator.
     /// </summary>
     public class ModelsSourceGenerator {
+        
+        private readonly OutOfDateModelsStatus _outOfDateModels;
 
         /// <summary>
         /// Gets or sets a map of simple types.
@@ -35,6 +40,14 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             { "System.Single", "float" },
             { "System.Object", "object" }
         };
+
+        #region Constructors
+
+        public ModelsSourceGenerator(OutOfDateModelsStatus outOfDateModels) {
+            _outOfDateModels = outOfDateModels;
+        }
+
+        #endregion
 
         #region Member methods
 
@@ -60,6 +73,9 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
                 File.WriteAllText(model.Path, source, Encoding.UTF8);
 
             }
+
+            // Clear the file on disk
+            _outOfDateModels.Clear();
 
         }
 
