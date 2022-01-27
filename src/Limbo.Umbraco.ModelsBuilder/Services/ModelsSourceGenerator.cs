@@ -1,6 +1,7 @@
 ﻿using Limbo.Umbraco.ModelsBuilder.Attributes;
 using Limbo.Umbraco.ModelsBuilder.CodeAnalasis;
 using Limbo.Umbraco.ModelsBuilder.Models;
+using Limbo.Umbraco.ModelsBuilder.Settings;
 using Skybrud.Essentials.Reflection;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,16 @@ using Umbraco.Cms.Core.Models.PublishedContent;
 // ReSharper disable PatternAlwaysOfType
 // ReSharper disable AssignNullToNotNullAttribute
 
-namespace Limbo.Umbraco.ModelsBuilder {
+namespace Limbo.Umbraco.ModelsBuilder.Services {
 
+    /// <summary>
+    /// Primary class servering as the models source generator.
+    /// </summary>
     public class ModelsSourceGenerator {
 
+        /// <summary>
+        /// Gets or sets a map of simple types.
+        /// </summary>
         protected Dictionary<string, string> SimpleNames => new() {
             { "System.String", "string" },
             { "System.Boolean", "bool" },
@@ -59,10 +66,10 @@ namespace Limbo.Umbraco.ModelsBuilder {
         /// <summary>
         /// Gets the name of the specified <paramref name="type"/> .
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="type"></param>
-        /// <param name="models"></param>
-        /// <returns></returns>
+        /// <param name="model">The model who's name to return.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="models">A list of all models.</param>
+        /// <returns>A string representing the name of the model.</returns>
         public virtual string GetValueTypeName(TypeModel model, Type type, TypeModelList models) {
 
             if (type is ModelType modelType) {
@@ -140,12 +147,12 @@ namespace Limbo.Umbraco.ModelsBuilder {
             List<string> temp = new();
 
             foreach (var attr in type.GetCustomAttributes<IgnorePropertyTypeAttribute>()) {
-                if (string.IsNullOrWhiteSpace(attr.PropertyName)) continue;
-                temp.Add(attr.PropertyName);
+                if (string.IsNullOrWhiteSpace(attr.PropertyAlias)) continue;
+                temp.Add(attr.PropertyAlias);
             }
 
             foreach (var attr in type.GetCustomAttributes<IgnorePropertyTypesAttribute>()) {
-                foreach (string propertyName in attr.PropertyNames) {
+                foreach (string propertyName in attr.PropertyAliases) {
                     if (string.IsNullOrWhiteSpace(propertyName)) continue;
                     temp.Add(propertyName);
                 }
@@ -167,6 +174,13 @@ namespace Limbo.Umbraco.ModelsBuilder {
             };
         }
 
+        /// <summary>
+        /// Returns the C# source code for the specified <paramref name="model"/>.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="models">A list of all the models.</param>
+        /// <param name="settings">The models generator settings.</param>
+        /// <returns>A string with the generated C# source code.</returns>
         public virtual string GetSource(TypeModel model, TypeModelList models, ModelsGeneratorSettings settings) {
 
             string customPartialPath = model.Path.Replace(".generated.cs", ".cs");
@@ -252,6 +266,12 @@ namespace Limbo.Umbraco.ModelsBuilder {
 
         }
 
+        /// <summary>
+        /// Internal method used for writing something to the start of the file - eg. a file header comment.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="model">The current model.</param>
+        /// <param name="settings">The models generator settings.</param>
         protected virtual void WriteFileStart(TextWriter writer, TypeModel model, ModelsGeneratorSettings settings) {
 
             Assembly assembly = typeof(ModelsSourceGenerator).Assembly;
@@ -272,6 +292,13 @@ namespace Limbo.Umbraco.ModelsBuilder {
 
         }
 
+        /// <summary>
+        /// Internal method used for writing the usings/imports of the file.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="model">The current model.</param>
+        /// <param name="imports">The usings/imports to be added.</param>
+        /// <param name="settings">The models generator settings.</param>
         protected virtual void WriteImports(TextWriter writer, TypeModel model, List<string> imports, ModelsGeneratorSettings settings) {
 
             if (imports.Count == 0) return;
@@ -283,16 +310,37 @@ namespace Limbo.Umbraco.ModelsBuilder {
             writer.WriteLine();
 
         }
-
+        
+        /// <summary>
+        /// Internal method used for writing the namespace open declaration to the file.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="model">The current model.</param>
+        /// <param name="settings">The models generator settings.</param>
         protected virtual void WriteNamespaceStart(TextWriter writer, TypeModel model, ModelsGeneratorSettings settings) {
             writer.WriteLine("namespace " + model.Namespace + " {");
             writer.WriteLine();
         }
-
+        
+        /// <summary>
+        /// Internal method used for writing the namespace close declaration to the file.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="model">The current model.</param>
+        /// <param name="settings">The models generator settings.</param>
         protected virtual void WriteNamespaceEnd(TextWriter writer, TypeModel model, ModelsGeneratorSettings settings) {
             writer.Write('}');
         }
 
+        /// <summary>
+        /// Internal method used for writing the composition to the file. If <paramref name="model"/> is not a
+        /// composition type, this method should not write anything to the file.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="model">The current model.</param>
+        /// <param name="models">A list with all the models.</param>
+        /// <param name="settings">The models generator settings.</param>
+        /// <param name="ignoredPropertyTypes">A hash set with the ignored property types.</param>
         protected virtual void WriteCompositionInterface(TextWriter writer, TypeModel model, HashSet<string> ignoredPropertyTypes, TypeModelList models, ModelsGeneratorSettings settings) {
 
             // Interface is only needed for composition types
@@ -325,6 +373,14 @@ namespace Limbo.Umbraco.ModelsBuilder {
 
         }
 
+        /// <summary>
+        /// Internal method used for writing the class open declaration to the file.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="model">The current model.</param>
+        /// <param name="partialClass">A reference to the custom partial, if any.</param>
+        /// <param name="settings">The models generator settings.</param>
+        /// <param name="inherits">A list of inherits (base type and interfaces).</param>
         protected virtual void WriteClassStart(TextWriter writer, TypeModel model, List<string> inherits, ClassSummary partialClass, ModelsGeneratorSettings settings) {
 
 
@@ -333,7 +389,13 @@ namespace Limbo.Umbraco.ModelsBuilder {
             writer.WriteLine();
 
         }
-
+        
+        /// <summary>
+        /// Internal method used for writing the class close declaration to the file.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="model">The current model.</param>
+        /// <param name="settings">The models generator settings.</param>
         protected virtual void WriteClassEnd(TextWriter writer, TypeModel model, ModelsGeneratorSettings settings) {
             string indent = "".PadLeft(1 * settings.EditorConfig.IndentSize, ' ');
             writer.Write(indent);
@@ -341,6 +403,13 @@ namespace Limbo.Umbraco.ModelsBuilder {
             writer.WriteLine();
         }
 
+        /// <summary>
+        /// Internal method used for writing the constructor to the file.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="model">The current model.</param>
+        /// <param name="partialClass">A reference to the custom partial, if any.</param>
+        /// <param name="settings">The models generator settings.</param>
         protected virtual void WriteConstructor(TextWriter writer, TypeModel model, ClassSummary partialClass, ModelsGeneratorSettings settings) {
 
             // If there is a custom partial for the model, and it already has a constructor with the require signature,
@@ -355,6 +424,14 @@ namespace Limbo.Umbraco.ModelsBuilder {
 
         }
 
+        /// <summary>
+        /// Internal method used for writing the properties to the file.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="model">The current model.</param>
+        /// <param name="models">A list with all the models.</param>
+        /// <param name="settings">The models generator settings.</param>
+        /// <param name="ignoredPropertyTypes">A hash set with the ignored property types.</param>
         protected virtual void WriteProperties(TextWriter writer, TypeModel model, HashSet<string> ignoredPropertyTypes, TypeModelList models, ModelsGeneratorSettings settings) {
 
             foreach (var property in model.Properties) {
@@ -365,6 +442,15 @@ namespace Limbo.Umbraco.ModelsBuilder {
 
         }
 
+        /// <summary>
+        /// Internal method used for writing a single property to the file.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="model">The current model.</param>
+        /// <param name="models">A list with all the models.</param>
+        /// <param name="settings">The models generator settings.</param>
+        /// <param name="property">The property.</param>
+        /// <param name="ignoredPropertyTypes">A hash set with the ignored property types.</param>
         protected virtual void WriteProperty(TextWriter writer, TypeModel model, PropertyModel property, HashSet<string> ignoredPropertyTypes, TypeModelList models, ModelsGeneratorSettings settings) {
 
             if (property.IsIgnored) return;
@@ -381,6 +467,13 @@ namespace Limbo.Umbraco.ModelsBuilder {
 
         }
 
+        /// <summary>
+        /// Internal method used for writing the JSON.net settings of a property to the file.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="model">The current model.</param>
+        /// <param name="property">The property.</param>
+        /// <param name="settings">The models generator settings.</param>
         protected virtual void WriteJsonNetPropertySettings(TextWriter writer, TypeModel model, PropertyModel property, ModelsGeneratorSettings settings) {
 
             var json = property.JsonNetSettings;

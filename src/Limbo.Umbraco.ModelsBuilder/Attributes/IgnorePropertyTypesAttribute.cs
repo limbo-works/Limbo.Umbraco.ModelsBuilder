@@ -2,24 +2,43 @@
 
 namespace Limbo.Umbraco.ModelsBuilder.Attributes {
 
+    /// <summary>
+    /// Attribute which can be used to ignore multiple property types.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class IgnorePropertyTypesAttribute : Attribute {
-
-        public string[] PropertyNames { get; }
-
-        public IgnorePropertyTypesAttribute(string propertyName1) {
-            if (string.IsNullOrWhiteSpace(propertyName1)) throw new ArgumentNullException(nameof(propertyName1));
-            PropertyNames = new[] { propertyName1 };
+        
+        /// <summary>
+        /// Gets the aliases of the ignored property types.
+        /// </summary>
+        public string[] PropertyAliases { get; }
+        
+        /// <summary>
+        /// Initializes a new instance based on the specified <paramref name="propertyAlias"/>.
+        /// </summary>
+        /// <param name="propertyAlias">The alias of the property type.</param>
+        public IgnorePropertyTypesAttribute(string propertyAlias) {
+            if (string.IsNullOrWhiteSpace(propertyAlias)) throw new ArgumentNullException(nameof(propertyAlias));
+            PropertyAliases = new[] { propertyAlias };
+        }
+        
+        /// <summary>
+        /// Initializes a new instance based on <paramref name="propertyAlias1"/> and <paramref name="propertyAlias2"/>.
+        /// </summary>
+        /// <param name="propertyAlias1">The alias of the first property type.</param>
+        /// <param name="propertyAlias2">The alias of the second property type.</param>
+        public IgnorePropertyTypesAttribute(string propertyAlias1, string propertyAlias2) {
+            if (string.IsNullOrWhiteSpace(propertyAlias1)) throw new ArgumentNullException(nameof(propertyAlias1));
+            if (string.IsNullOrWhiteSpace(propertyAlias2)) throw new ArgumentNullException(nameof(propertyAlias2));
+            PropertyAliases = new[] { propertyAlias1, propertyAlias2 };
         }
 
-        public IgnorePropertyTypesAttribute(string propertyName1, string propertyName2) {
-            if (string.IsNullOrWhiteSpace(propertyName1)) throw new ArgumentNullException(nameof(propertyName1));
-            if (string.IsNullOrWhiteSpace(propertyName2)) throw new ArgumentNullException(nameof(propertyName2));
-            PropertyNames = new[] { propertyName1, propertyName2 };
-        }
-
-        public IgnorePropertyTypesAttribute(params string[] propertyNames) {
-            PropertyNames = propertyNames;
+        /// <summary>
+        /// Initializes a new instance based on the specified <paramref name="propertyAliases"/>.
+        /// </summary>
+        /// <param name="propertyAliases">The aliases of the property types to be ignored.</param>
+        public IgnorePropertyTypesAttribute(params string[] propertyAliases) {
+            PropertyAliases = propertyAliases;
         }
 
     }

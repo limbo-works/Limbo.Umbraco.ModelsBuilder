@@ -6,6 +6,9 @@ using Umbraco.Cms.Core.Models.PublishedContent;
 
 namespace Limbo.Umbraco.ModelsBuilder.Models {
 
+    /// <summary>
+    /// Class representing a property.
+    /// </summary>
     public class PropertyModel {
 
         #region Properties
@@ -54,6 +57,12 @@ namespace Limbo.Umbraco.ModelsBuilder.Models {
 
         #region Constructors
 
+        /// <summary>
+        /// Initializes a new instance based on the specified <paramref name="propertyType"/> and <paramref name="publishedPropertyType"/>.
+        /// </summary>
+        /// <param name="propertyType">The property type.</param>
+        /// <param name="publishedPropertyType">The published property type.</param>
+        /// <remarks><see cref="IPropertyType"/> and <see cref="IPublishedPropertyType"/> holds different kinds of information which is why we need them both.</remarks>
         public PropertyModel(IPropertyType propertyType, IPublishedPropertyType publishedPropertyType) {
 
             Alias = propertyType.Alias;
