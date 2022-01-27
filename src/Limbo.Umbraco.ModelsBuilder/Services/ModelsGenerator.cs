@@ -85,7 +85,16 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             LimboModelsBuilderSettings appSettings = _modelsBuilderSettings.Value;
 
             // Initialize a new settings instance
-            return new(appSettings, _hostingEnvironment);
+            ModelsGeneratorSettings settings = new(appSettings, _hostingEnvironment);
+
+            // Initialize a new notification
+            GetDefaultSettingsNotification notification = new(settings, appSettings, _hostingEnvironment);
+
+            // Publish/broadcast the notification
+            _dependencies.EventAggregator.Publish(notification);
+
+            // Return the settings from the notification (an event handler may have replaced it)
+            return notification.Settings;
 
         }
 
