@@ -15,9 +15,9 @@ using Umbraco.Cms.Core.Services;
 using Umbraco.Extensions;
 
 namespace Limbo.Umbraco.ModelsBuilder {
-    
+
     public class ModelsGenerator {
-        
+
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IContentTypeService _contentTypeService;
         private readonly IMemberTypeService _memberTypeService;
@@ -27,8 +27,7 @@ namespace Limbo.Umbraco.ModelsBuilder {
 
         public ModelsGenerator(IHostingEnvironment hostingEnvironment, IContentTypeService contentTypeService, IMemberTypeService memberTypeService,
             IMediaTypeService mediaTypeService, IPublishedContentTypeFactory publishedContentTypeFactory,
-            IOptions<LimboModelsBuilderSettings> modelsBuilderSettings)
-        {
+            IOptions<LimboModelsBuilderSettings> modelsBuilderSettings) {
             _hostingEnvironment = hostingEnvironment;
             _contentTypeService = contentTypeService;
             _memberTypeService = memberTypeService;
@@ -44,7 +43,7 @@ namespace Limbo.Umbraco.ModelsBuilder {
         }
 
         public ModelsGeneratorSettings GetDefaultSettings() {
-            
+
             ModelsGeneratorSettings settings = new();
 
             // Get a reference to the ModelsBuilder config section (Limbo style)
@@ -85,7 +84,7 @@ namespace Limbo.Umbraco.ModelsBuilder {
 
                 IPublishedPropertyType ppt = pct.GetPropertyType(propertyType.Alias);
                 if (ppt == null) throw new Exception("Published property type not found.");
-                
+
                 type.Properties.Add(new PropertyModel(propertyType, ppt));
 
             }
@@ -108,7 +107,7 @@ namespace Limbo.Umbraco.ModelsBuilder {
 
                     IPublishedPropertyType ppt = pct.GetPropertyType(propertyType.Alias);
                     if (ppt == null) throw new Exception("Published property type not found.");
-                    
+
                     type.Properties.Add(new PropertyModel(propertyType, ppt));
 
                 }
@@ -133,7 +132,7 @@ namespace Limbo.Umbraco.ModelsBuilder {
 
                     IPublishedPropertyType ppt = pct.GetPropertyType(propertyType.Alias);
                     if (ppt == null) throw new Exception("Published property type not found.");
-                    
+
                     type.Properties.Add(new PropertyModel(propertyType, ppt));
 
                 }
@@ -145,7 +144,7 @@ namespace Limbo.Umbraco.ModelsBuilder {
         }
 
         protected virtual void BuildModelRelations(ModelsGeneratorSettings settings, List<TypeModel> types) {
-            
+
             // Create a new dictionary based on the list (foir faster lookups)
             Dictionary<int, TypeModel> lookup = types.ToDictionary(x => x.Id);
 
@@ -175,7 +174,7 @@ namespace Limbo.Umbraco.ModelsBuilder {
             foreach (TypeModel type in types) {
 
                 if (settings.UseDirectories) {
-                    
+
                     switch (type.Kind) {
 
                         case ContentTypeKind.Media:
@@ -214,7 +213,7 @@ namespace Limbo.Umbraco.ModelsBuilder {
                 foreach (PropertyModel property in type.Properties) {
 
                     switch (property.EditorAlias) {
-                        
+
                         case "Skybrud.Separator":
                         case "Skybrud.Umbraco.Redirects":
                         case "Skybrud.Umbraco.Redirects.OutboundRedirect":
@@ -230,7 +229,7 @@ namespace Limbo.Umbraco.ModelsBuilder {
         }
 
         public TypeModelList GetModels(ModelsGeneratorSettings settings) {
-            
+
             // Input validation
             if (settings == null) throw new ArgumentNullException(nameof(settings));
             if (string.IsNullOrWhiteSpace(settings.DefaultModelsPath)) throw new PropertyNotSetException(nameof(settings.DefaultModelsPath));
@@ -251,7 +250,7 @@ namespace Limbo.Umbraco.ModelsBuilder {
             OnGetModelsReturning(args);
 
             foreach (TypeModel type in args.Types) {
-                
+
                 // If "Path" has a value at this point, it means the user explicitly set one from an event handler,
                 // and if so, we shouldn't overwrite the value
                 if (!string.IsNullOrWhiteSpace(type.Path)) continue;

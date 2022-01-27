@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 
 namespace Limbo.Umbraco.ModelsBuilder.Models.Json {
-    
+
     public class JsonNetPropertySettings {
 
         public bool Ignore { get; set; }

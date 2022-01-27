@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis
-{
+namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
+
     public class NamespaceSummary {
 
         public string Name { get; set; }
@@ -9,4 +9,5 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis
         public List<ClassSummary> Classes { get; set; }
 
     }
+
 }

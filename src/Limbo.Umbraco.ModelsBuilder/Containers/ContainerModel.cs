@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Limbo.Umbraco.ModelsBuilder.Containers {
-    
+
     public class ContainerModel {
 
         public string Directory { get; }

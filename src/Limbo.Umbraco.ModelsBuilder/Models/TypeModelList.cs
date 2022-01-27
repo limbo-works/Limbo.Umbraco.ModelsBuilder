@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Limbo.Umbraco.ModelsBuilder.Models {
-    
+
     public class TypeModelList : IEnumerable<TypeModel> {
 
         private readonly List<TypeModel> _list;

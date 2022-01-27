@@ -1,7 +1,7 @@
 ﻿using Limbo.Umbraco.ModelsBuilder.Models;
 
 namespace Limbo.Umbraco.ModelsBuilder.Containers {
-    
+
     public class HelloContainer {
 
         public ContentTypeKind Type { get; set; }

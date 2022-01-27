@@ -1,5 +1,5 @@
 ﻿namespace Limbo.Umbraco.ModelsBuilder.Settings {
-   
+
     public class EditorConfigSettings {
 
         public int IndentSize { get; set; } = 4;

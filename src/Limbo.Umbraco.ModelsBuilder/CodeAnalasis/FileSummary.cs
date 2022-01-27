@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 
 namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
-    
+
     public class FileSummary {
 
         public string Path { get; set; }
@@ -18,15 +18,11 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
 
         public List<NamespaceSummary> Namespaces { get; set; }
 
-        public bool TryGetClass(string fullname, out ClassSummary result)
-        {
+        public bool TryGetClass(string fullname, out ClassSummary result) {
 
-            foreach (var ns in Namespaces)
-            {
-                foreach (var cs in ns.Classes)
-                {
-                    if (cs.FullName == fullname)
-                    {
+            foreach (var ns in Namespaces) {
+                foreach (var cs in ns.Classes) {
+                    if (cs.FullName == fullname) {
                         result = cs;
                         return true;
                     }
@@ -47,7 +43,7 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
 
             SyntaxTree tree = CSharpSyntaxTree.ParseText(File.ReadAllText(path, Encoding.UTF8));
             CompilationUnitSyntax root = tree.GetCompilationUnitRoot();
-            
+
             FileSummary file = new FileSummary {
                 Path = path,
                 Name = System.IO.Path.GetFileName(path),
@@ -63,7 +59,7 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
                 };
 
                 foreach (MemberDeclarationSyntax h in ns.Members) {
-                
+
                     if (h is ClassDeclarationSyntax cs) {
 
                         ClassSummary summary = new ClassSummary(cs);
@@ -91,4 +87,5 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
         }
 
     }
+
 }

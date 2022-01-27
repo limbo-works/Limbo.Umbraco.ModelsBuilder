@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.IO;
 
 namespace Limbo.Umbraco.ModelsBuilder {
-    
+
     public static class Hest {
 
         public static CompilationUnitSyntax Load(string path) {

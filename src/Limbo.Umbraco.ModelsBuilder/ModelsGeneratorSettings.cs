@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 
 namespace Limbo.Umbraco.ModelsBuilder {
-    
+
     public class ModelsGeneratorSettings {
 
         /// <summary>
@@ -17,13 +17,13 @@ namespace Limbo.Umbraco.ModelsBuilder {
         public bool UseDirectories { get; set; } = true;
 
         public List<IModelsContainer> Containers { get; }
-        
+
         public EditorConfigSettings EditorConfig { get; set; }
 
         public ModelsGeneratorSettings() {
             Containers = new List<IModelsContainer>();
         }
-        
+
         public ModelsGeneratorSettings(string defaultNamespace, string defaultModelsPath) {
             if (string.IsNullOrWhiteSpace(defaultNamespace)) throw new ArgumentNullException(nameof(defaultNamespace));
             if (string.IsNullOrWhiteSpace(defaultModelsPath)) throw new ArgumentNullException(nameof(defaultModelsPath));

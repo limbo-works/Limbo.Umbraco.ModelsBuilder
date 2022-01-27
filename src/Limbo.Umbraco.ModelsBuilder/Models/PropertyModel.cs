@@ -44,7 +44,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Models {
         /// Gets the alias of the property editor associated with this property.
         /// </summary>
         public string EditorAlias { get; }
-        
+
         /// <summary>
         /// Gets a reference to the <see cref="PublishedDataType"/> associated with this property.
         /// </summary>
