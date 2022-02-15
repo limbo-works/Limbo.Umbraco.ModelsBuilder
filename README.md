@@ -4,7 +4,17 @@
 
 ## Installation
 
-*Coming soon ;)*
+Via <a href="https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder/1.0.0-beta001" target="_blank">NuGet</a>:
+
+```
+dotnet add package Limbo.Umbraco.ModelsBuilder --version 1.0.0-beta001
+```
+
+or:
+
+```
+Install-Package Limbo.Umbraco.ModelsBuilder -Version 1.0.0-beta001
+```
 
 ## Configuration
 
