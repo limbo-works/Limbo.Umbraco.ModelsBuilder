@@ -404,8 +404,15 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             writer.WriteLine($"    public partial class {model.ClrName}{(inherits.Any() ? " : " + string.Join(", ", inherits) : "")} {{");
             writer.WriteLine();
 
+            //Adding Model Helpers
+            writer.WriteLine($"//Helpers");
+            writer.WriteLine($"#pragma warning disable 0109 // new is redundant");
+            writer.WriteLine();
+            writer.WriteLine($"public new const string ModelTypeAlias = \"{model.Alias}\";");
+            writer.WriteLine();
+            writer.WriteLine($"#pragma warning restore 0109");
         }
-        
+
         /// <summary>
         /// Internal method used for writing the class close declaration to the file.
         /// </summary>
