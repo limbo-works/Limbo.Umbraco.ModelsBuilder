@@ -24,7 +24,7 @@ The configuration may also be changed programmatically - either by extending the
 
 ### Models Mode
 
-The `ModelsMode` option how Umbraco's build-in ModelsBuilder should work. To avoid conflicts with this package, the value should always be set to `None`.
+The `ModelsMode` option specifies how Umbraco's build-in Models Builder should work. To avoid conflicts with this package, the value should always be set to `Nothing`, meaning that Umbraco or the build-in Models Builder will not generate any models on it's own.
 
 ### Models Directory
 
