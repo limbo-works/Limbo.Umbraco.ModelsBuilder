@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+#pragma warning disable 1591
+
 namespace Limbo.Umbraco.ModelsBuilder.Containers {
 
     public class ContainerModel {

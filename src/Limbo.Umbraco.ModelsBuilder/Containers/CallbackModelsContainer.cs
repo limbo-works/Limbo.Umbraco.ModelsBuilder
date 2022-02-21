@@ -1,6 +1,8 @@
 ﻿using Limbo.Umbraco.ModelsBuilder.Models;
 using System;
 
+#pragma warning disable 1591
+
 namespace Limbo.Umbraco.ModelsBuilder.Containers {
 
     public class CallbackModelsContainer : IModelsContainer {
