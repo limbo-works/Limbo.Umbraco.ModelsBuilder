@@ -58,6 +58,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <summary>
         /// Initializes a new instance based on the specified dependencies.
         /// </summary>
+        /// <param name="eventAggregator"></param>
         /// <param name="hostingEnvironment"></param>
         /// <param name="contentTypeService"></param>
         /// <param name="memberTypeService"></param>
