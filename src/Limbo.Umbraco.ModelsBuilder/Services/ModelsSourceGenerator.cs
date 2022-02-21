@@ -245,7 +245,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             // If the type is a composition, the generated class should implement the composition's interface
             if (model.IsComposition) inherits.Add($"I{model.ClrName}");
 
-            // Ignored property types is a bit special, at we can check the attributes of the CLR type. The attributes
+            // Ignored property types is a bit special, as we can check the attributes of the CLR type. The attributes
             // are not likely to be specified on the generated class, but whether they have been added on the generated
             // class or the custom partial doesn't really matter.
             HashSet<string> ignoredPropertyTypes = GetIgnoredPropertyTypes(model);
@@ -277,7 +277,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
             WriteConstructor(writer, model, partialClass, settings);
 
-            WriteProperties(writer, model, ignoredPropertyTypes, models, settings);
+            WriteProperties(writer, model, ignoredPropertyTypes, partialClass, models, settings);
 
             WriteClassEnd(writer, model, settings);
 
@@ -487,7 +487,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="models">A list with all the models.</param>
         /// <param name="settings">The models generator settings.</param>
         /// <param name="ignoredPropertyTypes">A hash set with the ignored property types.</param>
-        protected virtual void WriteProperties(TextWriter writer, TypeModel model, HashSet<string> ignoredPropertyTypes, TypeModelList models, ModelsGeneratorSettings settings) {
+        protected virtual void WriteProperties(TextWriter writer, TypeModel model, HashSet<string> ignoredPropertyTypes, ClassSummary partialClass, TypeModelList models, ModelsGeneratorSettings settings) {
 
             string indent = "".PadLeft(2 * settings.EditorConfig.IndentSize, ' ');
 
@@ -496,7 +496,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
             foreach (PropertyModel property in model.Properties) {
 
-                WriteProperty(writer, model, property, ignoredPropertyTypes, models, settings);
+                WriteProperty(writer, model, property, ignoredPropertyTypes, partialClass, models, settings);
 
             }
 
@@ -514,11 +514,13 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="settings">The models generator settings.</param>
         /// <param name="property">The property.</param>
         /// <param name="ignoredPropertyTypes">A hash set with the ignored property types.</param>
-        protected virtual void WriteProperty(TextWriter writer, TypeModel model, PropertyModel property, HashSet<string> ignoredPropertyTypes, TypeModelList models, ModelsGeneratorSettings settings) {
+        protected virtual void WriteProperty(TextWriter writer, TypeModel model, PropertyModel property, HashSet<string> ignoredPropertyTypes, ClassSummary partialClass, TypeModelList models, ModelsGeneratorSettings settings) {
 
             if (property.IsIgnored) return;
 
             if (ignoredPropertyTypes.Contains(property.Alias)) return;
+            
+            if (partialClass != null && partialClass.HasProperty(property.ClrName)) return;
 
             string valueTypeName = GetValueTypeName(model, property.ValueType, models);
 

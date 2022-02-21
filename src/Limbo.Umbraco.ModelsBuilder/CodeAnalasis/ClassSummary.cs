@@ -51,6 +51,11 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
                 return Constructors.Any(x => x.Parameters.Length == 2 && x.Parameters[0].Type == "IPublishedContent" && x.Parameters[1].Type == "IPublishedValueFallback");
             }
         }
+        
+        /// <summary>
+        /// Gets a list of the properties of the class.
+        /// </summary>
+        public PropertySummary[] Properties { get; }
 
         #endregion
 
@@ -66,6 +71,18 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
                 .OfType<ConstructorDeclarationSyntax>()
                 .Select(x => new ConstructorSummary(x))
                 .ToArray();
+            Properties = syntax.Members
+                .OfType<PropertyDeclarationSyntax>()
+                .Select(x => new PropertySummary(x))
+                .ToArray();
+        }
+
+        #endregion
+
+        #region Properties
+
+        public bool HasProperty(string name) {
+            return Properties.Any(x => x.Name == name);
         }
 
         #endregion
