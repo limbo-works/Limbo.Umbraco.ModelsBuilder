@@ -214,7 +214,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
                 TypeModel type = new(memberType, pct, settings);
                 
                 // Run through all the properties and add them to the type model
-                foreach (IPropertyType propertyType in memberType.PropertyTypes) {
+                foreach (IPropertyType propertyType in memberType.CompositionPropertyTypes) {
                     
                     // Get the published property type as well
                     IPublishedPropertyType ppt = pct.GetPropertyType(propertyType.Alias);
@@ -249,7 +249,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
                 TypeModel type = new(mediaType, pct, settings);
                 
                 // Run through all the properties and add them to the type model
-                foreach (IPropertyType propertyType in mediaType.PropertyTypes) {
+                foreach (IPropertyType propertyType in mediaType.CompositionPropertyTypes) {
                     
                     // Get the published property type as well
                     IPublishedPropertyType ppt = pct.GetPropertyType(propertyType.Alias);
