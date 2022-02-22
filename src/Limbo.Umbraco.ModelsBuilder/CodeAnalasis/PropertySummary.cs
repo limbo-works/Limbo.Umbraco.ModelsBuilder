@@ -22,12 +22,8 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
         /// </summary>
         /// <param name="syntax">The declaration syntax describing the property.</param>
         public PropertySummary(PropertyDeclarationSyntax syntax) {
-
             Type = syntax.Type.ToString();
-
-
             Name = syntax.Identifier.ToString();
-
         }
 
     }

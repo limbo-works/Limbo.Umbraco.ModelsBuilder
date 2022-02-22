@@ -1,5 +1,6 @@
 ﻿using Limbo.Umbraco.ModelsBuilder.Attributes;
 using Limbo.Umbraco.ModelsBuilder.CodeAnalasis;
+using Limbo.Umbraco.ModelsBuilder.Extensions;
 using Limbo.Umbraco.ModelsBuilder.Models;
 using Limbo.Umbraco.ModelsBuilder.Settings;
 using Skybrud.Essentials.Reflection;
@@ -279,6 +280,8 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
             WriteProperties(writer, model, ignoredPropertyTypes, partialClass, models, settings);
 
+            WriteStaticMethods(writer, model, ignoredPropertyTypes, partialClass, models, settings);
+
             WriteClassEnd(writer, model, settings);
 
             WriteNamespaceEnd(writer, model, settings);
@@ -484,6 +487,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// </summary>
         /// <param name="writer">The writer.</param>
         /// <param name="model">The current model.</param>
+        /// <param name="partialClass">A reference to the custom partial, if any.</param>
         /// <param name="models">A list with all the models.</param>
         /// <param name="settings">The models generator settings.</param>
         /// <param name="ignoredPropertyTypes">A hash set with the ignored property types.</param>
@@ -510,24 +514,103 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// </summary>
         /// <param name="writer">The writer.</param>
         /// <param name="model">The current model.</param>
+        /// <param name="partialClass">A reference to a partial class, if present.</param>
         /// <param name="models">A list with all the models.</param>
         /// <param name="settings">The models generator settings.</param>
         /// <param name="property">The property.</param>
         /// <param name="ignoredPropertyTypes">A hash set with the ignored property types.</param>
         protected virtual void WriteProperty(TextWriter writer, TypeModel model, PropertyModel property, HashSet<string> ignoredPropertyTypes, ClassSummary partialClass, TypeModelList models, ModelsGeneratorSettings settings) {
 
-            if (property.IsIgnored) return;
-
-            if (ignoredPropertyTypes.Contains(property.Alias)) return;
+            // Skip the property if it already has been flagged as ignored
+            if (property.IsIgnored || ignoredPropertyTypes.Contains(property.Alias)) return;
             
+            // If the model has a custom partial class, and the property has been manually added there, we shouldn't add it here
             if (partialClass != null && partialClass.HasProperty(property.ClrName)) return;
 
+            // Gets the name of the value type
             string valueTypeName = GetValueTypeName(model, property.ValueType, models);
+            
+            // Get the declaring type of the property. This mey be different than "model" when using compositions
+            if (!model.HasPropertyType(property.Alias, out TypeModel declaringType)) {
+                throw new Exception("Property type not found. This shouldn't happen.");
+            }
 
+            bool useStaticMethod;
+            switch (property.StaticMethod) {
+                
+                case PropertyStaticMethod.Always:
+                    useStaticMethod = true;
+                    break;
+                
+                case PropertyStaticMethod.Auto:
+                    useStaticMethod = declaringType != model;
+                    break;
+
+                case PropertyStaticMethod.Never:
+                default:
+                    useStaticMethod = false;
+                    break;
+
+            }
+            
             WriteJsonNetPropertySettings(writer, model, property, settings);
-
+            
             writer.WriteLine("        [ImplementPropertyType(\"" + property.Alias + "\")]");
-            writer.WriteLine("        public " + valueTypeName + " " + property.ClrName + " => this.Value<" + valueTypeName + ">(\"" + property.Alias + "\");");
+            writer.Write("        public " + valueTypeName + " " + property.ClrName + " => ");
+
+            if (useStaticMethod) {
+
+                // If "model" and "declaringType" differ, we need to specify the class name
+                string className = declaringType == model ? null : $"{declaringType.ClrName}.";
+
+                writer.Write($"{className}Get" + property.ClrName + "(this);");
+
+            } else {
+
+                writer.Write($"this.Value<{valueTypeName}>(\"{property.Alias}\");");
+
+            }
+            
+            writer.WriteLine();
+            writer.WriteLine();
+
+        }
+
+        protected virtual void WriteStaticMethods(TextWriter writer, TypeModel model, HashSet<string> ignoredPropertyTypes, ClassSummary partialClass, TypeModelList models, ModelsGeneratorSettings settings) {
+
+            string indent = "".PadLeft(2 * settings.EditorConfig.IndentSize, ' ');
+
+            // Find all properties that need a static getter method
+            List<PropertyModel> properties = new();
+            foreach (PropertyModel property in model.Properties) {
+                
+                if (property.StaticMethod != PropertyStaticMethod.Always && (property.StaticMethod != PropertyStaticMethod.Auto || !model.IsComposition)) continue;
+                if (!model.HasPropertyType(property.Alias, out TypeModel declaringType)) throw new Exception("Property type not found. This shouldn't happen.");
+                if (declaringType != model) continue;
+
+                // If the type has a custom partial class, and that class has a method with the same name, we skip adding it to the generated file
+                if (partialClass != null && partialClass.HasMethod("Get" + property.ClrName)) continue;
+
+                properties.Add(property);
+
+            }
+            
+            // Return if we didn't find any properties
+            if (properties.Count == 0) return;
+            
+            writer.WriteLine($"{indent}#region Static methods");
+            writer.WriteLine();
+
+            foreach (PropertyModel property in properties) {
+                
+                string valueTypeName = GetValueTypeName(model, property.ValueType, models);
+                
+                writer.WriteLine($"{indent}public static {valueTypeName} Get{property.ClrName}(I{model.ClrName} that) => that.Value<{valueTypeName}>(\"{property.Alias}\");");
+                writer.WriteLine();
+
+            }
+
+            writer.WriteLine($"{indent}#endregion");
             writer.WriteLine();
 
         }

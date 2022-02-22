@@ -1,9 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Limbo.Umbraco.ModelsBuilder.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System;
+using System.Linq;
 using System.Reflection;
 using Umbraco.Cms.Core.Configuration.Models;
 using Umbraco.Cms.Core.DependencyInjection;
+using Umbraco.Cms.Core.Models.PublishedContent;
 
 namespace Limbo.Umbraco.ModelsBuilder.Extensions {
 
@@ -42,6 +45,28 @@ namespace Limbo.Umbraco.ModelsBuilder.Extensions {
             configure?.Invoke(optionsBuilder);
 
             return builder;
+
+        }
+
+        public static bool HasPropertyType(this TypeModel subject, string propertyAlias, out TypeModel type) {
+            
+            //IPublishedPropertyType pt = subject.PublishedContentType.GetPropertyType(propertyAlias);
+            var pt = subject.ContentType.PropertyTypes.FirstOrDefault(x => x.Alias == propertyAlias);
+
+            if (pt != null) {
+                type = subject;
+                return true;
+            }
+
+            foreach (var composition in subject.Compositions) {
+
+                if (HasPropertyType(composition, propertyAlias, out type)) return true;
+
+            }
+
+            type = null;
+
+            return false;
 
         }
 

@@ -53,6 +53,11 @@ namespace Limbo.Umbraco.ModelsBuilder.Models {
         /// </summary>
         public PublishedDataType DataType { get; }
 
+        /// <summary>
+        /// Gets or sets whether a static getter method should be added for this property. Default is <see cref="PropertyStaticMethod.Auto"/>.
+        /// </summary>
+        public PropertyStaticMethod StaticMethod { get; set; }
+
         #endregion
 
         #region Constructors
