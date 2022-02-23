@@ -2,8 +2,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.Configuration.Models;
 using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Cms.Core.Models.PublishedContent;
@@ -68,6 +70,10 @@ namespace Limbo.Umbraco.ModelsBuilder.Extensions {
 
             return false;
 
+        }
+
+        public static LazyReadOnlyCollection<T> ToLazyReadOnlyCollection<T>(this IEnumerable<T> collection) {
+            return new LazyReadOnlyCollection<T>(() => collection);
         }
 
     }

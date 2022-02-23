@@ -1,5 +1,5 @@
-﻿using J2N.Collections.Generic;
-using Limbo.Umbraco.ModelsBuilder.Containers;
+﻿using Limbo.Umbraco.ModelsBuilder.Containers;
+using System.Collections.Generic;
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Configuration.Models;
 
@@ -20,6 +20,11 @@ namespace Limbo.Umbraco.ModelsBuilder.Settings {
         /// Notice that even if set to <c>false</c>, each type may have individual settings (eg. if set through events).
         /// </summary>
         public bool UseDirectories { get; set; } = true;
+
+        /// <summary>
+        /// If set to <c>true</c> (default), the dashboard of the build-in Models Builder will be removed.
+        /// </summary>
+        public bool DisableDefaultDashboard { get; set; } = true;
 
         /// <summary>
         /// Gets or sets a list of containers to be used when generating the models.
