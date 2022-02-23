@@ -1,0 +1,26 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <LimboUmbracoModelsBuilderContentFilesPath>$(MSBuildThisFileDirectory)..\content\App_Plugins\Limbo.Umbraco.ModelsBuilder\**\*.*</LimboUmbracoModelsBuilderContentFilesPath>
+  </PropertyGroup>
+
+  <Target Name="CopyLimboUmbracoModelsBuilderAssets" BeforeTargets="Build">
+    <ItemGroup>
+      <LimboUmbracoModelsBuilderContentFiles Include="$(LimboUmbracoModelsBuilderContentFilesPath)" />
+    </ItemGroup>
+    <Message Text="Copying Limbo.Umbraco.ModelsBuilder files: $(LimboUmbracoModelsBuilderContentFilesPath) - #@(LimboUmbracoModelsBuilderContentFiles->Count()) files"  Importance="high" />
+    <Copy
+      SourceFiles="@(LimboUmbracoModelsBuilderContentFiles)"
+      DestinationFiles="@(LimboUmbracoModelsBuilderContentFiles->'$(MSBuildProjectDirectory)\App_Plugins\Limbo.Umbraco.ModelsBuilder\%(RecursiveDir)%(Filename)%(Extension)')"
+      SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="ClearLimboUmbracoModelsBuilderAssets" BeforeTargets="Clean">
+    <ItemGroup>
+      <LimboUmbracoModelsBuilderDir Include="$(MSBuildProjectDirectory)\App_Plugins\Limbo.Umbraco.ModelsBuilder\" />
+    </ItemGroup>
+    <Message Text="Clear old Limbo.Umbraco.ModelsBuilder files"  Importance="high" />
+    <RemoveDir Directories="@(LimboUmbracoModelsBuilderDir)"  />
+  </Target>
+
+</Project>

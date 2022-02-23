@@ -3,6 +3,7 @@
   <PropertyGroup>
     <LangVersion>9.0</LangVersion>
     <TargetFramework>net5.0</TargetFramework>
+    <ContentTargetFolders>content</ContentTargetFolders>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -16,6 +17,7 @@
 
   <!-- Information for the NuGet package -->
   <PropertyGroup>
+    <PackageId>Limbo.Umbraco.ModelsBuilder</PackageId>
     <PackageTags>Skybrud, Limbo, Umbraco, Models Builder</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/limbo-works/Limbo.Umbraco.ModelsBuilder</PackageProjectUrl>
@@ -30,6 +32,19 @@
     <PackageReference Include="Umbraco.Cms.Core" Version="9.0.0" />
     <PackageReference Include="Umbraco.Cms.Web.Website" Version="9.0.0" />
     <PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="9.0.0" />
+  </ItemGroup>
+
+  <!-- Include backoffice assets -->
+  <ItemGroup>
+    <Content Include="App_Plugins\Limbo.Umbraco.ModelsBuilder\**\*.css" />
+    <Content Include="App_Plugins\Limbo.Umbraco.ModelsBuilder\**\*.html" />
+    <Content Include="App_Plugins\Limbo.Umbraco.ModelsBuilder\**\*.js" />
+    <Content Include="App_Plugins\Limbo.Umbraco.ModelsBuilder\Lang\*.xml" />
+  </ItemGroup>
+
+  <!-- Include the targets file -->
+  <ItemGroup>
+    <Content Include="../build/$(AssemblyName).targets" PackagePath="build\$(AssemblyName).targets" />
   </ItemGroup>
 
   <!-- Include package icon for NuGet -->
