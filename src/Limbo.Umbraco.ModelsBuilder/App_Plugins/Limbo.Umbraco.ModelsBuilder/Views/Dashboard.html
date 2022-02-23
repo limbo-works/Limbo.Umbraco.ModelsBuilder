@@ -1,0 +1,38 @@
+﻿<div class="limbo-models-builder" ng-controller="Limbo.Umbraco.ModelsBuilder.Dashboard.Controller as vm" ng-class="{loading: vm.loading}">
+    <div class="umb-box">
+        <div class="umb-box-content">
+            <div class="pull-right" aria-hidden="false">
+                <umb-button
+                    action="vm.generate()"
+                    type="button"
+                    state="vm.generateButtonState"
+                    label="Generate"
+                    disabled="vm.loading">
+                </umb-button>
+                <umb-button
+                    action="vm.update()"
+                    type="button"
+                    state="vm.reloadButtonState"
+                    label="Reload"
+                    disabled="vm.loading">
+                </umb-button>
+            </div>
+            <h3 class="bold">Limbo Models Builder</h3>
+            <umb-load-indicator ng-show="vm.loading"></umb-load-indicator>
+            <div ng-show="vm.status">
+                <table class="table details">
+                    <tr>
+                        <th>Version</th>
+                        <td>{{vm.status.version}}</td>
+                    </tr>
+                    <tr>
+                        <th>Mode</th>
+                        <td>{{vm.status.mode}}</td>
+                    </tr>
+                </table>
+                <div class="alert alert-danger" ng-if="vm.status.outOfDateModels">Models are <strong>out-of-date</strong>.</div>
+                <div class="alert alert-success" ng-if="!vm.status.outOfDateModels">Models are <strong>up-to-date</strong>.</div>
+            </div>
+        </div>
+    </div>
+</div>
