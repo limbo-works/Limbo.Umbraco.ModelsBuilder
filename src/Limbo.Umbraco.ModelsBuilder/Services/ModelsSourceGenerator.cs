@@ -494,11 +494,31 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         protected virtual void WriteProperties(TextWriter writer, TypeModel model, HashSet<string> ignoredPropertyTypes, ClassSummary partialClass, TypeModelList models, ModelsGeneratorSettings settings) {
 
             string indent = "".PadLeft(2 * settings.EditorConfig.IndentSize, ' ');
+            
+            // This is an extra, seemingly unnecessary step, but in order to prevent the region from being generated if
+            // there are no properties to write, we need create a list of the properties to write, and then check
+            // whether that list has any items
+            List<PropertyModel> properties = new();
+            foreach (PropertyModel property in model.Properties) {
+                
+                // Skip the property if it already has been flagged as ignored
+                if (property.IsIgnored || ignoredPropertyTypes.Contains(property.Alias)) continue;
+            
+                // If the model has a custom partial class, and the property has been manually added there, we shouldn't add it here
+                if (partialClass != null && partialClass.HasProperty(property.ClrName)) continue;
 
+                // Append the property model to the list
+                properties.Add(property);
+
+            }
+
+            // Return if there are no properties to write
+            if (properties.Count == 0) return;
+            
             writer.WriteLine($"{indent}#region Properties");
             writer.WriteLine();
 
-            foreach (PropertyModel property in model.Properties) {
+            foreach (PropertyModel property in properties) {
 
                 WriteProperty(writer, model, property, ignoredPropertyTypes, partialClass, models, settings);
 
@@ -520,12 +540,6 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="property">The property.</param>
         /// <param name="ignoredPropertyTypes">A hash set with the ignored property types.</param>
         protected virtual void WriteProperty(TextWriter writer, TypeModel model, PropertyModel property, HashSet<string> ignoredPropertyTypes, ClassSummary partialClass, TypeModelList models, ModelsGeneratorSettings settings) {
-
-            // Skip the property if it already has been flagged as ignored
-            if (property.IsIgnored || ignoredPropertyTypes.Contains(property.Alias)) return;
-            
-            // If the model has a custom partial class, and the property has been manually added there, we shouldn't add it here
-            if (partialClass != null && partialClass.HasProperty(property.ClrName)) return;
 
             // Gets the name of the value type
             string valueTypeName = GetValueTypeName(model, property.ValueType, models);
