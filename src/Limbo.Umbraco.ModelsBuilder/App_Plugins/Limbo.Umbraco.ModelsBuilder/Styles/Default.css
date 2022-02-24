@@ -1,4 +1,7 @@
-﻿.limbo-models-builder h3 {
+﻿.limbo-models-builder {
+  position: relative;
+}
+.limbo-models-builder h3 {
   margin-top: 0;
 }
 .limbo-models-builder table.table.details tr th {
@@ -7,9 +10,6 @@
 }
 .limbo-models-builder.loading table {
   opacity: 0.5;
-}
-.limbo-models-builder .umb-box-content {
-  position: relative;
 }
 .limbo-models-builder .umb-load-indicator {
   z-index: 9001;
