@@ -40,6 +40,7 @@
     <Content Include="App_Plugins\Limbo.Umbraco.ModelsBuilder\**\*.html" />
     <Content Include="App_Plugins\Limbo.Umbraco.ModelsBuilder\**\*.js" />
     <Content Include="App_Plugins\Limbo.Umbraco.ModelsBuilder\Lang\*.xml" />
+    <Content Remove="App_Plugins\Skybrud.Umbraco.Redirects\Scripts\Intellisense.js" />
   </ItemGroup>
 
   <!-- Include the targets file -->
