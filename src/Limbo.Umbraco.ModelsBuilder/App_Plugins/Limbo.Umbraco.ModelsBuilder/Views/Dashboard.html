@@ -18,7 +18,8 @@
                 </umb-button>
             </div>
             <h3 class="bold">Limbo Models Builder</h3>
-            <umb-load-indicator ng-show="vm.loading"></umb-load-indicator>
+            <div class="alert alert-danger" ng-if="vm.status.isOutOfDate">Models are <strong>out-of-date</strong>.</div>
+            <div class="alert alert-success" ng-if="!vm.status.isOutOfDate">Models are <strong>up-to-date</strong>.</div>
             <div ng-show="vm.status">
                 <table class="table details">
                     <tr>
@@ -42,8 +43,6 @@
                         </td>
                     </tr>
                 </table>
-                <div class="alert alert-danger" ng-if="vm.status.isOutOfDate">Models are <strong>out-of-date</strong>.</div>
-                <div class="alert alert-success" ng-if="!vm.status.isOutOfDate">Models are <strong>up-to-date</strong>.</div>
                 <div class="links" ng-if="vm.status.links.length > 0">
                     <a class="btn btn-default" href="{{link.url}}" target="{{link.target}}" rel="{{link.rel}}" ng-repeat="link in vm.status.links">
                         <i class="{{link.icon}}"></i>
@@ -53,4 +52,5 @@
             </div>
         </div>
     </div>
+    <umb-load-indicator ng-show="vm.loading"></umb-load-indicator>
 </div>
