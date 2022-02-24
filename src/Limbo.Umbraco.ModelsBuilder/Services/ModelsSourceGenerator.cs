@@ -3,7 +3,9 @@ using Limbo.Umbraco.ModelsBuilder.CodeAnalasis;
 using Limbo.Umbraco.ModelsBuilder.Extensions;
 using Limbo.Umbraco.ModelsBuilder.Models;
 using Limbo.Umbraco.ModelsBuilder.Settings;
+using Microsoft.Extensions.Options;
 using Skybrud.Essentials.Reflection;
+using Skybrud.Essentials.Time;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,8 +13,10 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using Umbraco.Cms.Core.Hosting;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Infrastructure.ModelsBuilder;
+using Umbraco.Extensions;
 
 #pragma warning disable 1591
 
@@ -26,6 +30,8 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
     /// </summary>
     public class ModelsSourceGenerator {
         
+        private readonly LimboModelsBuilderSettings _modelsBuilderSettings;
+        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly OutOfDateModelsStatus _outOfDateModels;
 
         /// <summary>
@@ -44,7 +50,10 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
         #region Constructors
 
-        public ModelsSourceGenerator(OutOfDateModelsStatus outOfDateModels) {
+        public ModelsSourceGenerator(IHostingEnvironment hostingEnvironment,
+            IOptions<LimboModelsBuilderSettings> modelsBuilderSettings, OutOfDateModelsStatus outOfDateModels) {
+            _modelsBuilderSettings = modelsBuilderSettings.Value;
+            _hostingEnvironment = hostingEnvironment;
             _outOfDateModels = outOfDateModels;
         }
 
@@ -74,6 +83,9 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
                 File.WriteAllText(model.Path, source, Encoding.UTF8);
 
             }
+
+            // Update the file on disk
+            SaveLastBuildDate();
 
             // Clear the file on disk
             _outOfDateModels.Clear();
@@ -666,6 +678,22 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
             writer.Write(indent);
             writer.WriteLine("[Newtonsoft.Json.JsonProperty(" + string.Join(", ", hej) + ")]");
+
+        }
+
+        public virtual void SaveLastBuildDate() {
+            string modelsDirectory = _modelsBuilderSettings.ModelsDirectoryAbsolute(_hostingEnvironment);
+            if (!Directory.Exists(modelsDirectory)) Directory.CreateDirectory(modelsDirectory);
+            File.WriteAllText(Path.Combine(modelsDirectory, "lastBuild.flag"), "HELLO THERE!\n\n");
+        }
+
+        public virtual EssentialsTime GetLastBuildDate() {
+            
+            string modelsDirectory = _modelsBuilderSettings.ModelsDirectoryAbsolute(_hostingEnvironment);
+
+            string path = Path.Combine(modelsDirectory, "lastBuild.flag");
+
+            return File.Exists(path) ? File.GetLastWriteTime(path) : null;
 
         }
 
