@@ -557,7 +557,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
                     break;
                 
                 case PropertyStaticMethod.Auto:
-                    useStaticMethod = declaringType != model;
+                    useStaticMethod = declaringType != model || model.IsComposition;
                     break;
 
                 case PropertyStaticMethod.Never:
@@ -576,6 +576,8 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
                 // If "model" and "declaringType" differ, we need to specify the class name
                 string className = declaringType == model ? null : $"{declaringType.ClrName}.";
+
+                // TODO: Should "className" also include the namespace?
 
                 writer.Write($"{className}Get" + property.ClrName + "(this);");
 
