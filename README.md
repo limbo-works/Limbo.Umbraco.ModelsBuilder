@@ -16,6 +16,14 @@ or:
 Install-Package Limbo.Umbraco.ModelsBuilder -Version 1.0.0-beta002
 ```
 
+## Documentation
+
+Coming soon. Meanwhile, have a look at the following sections in this README file:
+
+- [Configuration](#configuration)
+- [Events](#events)
+- [Notifcations](#notifcations)
+
 ## Configuration
 
 The package re-uses the existing `Umbraco.CMS.ModelsBuilder` section in the `appsettings.json` file, and as such supports the same options as Umbraco's build-in ModelsBuilder.
@@ -39,6 +47,10 @@ If not specified, Umbraco defaults to the `Umbraco.Cms.Web.Common.PublishedModel
 Defaults to <c>true</c>. This option is specific to this package, and if enabled, the models will be placed in sub directories based on their type - eg. **Members** for member types, **Media** for media types and then **Content** and **Elements** for content types and element types respectively.
 
 Regardless of this option being enabled or not, the directory to which the individual models will be saved, may still be overriden through events/notifications.
+
+### Disable Default Dashboard
+
+Defaults to <c>true</c>. This options lets you disable the dashboard of the embedded Models Builder, as the dashboard has little purpose when using this package instead.
 
 ### Containers
 
