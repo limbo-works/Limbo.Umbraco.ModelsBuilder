@@ -12,8 +12,9 @@
             $http.get(Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + "/backoffice/Limbo/ModelsBuilder/GetStatus")
         ]).then(function (data) {
             vm.loading = false;
-            vm.status = data[1].data;
             vm.reloadButtonState = "init";
+            vm.status = data[1].data;
+            if (vm.status.lastBuildDate) vm.status.lastBuildDateFrom = moment(vm.status.lastBuildDate).locale("en").fromNow();
         });
 
     };
@@ -34,6 +35,8 @@
         ]).then(function () {
             vm.loading = false;
             vm.generateButtonState = "init";
+            vm.status = data[1].data;
+            if (vm.status.lastBuildDate) vm.status.lastBuildDateFrom = moment(vm.status.lastBuildDate).locale("en").fromNow();
         });
 
     };

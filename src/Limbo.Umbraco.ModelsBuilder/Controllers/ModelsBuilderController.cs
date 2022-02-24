@@ -1,4 +1,5 @@
 ﻿using Limbo.Umbraco.ModelsBuilder.Models;
+using Limbo.Umbraco.ModelsBuilder.Models.Api;
 using Limbo.Umbraco.ModelsBuilder.Services;
 using Limbo.Umbraco.ModelsBuilder.Settings;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Controllers {
         
         private readonly ILogger<ModelsBuilderController> _logger;
         private readonly OutOfDateModelsStatus _outOfDateModelsStatus;
-        private readonly IOptions<LimboModelsBuilderSettings> _modelsBuilderSettings;
+        private readonly LimboModelsBuilderSettings _modelsBuilderSettings;
         private readonly ModelsGenerator _modelsGenerator;
         private readonly ModelsSourceGenerator _sourceGenerator;
 
@@ -26,7 +27,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Controllers {
             IOptions<LimboModelsBuilderSettings> modelsBuilderSettings, ModelsGenerator modelsGenerator, ModelsSourceGenerator sourceGenerator) {
             _logger = logger;
             _outOfDateModelsStatus = outOfDateModelsStatus;
-            _modelsBuilderSettings = modelsBuilderSettings;
+            _modelsBuilderSettings = modelsBuilderSettings.Value;
             _modelsGenerator = modelsGenerator;
             _sourceGenerator = sourceGenerator;
         }
@@ -35,16 +36,12 @@ namespace Limbo.Umbraco.ModelsBuilder.Controllers {
         public object GetStatus() {
 
             try {
-
-                return new {
-                    version = ModelsBuilderPackage.SemVersion.ToString(),
-                    mode = _modelsBuilderSettings.Value.ModelsMode,
-                    outOfDateModels = _outOfDateModelsStatus.IsOutOfDate
-                };
+                
+                return new StatusResult(_modelsBuilderSettings, _outOfDateModelsStatus, _sourceGenerator);
 
             } catch (Exception ex) {
 
-                _logger.LogError(ex, "Failed building models.");
+                _logger.LogError(ex, "Failed getting status.");
 
                 return new { success = false };
 
@@ -66,7 +63,8 @@ namespace Limbo.Umbraco.ModelsBuilder.Controllers {
                 // Generate the source code and save the models to disk
                 _sourceGenerator.SaveModels(models, settings);
 
-                return new { success = true };
+                // Return a new status result
+                return GetStatus();
 
             } catch (Exception ex) {
 

@@ -29,9 +29,27 @@
                         <th>Mode</th>
                         <td>{{vm.status.mode}}</td>
                     </tr>
+                    <tr>
+                        <th>Models last generated</th>
+                        <td>
+                            <span ng-show="vm.status.lastBuildDate">
+                                {{vm.status.lastBuildDate | date: 'yyyy-MM-dd HH:mm'}}
+                                <small>({{vm.status.lastBuildDateFrom}})</small>
+                            </span>
+                            <span ng-show="!vm.status.lastBuildDate">
+                                <em>Unknown</em>
+                            </span>
+                        </td>
+                    </tr>
                 </table>
-                <div class="alert alert-danger" ng-if="vm.status.outOfDateModels">Models are <strong>out-of-date</strong>.</div>
-                <div class="alert alert-success" ng-if="!vm.status.outOfDateModels">Models are <strong>up-to-date</strong>.</div>
+                <div class="alert alert-danger" ng-if="vm.status.isOutOfDate">Models are <strong>out-of-date</strong>.</div>
+                <div class="alert alert-success" ng-if="!vm.status.isOutOfDate">Models are <strong>up-to-date</strong>.</div>
+                <div class="links" ng-if="vm.status.links.length > 0">
+                    <a class="btn btn-default" href="{{link.url}}" target="{{link.target}}" rel="{{link.rel}}" ng-repeat="link in vm.status.links">
+                        <i class="{{link.icon}}"></i>
+                        {{link.text}}
+                    </a>
+                </div>
             </div>
         </div>
     </div>

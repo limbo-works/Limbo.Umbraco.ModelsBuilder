@@ -29,6 +29,17 @@ namespace Limbo.Umbraco.ModelsBuilder {
         /// </summary>
         public static readonly SemVersion SemVersion = SemVersion.Parse(ReflectionUtils.GetInformationalVersion<ModelsBuilderPackage>());
 
+        /// <summary>
+        /// Gets the URL of the GitHub repository for this package.
+        /// </summary>
+        public const string GitHubUrl = "https://github.com/limbo-works/Limbo.Umbraco.ModelsBuilder";
+        
+        /// <summary>
+        /// Gets the URL of the documentation for this package.
+        /// </summary>
+        public const string DocumentationUrl = "https://github.com/limbo-works/Limbo.Umbraco.ModelsBuilder#documentation";
+
+
     }
 
 }

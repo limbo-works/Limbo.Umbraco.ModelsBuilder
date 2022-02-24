@@ -5,8 +5,8 @@
   margin-bottom: 0;
 }
 .limbo-models-builder table.table.details tr th {
-  width: 120px;
-  min-width: 120px;
+  width: 150px;
+  min-width: 150px;
 }
 .limbo-models-builder.loading table {
   opacity: 0.5;
@@ -16,4 +16,15 @@
 }
 .limbo-models-builder .umb-load-indicator {
   z-index: 9001;
+}
+.limbo-models-builder .links {
+  margin-top: 20px;
+  display: flex;
+}
+.limbo-models-builder .links .btn {
+  display: block;
+  margin-right: 10px;
+}
+.limbo-models-builder .links i.fa {
+  margin-right: 5px;
 }
