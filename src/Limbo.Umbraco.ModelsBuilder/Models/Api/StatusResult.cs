@@ -51,6 +51,13 @@ namespace Limbo.Umbraco.ModelsBuilder.Models.Api {
                     Icon = "fa fa-github"
                 },
                 new() {
+                    Text = "Issues",
+                    Url = ModelsBuilderPackage.IssuesUrl,
+                    Target = "_blank",
+                    Rel = "noopener noreferrer",
+                    Icon = "fa fa-bug"
+                },
+                new() {
                     Text = "Documentation",
                     Url = ModelsBuilderPackage.DocumentationUrl,
                     Target = "_blank",

@@ -33,6 +33,11 @@ namespace Limbo.Umbraco.ModelsBuilder {
         /// Gets the URL of the GitHub repository for this package.
         /// </summary>
         public const string GitHubUrl = "https://github.com/limbo-works/Limbo.Umbraco.ModelsBuilder";
+
+        /// <summary>
+        /// Gets the URL of the issue tracker for this package.
+        /// </summary>
+        public const string IssuesUrl = "https://github.com/limbo-works/Limbo.Umbraco.ModelsBuilder/issues";
         
         /// <summary>
         /// Gets the URL of the documentation for this package.
