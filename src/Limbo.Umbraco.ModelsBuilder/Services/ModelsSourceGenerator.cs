@@ -582,7 +582,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             WriteJsonNetPropertySettings(writer, model, property, settings);
             
             writer.WriteLine("        [ImplementPropertyType(\"" + property.Alias + "\")]");
-            writer.Write("        public " + valueTypeName + " " + property.ClrName + " => ");
+            writer.Write("        public new " + valueTypeName + " " + property.ClrName + " => ");
 
             if (useStaticMethod) {
 
