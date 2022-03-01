@@ -296,9 +296,35 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
             WriteClassEnd(writer, model, settings);
 
+            WriteExtensionMethodsClass(writer, model, settings, models);
+
             WriteNamespaceEnd(writer, model, settings);
 
             return sb.ToString().Trim();
+
+        }
+
+        private void WriteExtensionMethodsClass(TextWriter writer, TypeModel model, ModelsGeneratorSettings settings, TypeModelList models) {
+
+            string className = (model.IsComposition ? "I" : string.Empty) + model.ClrName;
+
+            writer.WriteLine("    public static class " + model.ClrName + "Extensions {");
+            writer.WriteLine();
+
+            foreach (PropertyModel property in model.Properties) {
+
+                // Get the name of the property's value type
+                string valueTypeName = GetValueTypeName(model, property.ValueType, models);
+
+                writer.WriteLine("        public static " + valueTypeName + " " + property.ClrName + "(this " + className + " content, string culture = null, string segment = null) {");
+                writer.WriteLine("            return content.Value<" + valueTypeName + ">(\"" + property.Alias + "\", culture, segment);");
+                writer.WriteLine("        }");
+                writer.WriteLine();
+
+            }
+            
+            writer.WriteLine("    }");
+            writer.WriteLine();
 
         }
 
