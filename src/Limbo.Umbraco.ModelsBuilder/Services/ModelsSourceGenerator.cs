@@ -2,10 +2,12 @@
 using Limbo.Umbraco.ModelsBuilder.CodeAnalasis;
 using Limbo.Umbraco.ModelsBuilder.Extensions;
 using Limbo.Umbraco.ModelsBuilder.Models;
+using Limbo.Umbraco.ModelsBuilder.Models.Generator;
 using Limbo.Umbraco.ModelsBuilder.Settings;
 using Microsoft.Extensions.Options;
 using Skybrud.Essentials.Reflection;
 using Skybrud.Essentials.Time;
+using Skybrud.Essentials.Time.Iso8601;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -296,7 +298,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
             WriteClassEnd(writer, model, settings);
 
-            WriteExtensionMethodsClass(writer, model, settings, models);
+            WriteExtensionMethodsClass(writer, model, ignoredPropertyTypes, partialClass, models, settings);
 
             WriteNamespaceEnd(writer, model, settings);
 
@@ -304,25 +306,43 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
         }
 
-        private void WriteExtensionMethodsClass(TextWriter writer, TypeModel model, ModelsGeneratorSettings settings, TypeModelList models) {
+        private void WriteExtensionMethodsClass(TextWriter writer, TypeModel model, HashSet<string> ignoredPropertyTypes, ClassSummary partialClass, TypeModelList models, ModelsGeneratorSettings settings) {
 
-            string className = (model.IsComposition ? "I" : string.Empty) + model.ClrName;
+            List<GeneratorExtensionMethod> extensionMethods = new();
+                
+            // Determine the class name
+            string className = $"{(model.IsComposition ? "I" : string.Empty)}{model.ClrName}";
 
-            writer.WriteLine("    public static class " + model.ClrName + "Extensions {");
-            writer.WriteLine();
-
+            // Iterate through the properties
             foreach (PropertyModel property in model.Properties) {
+                
+                // Skip the property if it already has been flagged as ignored
+                if (property.IsIgnored || ignoredPropertyTypes.Contains(property.Alias)) continue;
+            
+                // If the model has a custom partial class, and the property has been manually added there, we shouldn't add it here
+                if (partialClass != null && partialClass.HasProperty(property.ClrName)) continue;
 
                 // Get the name of the property's value type
                 string valueTypeName = GetValueTypeName(model, property.ValueType, models);
 
-                writer.WriteLine("        public static " + valueTypeName + " " + property.ClrName + "(this " + className + " content, string culture = null, string segment = null) {");
-                writer.WriteLine("            return content.Value<" + valueTypeName + ">(\"" + property.Alias + "\", culture, segment);");
-                writer.WriteLine("        }");
-                writer.WriteLine();
+                // Append the property model to the list
+                extensionMethods.Add(new GeneratorExtensionMethod(property, className, valueTypeName));
 
             }
+
+            // Dont add the clas if there are no extension methods to write
+            if (extensionMethods.Count == 0) return;
+
+            // Write the start of the class
+            writer.WriteLine($"    public static class {model.ClrName}Extensions {{");
+            writer.WriteLine();
+
+            // Write the extension methods
+            foreach (GeneratorExtensionMethod extensionMethod in extensionMethods) {
+                extensionMethod.WriteTo(writer);
+            }
             
+            // Write the end of the class
             writer.WriteLine("    }");
             writer.WriteLine();
 
