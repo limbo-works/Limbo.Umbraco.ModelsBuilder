@@ -710,7 +710,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         public virtual void SaveLastBuildDate() {
             string modelsDirectory = _modelsBuilderSettings.ModelsDirectoryAbsolute(_hostingEnvironment);
             if (!Directory.Exists(modelsDirectory)) Directory.CreateDirectory(modelsDirectory);
-            File.WriteAllText(Path.Combine(modelsDirectory, "lastBuild.flag"), "HELLO THERE!\n\n");
+            File.WriteAllText(Path.Combine(modelsDirectory, "lastBuild.flag"), EssentialsTime.UtcNow.ToString(Iso8601Constants.DateTimeMilliseconds) + Environment.NewLine);
         }
 
         public virtual EssentialsTime GetLastBuildDate() {
@@ -718,8 +718,11 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             string modelsDirectory = _modelsBuilderSettings.ModelsDirectoryAbsolute(_hostingEnvironment);
 
             string path = Path.Combine(modelsDirectory, "lastBuild.flag");
+            if (!File.Exists(path)) return null;
 
-            return File.Exists(path) ? File.GetLastWriteTime(path) : null;
+            string first = File.ReadAllLines(path).FirstOrDefault();
+
+            return EssentialsTime.TryParseIso8601(first, out EssentialsTime time) ? time : null;
 
         }
 
