@@ -477,7 +477,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="inherits">A list of inherits (base type and interfaces).</param>
         protected virtual void WriteClassStart(TextWriter writer, TypeModel model, List<string> inherits, ClassSummary partialClass, ModelsGeneratorSettings settings) {
 
-            //writer.WriteLine($"    [PublishedModel(\"{model.Alias}\")]");
+            writer.WriteLine($"    [PublishedModel(\"{model.Alias}\")]");
             writer.WriteLine($"    public partial class {model.ClrName}{(inherits.Any() ? " : " + string.Join(", ", inherits) : "")} {{");
             writer.WriteLine();
 
