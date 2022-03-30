@@ -76,7 +76,11 @@ This means that any files matching the pattern will automatically be nested unde
 
 ## Building models
 
-The plan is that models should be build from the backoffice (like Umbraco 9 supports via the models mode). The dashboard for this hasn't been implemented yet, so the models can be build by accessing the `/umbraco/backoffice/Limbo/ModelsBuilder/GenerateModels` endpoint.
+The package adds a new dashboard to the *Settings* section. The dashboard then let's you see a quick status about your generated models, as well as generate your models in case they are not up-to-date:
+
+![image](https://user-images.githubusercontent.com/3634580/155564176-8adb8147-cfb2-44d5-b548-42c5b4d1ec88.png)
+
+The dashboard uses an authenticated endpoint, which you may also call directly by accessing the `/umbraco/backoffice/Limbo/ModelsBuilder/GenerateModels`.
 
 A new generation of the models may also be initiated programmatically:
 
