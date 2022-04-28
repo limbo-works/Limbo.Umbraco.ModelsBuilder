@@ -4,16 +4,16 @@
 
 ## Installation
 
-Via <a href="https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder/1.0.0-beta004" target="_blank">NuGet</a>:
+Via <a href="https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder/1.0.0-beta007" target="_blank">NuGet</a>:
 
 ```
-dotnet add package Limbo.Umbraco.ModelsBuilder --version 1.0.0-beta004
+dotnet add package Limbo.Umbraco.ModelsBuilder --version 1.0.0-beta007
 ```
 
 or:
 
 ```
-Install-Package Limbo.Umbraco.ModelsBuilder -Version 1.0.0-beta004
+Install-Package Limbo.Umbraco.ModelsBuilder -Version 1.0.0-beta007
 ```
 
 ## Documentation
