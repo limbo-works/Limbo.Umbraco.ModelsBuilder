@@ -20,15 +20,13 @@ namespace Limbo.Umbraco.ModelsBuilder.Controllers {
         private readonly ILogger<ModelsBuilderController> _logger;
         private readonly OutOfDateModelsStatus _outOfDateModelsStatus;
         private readonly LimboModelsBuilderSettings _modelsBuilderSettings;
-        private readonly ModelsGenerator _modelsGenerator;
         private readonly ModelsSourceGenerator _sourceGenerator;
 
         public ModelsBuilderController(ILogger<ModelsBuilderController> logger, OutOfDateModelsStatus outOfDateModelsStatus,
-            IOptions<LimboModelsBuilderSettings> modelsBuilderSettings, ModelsGenerator modelsGenerator, ModelsSourceGenerator sourceGenerator) {
+            IOptions<LimboModelsBuilderSettings> modelsBuilderSettings, ModelsSourceGenerator sourceGenerator) {
             _logger = logger;
             _outOfDateModelsStatus = outOfDateModelsStatus;
             _modelsBuilderSettings = modelsBuilderSettings.Value;
-            _modelsGenerator = modelsGenerator;
             _sourceGenerator = sourceGenerator;
         }
         
@@ -53,15 +51,9 @@ namespace Limbo.Umbraco.ModelsBuilder.Controllers {
         public object GenerateModels() {
 
             try {
-
-                // Get the default settings
-                ModelsGeneratorSettings settings = _modelsGenerator.GetDefaultSettings();
-
-                // Generate definitions for all the models
-                TypeModelList models = _modelsGenerator.GetModels();
-
+                
                 // Generate the source code and save the models to disk
-                _sourceGenerator.SaveModels(models, settings);
+                _sourceGenerator.BuildModels();
 
                 // Return a new status result
                 return GetStatus();

@@ -41,6 +41,17 @@ namespace Limbo.Umbraco.ModelsBuilder.Settings {
         /// </summary>
         public EditorConfigSettings EditorConfig { get; set; }
 
+        /// <summary>
+        /// Gets or sets whether the source generator should delete existing <c>*.generated.cs</c> files prior to
+        /// saving the newly generated files. Default is <c>true</c>.
+        /// </summary>
+        public bool DeleteGeneratedFiles { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets whether logging is enabled. Default is <c>false</c>.
+        /// </summary>
+        public bool EnableLogging { get; set; }
+
         #endregion
 
         #region Constructors
@@ -70,6 +81,8 @@ namespace Limbo.Umbraco.ModelsBuilder.Settings {
             DefaultModelsPath = appSettings.ModelsDirectoryAbsolute(hostingEnvironment);
             DefaultNamespace = appSettings.ModelsNamespace;
             UseDirectories = appSettings.UseDirectories;
+            DeleteGeneratedFiles = appSettings.DeleteGeneratedFiles;
+            EnableLogging = appSettings.EnableLogging;
 
             EditorConfig = new EditorConfigSettings();
 

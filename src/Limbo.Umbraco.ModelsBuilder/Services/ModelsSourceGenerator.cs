@@ -1,10 +1,13 @@
 ﻿using Limbo.Umbraco.ModelsBuilder.Attributes;
 using Limbo.Umbraco.ModelsBuilder.CodeAnalasis;
 using Limbo.Umbraco.ModelsBuilder.Extensions;
+using Limbo.Umbraco.ModelsBuilder.Logging;
 using Limbo.Umbraco.ModelsBuilder.Models;
 using Limbo.Umbraco.ModelsBuilder.Models.Generator;
 using Limbo.Umbraco.ModelsBuilder.Settings;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Skybrud.Essentials.Reflection;
 using Skybrud.Essentials.Time;
 using Skybrud.Essentials.Time.Iso8601;
@@ -35,6 +38,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         private readonly LimboModelsBuilderSettings _modelsBuilderSettings;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly OutOfDateModelsStatus _outOfDateModels;
+        private readonly ModelsGenerator _modelsGenerator;
 
         /// <summary>
         /// Gets or sets a map of simple types.
@@ -53,15 +57,47 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         #region Constructors
 
         public ModelsSourceGenerator(IHostingEnvironment hostingEnvironment,
-            IOptions<LimboModelsBuilderSettings> modelsBuilderSettings, OutOfDateModelsStatus outOfDateModels) {
+            IOptions<LimboModelsBuilderSettings> modelsBuilderSettings, OutOfDateModelsStatus outOfDateModels,
+            ModelsGenerator modelsGenerator) {
             _modelsBuilderSettings = modelsBuilderSettings.Value;
             _hostingEnvironment = hostingEnvironment;
             _outOfDateModels = outOfDateModels;
+            _modelsGenerator = modelsGenerator;
         }
 
         #endregion
 
         #region Member methods
+
+        public virtual void BuildModels() {
+            BuildModels(_modelsGenerator.GetDefaultSettings());
+        }
+
+        public virtual void BuildModels(ModelsGeneratorSettings settings) {
+
+            // Initialize a new log (if logging is enabled)
+            ModelsBuilderLog log = settings is { EnableLogging: true } ? new ModelsBuilderLog() : null;
+
+            log?.AppendLine(JObject.FromObject(settings).ToString(Formatting.Indented));
+            log?.AppendLine();
+            log?.AppendLine();
+
+            // Generate definitions for all the models
+            log?.AppendLine($"Getting models from {_modelsGenerator}");
+            TypeModelList models = _modelsGenerator.GetModels();
+            log?.AppendLine($"> Found {models.Count} models");
+            log?.AppendLine();
+            log?.AppendLine();
+
+            // Delete existing ".generated.cs" files (if enabled)
+            if (settings.DeleteGeneratedFiles) DeleteGenerateFiles(log);
+
+            // Generate the source code and save the models to disk
+            SaveModels(models, settings, log);
+
+            SaveToDisk(log);
+
+        }
 
         /// <summary>
         /// Saves the specified collection of <paramref name="models"/> to their respective locations on the disk.
@@ -69,6 +105,22 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="models">A collection with the models to be saved.</param>
         /// <param name="settings">The models generator settings.</param>
         public virtual void SaveModels(IEnumerable<TypeModel> models, ModelsGeneratorSettings settings) {
+
+            ModelsBuilderLog log = settings is { EnableLogging: true } ? new ModelsBuilderLog() : null;
+
+            SaveModels(models, settings, log);
+            
+            SaveToDisk(log);
+
+        }
+
+        /// <summary>
+        /// Saves the specified collection of <paramref name="models"/> to their respective locations on the disk.
+        /// </summary>
+        /// <param name="models">A collection with the models to be saved.</param>
+        /// <param name="settings">The models generator settings.</param>
+        /// <param name="log">The current <see cref="ModelsBuilderLog"/> instance.</param>
+        protected virtual void SaveModels(IEnumerable<TypeModel> models, ModelsGeneratorSettings settings, ModelsBuilderLog log) {
 
             // Create a new list for the models so we can quickly look them up later
             TypeModelList list = models as TypeModelList ?? new TypeModelList(models);
@@ -78,11 +130,21 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
                 // Skip types that have been explicitly ignored
                 if (model.IsIgnored) continue;
 
+                log?.AppendLine($"> Generating model for type {model.Name}");
+
                 // Generate the C# source code for the model
                 string source = GetSource(model, list, settings);
 
-                Directory.CreateDirectory(Path.GetDirectoryName(model.Path));
+                // Get the parent of the file's directory
+                string directory = Path.GetDirectoryName(model.Path);
+
+                if (!Directory.Exists(directory)) {
+                    Directory.CreateDirectory(directory);
+                    log?.AppendLine($"  > Created new directory {directory}");
+                }
+
                 File.WriteAllText(model.Path, source, Encoding.UTF8);
+                log?.AppendLine($"  > Saved new file {model.Path}");
 
             }
 
@@ -91,6 +153,109 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
             // Clear the file on disk
             _outOfDateModels.Clear();
+
+            // And we're done :D
+            log?.AppendLine("> Done");
+            log?.AppendLine();
+            log?.AppendLine();
+
+        }
+
+        /// <summary>
+        /// Delete all <c>*.generated.cs</c> files in the models 
+        /// </summary>
+        /// <param name="settings"></param>
+        public void DeleteGenerateFiles(ModelsGeneratorSettings settings) {
+
+            ModelsBuilderLog log = settings is { EnableLogging: true } ? new ModelsBuilderLog() : null;
+
+            DeleteGenerateFiles(log);
+
+            SaveToDisk(log);
+
+        }
+
+        protected void DeleteGenerateFiles(ModelsBuilderLog log) {
+
+            // Determine the full path to the models directory
+            string path = _modelsBuilderSettings.ModelsDirectoryAbsolute(_hostingEnvironment);
+
+            // Initialize a new DirectoryInfo instance
+            DirectoryInfo directory = new(path);
+
+            // Exit if the directory doesn't exist (no files to delete)
+            if (!directory.Exists) {
+                log?.AppendLine($"Exiting as models directory does not exist: {directory.FullName}");
+                SaveToDisk(log);
+                return;
+            }
+
+            log?.AppendLine("Deleting generated files in models directory");
+            log?.AppendLine("> Directory: " + directory.FullName);
+
+            // Find all "*.generated.cs" files
+            FileInfo[] files = directory.GetFiles("*.generated.cs", SearchOption.AllDirectories);
+            log?.AppendLine($"> Found {files.Length} files");
+
+            // Iterate through all "*.generated.cs" files
+            foreach (FileInfo file in files) {
+
+                log?.AppendLine($"> Deleting file {file.FullName}");
+
+                // Skip if the file doesn't look like it was generated by ModelsBuilder
+                if (!IsModelsBuilderGeneratedFile(file.FullName)) {
+                    log?.AppendLine(" > Doesn't look like the file was generated by ModelsBuilder :o");
+                    continue;
+                }
+
+                // Attempt to delete the file
+                try {
+                    file.Delete();
+                    log?.AppendLine(" > Done");
+                } catch (Exception ex) {
+                    log?.AppendLine(" > Failed");
+                    log?.AppendLine(ex.ToString());
+                    log?.AppendLine();
+                }
+
+            }
+
+            log?.AppendLine();
+            log?.AppendLine();
+
+        }
+
+        public bool IsModelsBuilderGeneratedFile(string path) {
+
+            // Definitely not if the file doesn't exist
+            if (!File.Exists(path)) return false;
+
+            byte[] buffer = new byte[512];
+
+            // Better watch for any exceptions
+            try {
+
+                // Open a new file stream
+                using FileStream fs = new(path, FileMode.Open, FileAccess.Read);
+
+                // Read the first 512 bytes
+                int _ = fs.Read(buffer, 0, buffer.Length);
+
+                // Close the stream
+                fs.Close();
+
+                // Convert the bytes to an UTF-8 encoded string
+                string contents = Encoding.UTF8.GetString(buffer);
+
+                // Does the first 512 bytes contains the ModelsBuilder header?
+                return contents.IndexOf("//    Limbo.Umbraco.ModelsBuilder v", StringComparison.CurrentCultureIgnoreCase) > 0;
+
+            } catch (Exception) {
+
+                // Can't tell for sure, but probably not
+                return false;
+
+            }
 
         }
 
@@ -739,6 +904,27 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             string first = File.ReadAllLines(path).FirstOrDefault();
 
             return EssentialsTime.TryParseIso8601(first, out EssentialsTime time) ? time : null;
+
+        }
+
+        /// <summary>
+        /// Saves the specified <paramref name="log"/> to a new file on the disk.
+        /// </summary>
+        /// <param name="log">A <see cref="ModelsBuilderLog"/> instance representing the log.</param>
+        protected virtual void SaveToDisk(ModelsBuilderLog log) {
+
+            // Nothing to save if "log" is null
+            if (log == null) return;
+
+            // Get the path to the logs directory (and create it if doesn't exist)
+            string dir = _hostingEnvironment.MapPathContentRoot($"~/Limbo/{ModelsBuilderPackage.Alias}/Logs");
+            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+
+            // Generate a new filename based on the current time
+            string filename = $"{DateTime.UtcNow:yyyyMMddHHmmssfff}.txt";
+
+            // Write the contents to the disk
+            File.WriteAllText(Path.Combine(dir, filename), log.ToString());
 
         }
 

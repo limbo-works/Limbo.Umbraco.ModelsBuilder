@@ -31,6 +31,17 @@ namespace Limbo.Umbraco.ModelsBuilder.Settings {
         /// </summary>
         public List<HelloContainer> Containers { get; set; } = new();
 
+        /// <summary>
+        /// Gets or sets whether the source generator should delete existing <c>*.generated.cs</c> files prior to
+        /// saving the newly generated files. Default is <c>true</c>.
+        /// </summary>
+        public bool DeleteGeneratedFiles { get; set; } = true;
+
+        /// <summary>
+        /// If set to <c>true</c>, the source generator will write log files to the <c>~/Limbo/Limbo.Umbraco.ModelsBuilder/Logs</c> directory.
+        /// </summary>
+        public bool EnableLogging { get; set; }
+
         #endregion
 
     }

@@ -14,6 +14,11 @@ namespace Limbo.Umbraco.ModelsBuilder.Models {
         private readonly IDictionary<string, TypeModel> _dictionary;
 
         /// <summary>
+        /// Returns the amount of models in the list.
+        /// </summary>
+        public int Count => _list.Count;
+
+        /// <summary>
         /// Initializes a new list based on the specified <paramref name="models"/>.
         /// </summary>
         /// <param name="models">The models that should make up the list.</param>
