@@ -114,30 +114,25 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
                 return simpleName;
             }
 
-            string ns;
+            string prefix;
 
-            switch (type.Namespace) {
-
-                //case "System.Collections.Generic":
-                case "Umbraco.Core.Models.PublishedContent":
-                    ns = string.Empty;
-                    break;
-
-                default:
-                    ns = $"{type.Namespace}.";
-                    break;
-
-            }
-
-            if (ns.StartsWith("Umbraco.")) {
-                ns = "global::" + ns;
+            if (type.DeclaringType != null) {
+                prefix = GetValueTypeName(model, type.DeclaringType, models) + ".";
+            } else {
+                prefix = type.Namespace switch {
+                    "Umbraco.Core.Models.PublishedContent" => string.Empty,
+                    _ => $"{type.Namespace}."
+                };
+                if (prefix.StartsWith("Umbraco.")) {
+                    prefix = "global::" + prefix;
+                }
             }
 
             if (type.GenericTypeArguments.Length == 0) {
-                return $"{ns}{type.Name}";
+                return $"{prefix}{type.Name}";
             }
 
-            return $"{ns}{type.Name.Split('`')[0]}<{string.Join(",", from t in type.GenericTypeArguments select GetValueTypeName(model, t, models))}>";
+            return $"{prefix}{type.Name.Split('`')[0]}<{string.Join(",", from t in type.GenericTypeArguments select GetValueTypeName(model, t, models))}>";
 
         }
 
