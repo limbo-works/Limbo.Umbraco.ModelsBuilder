@@ -2,18 +2,18 @@
 
   <PropertyGroup>
     <LangVersion>9.0</LangVersion>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <ContentTargetFolders>content</ContentTargetFolders>
   </PropertyGroup>
 
   <PropertyGroup>
-	<VersionPrefix>1.0.0-beta007</VersionPrefix>
-	<VersionSuffix Condition="'$(Configuration)'=='Debug'">build$([System.DateTime]::UtcNow.ToString(`yyyyMMddHHmm`))</VersionSuffix>
+	<VersionPrefix>2.0.0-alpha000</VersionPrefix>
+	<VersionSuffix Condition="'$(Configuration)'=='Debug'">$([System.DateTime]::UtcNow.ToString(`yyyyMMddHHmm`))</VersionSuffix>
     <Company>Limbo</Company>
     <Authors>Anders Bjerner</Authors>
     <Copyright>Copyright © 2022</Copyright>
     <Title>Limbo Models Builder</Title>
-    <Description>Custom models builder for Umbraco 9.</Description>
+    <Description>Custom models builder for Umbraco 10.</Description>
   </PropertyGroup>
 
   <!-- Information for the NuGet package -->
@@ -30,9 +30,9 @@
   <!-- Include NuGet dependencies -->
   <ItemGroup>
     <PackageReference Include="Skybrud.Essentials" Version="1.1.39" />
-    <PackageReference Include="Umbraco.Cms.Core" Version="9.0.0" />
-    <PackageReference Include="Umbraco.Cms.Web.Website" Version="9.0.0" />
-    <PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="9.0.0" />
+    <PackageReference Include="Umbraco.Cms.Core" Version="10.0.0-rc4" />
+    <PackageReference Include="Umbraco.Cms.Web.Website" Version="10.0.0-rc4" />
+    <PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="10.0.0-rc4" />
   </ItemGroup>
 
   <!-- Include backoffice assets -->

@@ -5,6 +5,7 @@ using Limbo.Umbraco.ModelsBuilder.Logging;
 using Limbo.Umbraco.ModelsBuilder.Models;
 using Limbo.Umbraco.ModelsBuilder.Models.Generator;
 using Limbo.Umbraco.ModelsBuilder.Settings;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -18,10 +19,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using Umbraco.Cms.Core.Hosting;
+using Umbraco.Cms.Core.Extensions;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Infrastructure.ModelsBuilder;
 using Umbraco.Extensions;
+using IHostingEnvironment = Umbraco.Cms.Core.Hosting.IHostingEnvironment;
 
 #pragma warning disable 1591
 
@@ -36,6 +38,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
     public class ModelsSourceGenerator {
         
         private readonly LimboModelsBuilderSettings _modelsBuilderSettings;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly OutOfDateModelsStatus _outOfDateModels;
         private readonly ModelsGenerator _modelsGenerator;
@@ -56,10 +59,12 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
         #region Constructors
 
-        public ModelsSourceGenerator(IHostingEnvironment hostingEnvironment,
+        public ModelsSourceGenerator(IWebHostEnvironment webHostEnvironment,
+            IHostingEnvironment hostingEnvironment,
             IOptions<LimboModelsBuilderSettings> modelsBuilderSettings, OutOfDateModelsStatus outOfDateModels,
             ModelsGenerator modelsGenerator) {
             _modelsBuilderSettings = modelsBuilderSettings.Value;
+            _webHostEnvironment = webHostEnvironment;
             _hostingEnvironment = hostingEnvironment;
             _outOfDateModels = outOfDateModels;
             _modelsGenerator = modelsGenerator;
@@ -917,7 +922,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             if (log == null) return;
 
             // Get the path to the logs directory (and create it if doesn't exist)
-            string dir = _hostingEnvironment.MapPathContentRoot($"~/Limbo/{ModelsBuilderPackage.Alias}/Logs");
+            string dir = _webHostEnvironment.MapPathContentRoot($"~/Limbo/{ModelsBuilderPackage.Alias}/Logs");
             if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
 
             // Generate a new filename based on the current time
