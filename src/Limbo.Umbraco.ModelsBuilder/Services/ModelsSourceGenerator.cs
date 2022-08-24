@@ -568,9 +568,9 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="model">The current model.</param>
         /// <param name="settings">The models generator settings.</param>
         protected virtual void WritePragma(TextWriter writer, TypeModel model, ModelsGeneratorSettings settings) {
+            writer.WriteLine("#pragma warning disable 0108");
             writer.WriteLine("#pragma warning disable 0109");
             writer.WriteLine("#pragma warning disable 1591");
-            writer.WriteLine("#pragma warning disable 0108");
             writer.WriteLine();
         }
 
