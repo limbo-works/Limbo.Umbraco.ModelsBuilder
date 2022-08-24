@@ -22,12 +22,12 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
         /// Gets the namespace of the class.
         /// </summary>
         public string Namespace { get; set; }
-        
+
         /// <summary>
         /// Gets the name of the class.
         /// </summary>
         public string Name { get; set; }
-        
+
         /// <summary>
         /// Gets the full name of the class.
         /// </summary>
@@ -37,11 +37,11 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
         /// Gets a list of the base types of the class.
         /// </summary>
         public List<string> BaseTypes { get; set; }
-        
+
         /// <summary>
         /// Gets a list of the constructors of the class.
         /// </summary>
-        public ConstructorSummary[] Constructors { get; }
+        public IReadOnlyList<ConstructorSummary> Constructors { get; }
 
         /// <summary>
         /// Gets whether the class has a suitable constructor for ModelsBuilder.
@@ -51,39 +51,77 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
                 return Constructors.Any(x => x.Parameters.Length == 2 && x.Parameters[0].Type == "IPublishedContent" && x.Parameters[1].Type == "IPublishedValueFallback");
             }
         }
-        
+
         /// <summary>
         /// Gets a list of the properties of the class.
         /// </summary>
-        public PropertySummary[] Properties { get; }
-        
+        public IReadOnlyList<PropertySummary> Properties { get; }
+
         /// <summary>
         /// Gets a list of the methods of the class.
         /// </summary>
-        public MethodSummary[] Methods { get; }
+        public IReadOnlyList<MethodSummary> Methods { get; }
+
+        /// <summary>
+        /// Gets a list of aliases for the property types that has been explicitly ignored.
+        /// </summary>
+        public IReadOnlySet<string> IgnoredPropertyTypes { get; }
 
         #endregion
 
         #region Constructors
-        
+
         /// <summary>
         /// Initializes a new instance based on the specified <paramref name="syntax"/>.
         /// </summary>
         /// <param name="syntax">The class declaration syntax describing the class.</param>
         public ClassSummary(ClassDeclarationSyntax syntax) {
+
+            HashSet<string> ignoredPropertyTypes = new();
+            List<ConstructorSummary> constructors = new();
+            List<PropertySummary> properties = new();
+            List<MethodSummary> methods = new();
+
+            foreach (AttributeListSyntax atrrList in syntax.AttributeLists) {
+                foreach (AttributeSyntax attr in atrrList.Attributes) {
+                    if (attr.Name.ToString() != "IgnorePropertyType") continue;
+                    if (attr.ArgumentList == null) continue;
+                    foreach (AttributeArgumentSyntax arg in attr.ArgumentList.Arguments) {
+                        if (arg.Expression is LiteralExpressionSyntax { Token: { Value: { } } } lit) {
+                            string alias = lit.Token.Value.ToString();
+                            if (ignoredPropertyTypes.Contains(alias)) continue;
+                            ignoredPropertyTypes.Add(alias);
+                        }
+                    }
+                }
+            }
+
+            foreach (MemberDeclarationSyntax member in syntax.Members) {
+
+                switch (member) {
+
+                    case ConstructorDeclarationSyntax xtor:
+                        constructors.Add(new ConstructorSummary(xtor));
+                        break;
+
+                    case PropertyDeclarationSyntax property:
+                        properties.Add(new PropertySummary(property));
+                        break;
+
+                    case MethodDeclarationSyntax method:
+                        methods.Add(new MethodSummary(method));
+                        break;
+
+                }
+
+            }
+
             Source = syntax;
-            Constructors = syntax.Members
-                .OfType<ConstructorDeclarationSyntax>()
-                .Select(x => new ConstructorSummary(x))
-                .ToArray();
-            Properties = syntax.Members
-                .OfType<PropertyDeclarationSyntax>()
-                .Select(x => new PropertySummary(x))
-                .ToArray();
-            Methods = syntax.Members
-                .OfType<MethodDeclarationSyntax>()
-                .Select(x => new MethodSummary(x))
-                .ToArray();
+            IgnoredPropertyTypes = ignoredPropertyTypes;
+            Constructors = constructors;
+            Properties = properties;
+            Methods = methods;
+
         }
 
         #endregion

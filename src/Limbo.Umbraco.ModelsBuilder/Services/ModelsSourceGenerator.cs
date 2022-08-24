@@ -750,8 +750,14 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
                 // Skip the property if it already has been flagged as ignored
                 if (property.IsIgnored || ignoredPropertyTypes.Contains(property.Alias)) continue;
 
-                // If the model has a custom partial class, and the property has been manually added there, we shouldn't add it here
+                // If the model has a custom partial class, and the property type is ignored through a [IgnorePropertyType] attribute
+                if (partialClass != null && partialClass.IgnoredPropertyTypes.Contains(property.Alias)) continue;
+
+                // If the model has a custom partial class, and it has a property with the same CLR name, we shouldn't add it here
                 if (partialClass != null && partialClass.HasProperty(property.ClrName)) continue;
+
+                // If the model has a custom partial class, and a property indicates that it implements this property, we shouldn't add it here
+                if (partialClass != null && partialClass.Properties.Any(x => x.ImplementsPropertyType == property.Alias)) continue;
 
                 // Append the property model to the list
                 properties.Add(property);
