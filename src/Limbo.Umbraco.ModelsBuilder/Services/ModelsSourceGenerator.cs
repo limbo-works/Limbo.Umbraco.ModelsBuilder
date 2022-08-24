@@ -456,7 +456,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
             WriteClassStart(writer, model, inherits, partialClass, settings);
 
-            WriteConstants(writer, model, settings);
+            WriteHelpers(writer, model, settings);
 
             WriteConstructor(writer, model, partialClass, settings);
 
@@ -665,11 +665,17 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             writer.WriteLine();
         }
 
-        protected virtual void WriteConstants(TextWriter writer, TypeModel model, ModelsGeneratorSettings settings) {
+        /// <summary>
+        /// Method responsible for generating various constants and static helper methods for working with the models.
+        /// </summary>
+        /// <param name="writer">The writer.</param>
+        /// <param name="model">The current model.</param>
+        /// <param name="settings">The models generator settings.</param>
+        protected virtual void WriteHelpers(TextWriter writer, TypeModel model, ModelsGeneratorSettings settings) {
 
             string indent = "".PadLeft(2 * settings.EditorConfig.IndentSize, ' ');
 
-            writer.WriteLine($"{indent}#region Constants");
+            writer.WriteLine($"{indent}#region Helpers");
             writer.WriteLine();
 
             writer.WriteLine($"{indent}public new const string ModelTypeAlias = \"{model.Alias}\";");
