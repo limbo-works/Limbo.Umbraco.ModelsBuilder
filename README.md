@@ -1,19 +1,19 @@
 # Limbo Models Builder
 
-`Limbo.Umbraco.ModelsBuilder` is a custom models builder for Umbraco 9 we use internally at [**@limbo-works**](https://github.com/limbo-works). It's purpose is to add additional features compared to what is available today in the build-in ModelsBuilder in Umbraco 9 and the older community ModelsBuilder (which doesn't work for Umbraco 9).
+`Limbo.Umbraco.ModelsBuilder` is a custom models builder for Umbraco 9+ we use internally at [**@limbo-works**](https://github.com/limbo-works). It's purpose is to add additional features compared to what is available today in the build-in ModelsBuilder in Umbraco 9+ and the older community ModelsBuilder (which doesn't work for Umbraco 9+).
 
 ## Installation
 
-Via <a href="https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder/1.0.0-beta007" target="_blank">NuGet</a>:
+Via <a href="https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder/2.0.0-beta001" target="_blank">NuGet</a>:
 
 ```
-dotnet add package Limbo.Umbraco.ModelsBuilder --version 1.0.0-beta007
+dotnet add package Limbo.Umbraco.ModelsBuilder --version 2.0.0-beta001
 ```
 
 or:
 
 ```
-Install-Package Limbo.Umbraco.ModelsBuilder -Version 1.0.0-beta007
+Install-Package Limbo.Umbraco.ModelsBuilder -Version 2.0.0-beta001
 ```
 
 ## Documentation
