@@ -167,7 +167,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         }
 
         /// <summary>
-        /// Delete all <c>*.generated.cs</c> files in the models 
+        /// Delete all <c>*.generated.cs</c> files in the models
         /// </summary>
         /// <param name="settings"></param>
         public void DeleteGenerateFiles(ModelsGeneratorSettings settings) {
@@ -673,7 +673,9 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             writer.WriteLine();
 
             writer.WriteLine($"{indent}public new const string ModelTypeAlias = \"{model.Alias}\";");
-            writer.WriteLine($"{indent}public new const PublishedItemType ModelItemType = PublishedItemType.{model.PublishedContentType.ItemType.ToString()};");
+            writer.WriteLine();
+
+            writer.WriteLine($"{indent}public new const PublishedItemType ModelItemType = PublishedItemType.{model.PublishedContentType.ItemType};");
             writer.WriteLine();
 
             writer.WriteLine($"{indent}[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]");
