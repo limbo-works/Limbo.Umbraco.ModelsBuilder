@@ -1,6 +1,10 @@
-# Limbo Models Builder
+# Limbo Models Builder [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md) [![NuGet](https://img.shields.io/nuget/vpre/Limbo.Umbraco.ModelsBuilder.svg)](https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder) [![NuGet](https://img.shields.io/nuget/dt/Limbo.Umbraco.ModelsBuilder.svg)](https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder) [![Our Umbraco](https://img.shields.io/badge/our-umbraco-%233544B1)]([https://our.umbraco.com/packages/website-utilities/skybrud-redirects/](https://our.umbraco.com/packages/developer-tools/limbo-models-builder/))
 
 `Limbo.Umbraco.ModelsBuilder` is a custom models builder for Umbraco 9+ we use internally at [**@limbo-works**](https://github.com/limbo-works). It's purpose is to add additional features compared to what is available today in the build-in ModelsBuilder in Umbraco 9+ and the older community ModelsBuilder (which doesn't work for Umbraco 9+).
+
+
+
+<br /><br />
 
 ## Installation
 
@@ -16,6 +20,10 @@ or:
 Install-Package Limbo.Umbraco.ModelsBuilder -Version 2.0.0-beta002
 ```
 
+
+
+<br /><br />
+
 ## Documentation
 
 Coming soon. Meanwhile, have a look at the following sections in this README file:
@@ -24,6 +32,11 @@ Coming soon. Meanwhile, have a look at the following sections in this README fil
 - [Events](#events)
 - [Notifications](#notifications)
 - [Usage Tips](#usage)
+
+
+
+
+<br /><br />
 
 ## Configuration
 
@@ -75,6 +88,10 @@ When having a lot of generated class files and custom partials, the file tree in
 
 This means that any files matching the pattern will automatically be nested under their custom partial, so you or this package doesn't have to add a `<Compile>` element for each generated file. Technically this also applies to generated files that doesn't have a custom partial, but Visual Studio will just ignore if the file doesn't exist.
 
+
+
+<br /><br />
+
 ## Building models
 
 The package adds a new dashboard to the *Settings* section. The dashboard then let's you see a quick status about your generated models, as well as generate your models in case they are not up-to-date:
@@ -95,6 +112,10 @@ TypeModelList models = _modelsGenerator.GetModels();
 // Generate the source code and save the models to disk
 _sourceGenerator.SaveModels(models, settings);
 ```
+
+
+
+<br /><br />
 
 ## Events
 
@@ -184,6 +205,10 @@ namespace UmbracoNineTests.ModelsBuilder {
 }
 ```
 
+
+
+<br /><br />
+
 ## Notifications
 
 ### GetDefaultSettingsNotification
@@ -272,6 +297,11 @@ namespace UmbracoNineTests.ModelsBuilder {
 
 }
 ```
+
+
+
+<br /><br />
+
 ## Usage
 
 ### Strongly-Type All the Things
