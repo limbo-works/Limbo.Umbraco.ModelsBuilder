@@ -19,6 +19,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using Limbo.Umbraco.ModelsBuilder.Models.Json;
 using Umbraco.Cms.Core.Extensions;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Infrastructure.ModelsBuilder;
@@ -81,7 +82,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         public virtual void BuildModels(ModelsGeneratorSettings settings) {
 
             // Initialize a new log (if logging is enabled)
-            ModelsBuilderLog log = settings is { EnableLogging: true } ? new ModelsBuilderLog() : null;
+            ModelsBuilderLog? log = settings is { EnableLogging: true } ? new ModelsBuilderLog() : null;
 
             log?.AppendLine(JObject.FromObject(settings).ToString(Formatting.Indented));
             log?.AppendLine();
@@ -111,7 +112,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="settings">The models generator settings.</param>
         public virtual void SaveModels(IEnumerable<TypeModel> models, ModelsGeneratorSettings settings) {
 
-            ModelsBuilderLog log = settings is { EnableLogging: true } ? new ModelsBuilderLog() : null;
+            ModelsBuilderLog? log = settings is { EnableLogging: true } ? new ModelsBuilderLog() : null;
 
             SaveModels(models, settings, log);
 
@@ -125,7 +126,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="models">A collection with the models to be saved.</param>
         /// <param name="settings">The models generator settings.</param>
         /// <param name="log">The current <see cref="ModelsBuilderLog"/> instance.</param>
-        protected virtual void SaveModels(IEnumerable<TypeModel> models, ModelsGeneratorSettings settings, ModelsBuilderLog log) {
+        protected virtual void SaveModels(IEnumerable<TypeModel> models, ModelsGeneratorSettings settings, ModelsBuilderLog? log) {
 
             // Create a new list for the models so we can quickly look them up later
             TypeModelList list = models as TypeModelList ?? new TypeModelList(models);
@@ -141,14 +142,14 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
                 string source = GetSource(model, list, settings);
 
                 // Get the parent of the file's directory
-                string directory = Path.GetDirectoryName(model.Path);
+                string directory = Path.GetDirectoryName(model.Path)!;
 
                 if (!Directory.Exists(directory)) {
                     Directory.CreateDirectory(directory);
                     log?.AppendLine($"  > Created new directory {directory}");
                 }
 
-                File.WriteAllText(model.Path, source, Encoding.UTF8);
+                File.WriteAllText(model.Path!, source, Encoding.UTF8);
                 log?.AppendLine($"  > Saved new file {model.Path}");
 
             }
@@ -172,7 +173,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="settings"></param>
         public void DeleteGenerateFiles(ModelsGeneratorSettings settings) {
 
-            ModelsBuilderLog log = settings is { EnableLogging: true } ? new ModelsBuilderLog() : null;
+            ModelsBuilderLog? log = settings is { EnableLogging: true } ? new ModelsBuilderLog() : null;
 
             DeleteGenerateFiles(log);
 
@@ -180,7 +181,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
         }
 
-        protected void DeleteGenerateFiles(ModelsBuilderLog log) {
+        protected void DeleteGenerateFiles(ModelsBuilderLog? log) {
 
             // Determine the full path to the models directory
             string path = _modelsBuilderSettings.ModelsDirectoryAbsolute(_hostingEnvironment);
@@ -280,7 +281,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
                 throw new InvalidOperationException($"Don't know how to map ModelType with content type alias \"{modelType.ContentTypeAlias}\".");
             }
 
-            if (type.FullName != null && SimpleNames.TryGetValue(type.FullName, out string simpleName)) {
+            if (type.FullName != null && SimpleNames.TryGetValue(type.FullName, out string? simpleName)) {
                 return simpleName;
             }
 
@@ -311,7 +312,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns>An instance of <see cref="Type"/>, or <c>null</c>.</returns>
-        protected virtual Type GetClrType(TypeModel model) {
+        protected virtual Type? GetClrType(TypeModel model) {
 
             // Get the full name of the CLR type
             string fullname = $"{model.Namespace}.{model.ClrName}";
@@ -337,7 +338,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
             // TODO: Check parent types and compositions
 
-            Type type = GetClrType(model);
+            Type? type = GetClrType(model);
             if (type == null) return new HashSet<string>();
 
             List<string> temp = new();
@@ -382,10 +383,10 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <returns>A string with the generated C# source code.</returns>
         public virtual string GetSource(TypeModel model, TypeModelList models, ModelsGeneratorSettings settings) {
 
-            string customPartialPath = model.Path.Replace(".generated.cs", ".cs");
+            string customPartialPath = model.Path!.Replace(".generated.cs", ".cs");
 
-            ClassSummary partialClass = null;
-            if (FileSummary.TryLoad(customPartialPath, out FileSummary summary)) {
+            ClassSummary? partialClass = null;
+            if (FileSummary.TryLoad(customPartialPath, out FileSummary? summary)) {
                 summary.TryGetClass($"{model.Namespace}.{model.ClrName}", out partialClass);
             }
 
@@ -393,7 +394,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             List<string> inherits = new();
 
             // If the partial class already has a base type, we shouldn't try adding one
-            string partialBaseType = partialClass?.BaseTypes.FirstOrDefault(x => !Regex.IsMatch(x, "^I[A-Z]"));
+            string? partialBaseType = partialClass?.BaseTypes.FirstOrDefault(x => !Regex.IsMatch(x, "^I[A-Z]"));
 
             // Make sure a proper base class is appended to the inherits - unless the custom partial already does this
             if (string.IsNullOrWhiteSpace(partialBaseType)) {
@@ -474,7 +475,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
         }
 
-        private void WriteExtensionMethodsClass(TextWriter writer, TypeModel model, HashSet<string> ignoredPropertyTypes, ClassSummary partialClass, TypeModelList models, ModelsGeneratorSettings settings) {
+        private void WriteExtensionMethodsClass(TextWriter writer, TypeModel model, HashSet<string> ignoredPropertyTypes, ClassSummary? partialClass, TypeModelList models, ModelsGeneratorSettings settings) {
 
             List<GeneratorExtensionMethod> extensionMethods = new();
 
@@ -526,7 +527,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
             Assembly assembly = typeof(ModelsSourceGenerator).Assembly;
 
-            string name = assembly.GetName().Name;
+            string name = assembly.GetName().Name!;
 
             string version = ReflectionUtils.GetInformationalVersion(assembly);
 
@@ -644,7 +645,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="partialClass">A reference to the custom partial, if any.</param>
         /// <param name="settings">The models generator settings.</param>
         /// <param name="inherits">A list of inherits (base type and interfaces).</param>
-        protected virtual void WriteClassStart(TextWriter writer, TypeModel model, List<string> inherits, ClassSummary partialClass, ModelsGeneratorSettings settings) {
+        protected virtual void WriteClassStart(TextWriter writer, TypeModel model, List<string> inherits, ClassSummary? partialClass, ModelsGeneratorSettings settings) {
 
             writer.WriteLine($"    [PublishedModel(\"{model.Alias}\")]");
             writer.WriteLine($"    public partial class {model.ClrName}{(inherits.Any() ? " : " + string.Join(", ", inherits) : "")} {{");
@@ -706,7 +707,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="model">The current model.</param>
         /// <param name="partialClass">A reference to the custom partial, if any.</param>
         /// <param name="settings">The models generator settings.</param>
-        protected virtual void WriteConstructor(TextWriter writer, TypeModel model, ClassSummary partialClass, ModelsGeneratorSettings settings) {
+        protected virtual void WriteConstructor(TextWriter writer, TypeModel model, ClassSummary? partialClass, ModelsGeneratorSettings settings) {
 
             // If there is a custom partial for the model, and it already has a constructor with the require signature,
             // we shouldn't add one to the generated partial
@@ -737,7 +738,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="models">A list with all the models.</param>
         /// <param name="settings">The models generator settings.</param>
         /// <param name="ignoredPropertyTypes">A hash set with the ignored property types.</param>
-        protected virtual void WriteProperties(TextWriter writer, TypeModel model, HashSet<string> ignoredPropertyTypes, ClassSummary partialClass, TypeModelList models, ModelsGeneratorSettings settings) {
+        protected virtual void WriteProperties(TextWriter writer, TypeModel model, HashSet<string> ignoredPropertyTypes, ClassSummary? partialClass, TypeModelList models, ModelsGeneratorSettings settings) {
 
             string indent = "".PadLeft(2 * settings.EditorConfig.IndentSize, ' ');
 
@@ -791,13 +792,13 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="settings">The models generator settings.</param>
         /// <param name="property">The property.</param>
         /// <param name="ignoredPropertyTypes">A hash set with the ignored property types.</param>
-        protected virtual void WriteProperty(TextWriter writer, TypeModel model, PropertyModel property, HashSet<string> ignoredPropertyTypes, ClassSummary partialClass, TypeModelList models, ModelsGeneratorSettings settings) {
+        protected virtual void WriteProperty(TextWriter writer, TypeModel model, PropertyModel property, HashSet<string> ignoredPropertyTypes, ClassSummary? partialClass, TypeModelList models, ModelsGeneratorSettings settings) {
 
             // Gets the name of the value type
             string valueTypeName = GetValueTypeName(model, property.ValueType, models);
 
             // Get the declaring type of the property. This mey be different than "model" when using compositions
-            if (!model.HasPropertyType(property.Alias, out TypeModel declaringType)) {
+            if (!model.HasPropertyType(property.Alias, out TypeModel? declaringType)) {
                 throw new Exception("Property type not found. This shouldn't happen.");
             }
 
@@ -827,7 +828,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             if (useStaticMethod) {
 
                 // If "model" and "declaringType" differ, we need to specify the class name
-                string className = declaringType == model ? null : $"{declaringType.ClrName}.";
+                string? className = declaringType == model ? null : $"{declaringType.ClrName}.";
 
                 // TODO: Should "className" also include the namespace?
 
@@ -844,7 +845,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
         }
 
-        protected virtual void WriteStaticMethods(TextWriter writer, TypeModel model, HashSet<string> ignoredPropertyTypes, ClassSummary partialClass, TypeModelList models, ModelsGeneratorSettings settings) {
+        protected virtual void WriteStaticMethods(TextWriter writer, TypeModel model, HashSet<string> ignoredPropertyTypes, ClassSummary? partialClass, TypeModelList models, ModelsGeneratorSettings settings) {
 
             string indent = "".PadLeft(2 * settings.EditorConfig.IndentSize, ' ');
 
@@ -853,7 +854,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             foreach (PropertyModel property in model.Properties) {
 
                 if (property.StaticMethod != PropertyStaticMethod.Always && (property.StaticMethod != PropertyStaticMethod.Auto || !model.IsComposition)) continue;
-                if (!model.HasPropertyType(property.Alias, out TypeModel declaringType)) throw new Exception("Property type not found. This shouldn't happen.");
+                if (!model.HasPropertyType(property.Alias, out TypeModel? declaringType)) throw new Exception("Property type not found. This shouldn't happen.");
                 if (declaringType != model) continue;
 
                 // If the type has a custom partial class, and that class has a method with the same name, we skip adding it to the generated file
@@ -892,7 +893,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="settings">The models generator settings.</param>
         protected virtual void WriteJsonNetPropertySettings(TextWriter writer, TypeModel model, PropertyModel property, ModelsGeneratorSettings settings) {
 
-            var json = property.JsonNetSettings;
+            JsonNetPropertySettings? json = property.JsonNetSettings;
             var editor = settings.EditorConfig;
             if (json == null) return;
 
@@ -927,16 +928,16 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             File.WriteAllText(Path.Combine(modelsDirectory, "lastBuild.flag"), EssentialsTime.UtcNow.ToString(Iso8601Constants.DateTimeMilliseconds) + Environment.NewLine);
         }
 
-        public virtual EssentialsTime GetLastBuildDate() {
+        public virtual EssentialsTime? GetLastBuildDate() {
 
             string modelsDirectory = _modelsBuilderSettings.ModelsDirectoryAbsolute(_hostingEnvironment);
 
             string path = Path.Combine(modelsDirectory, "lastBuild.flag");
             if (!File.Exists(path)) return null;
 
-            string first = File.ReadAllLines(path).FirstOrDefault();
+            string? first = File.ReadAllLines(path).FirstOrDefault();
 
-            return EssentialsTime.TryParseIso8601(first, out EssentialsTime time) ? time : null;
+            return EssentialsTime.TryParseIso8601(first, out EssentialsTime? time) ? time : null;
 
         }
 
@@ -944,7 +945,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// Saves the specified <paramref name="log"/> to a new file on the disk.
         /// </summary>
         /// <param name="log">A <see cref="ModelsBuilderLog"/> instance representing the log.</param>
-        protected virtual void SaveToDisk(ModelsBuilderLog log) {
+        protected virtual void SaveToDisk(ModelsBuilderLog? log) {
 
             // Nothing to save if "log" is null
             if (log == null) return;

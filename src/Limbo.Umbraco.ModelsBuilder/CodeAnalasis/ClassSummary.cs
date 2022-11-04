@@ -75,7 +75,12 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
         /// Initializes a new instance based on the specified <paramref name="syntax"/>.
         /// </summary>
         /// <param name="syntax">The class declaration syntax describing the class.</param>
-        public ClassSummary(ClassDeclarationSyntax syntax) {
+        /// <param name="namespaceSyntax">The syntax for the parent namespace.</param>
+        public ClassSummary(ClassDeclarationSyntax syntax, NamespaceDeclarationSyntax namespaceSyntax) {
+
+            Name = syntax.Identifier.ToString();
+            Namespace = namespaceSyntax.Name.ToString();
+            BaseTypes = syntax.BaseList?.Types.Select(x => x.ToString()).ToList() ?? new List<string>();
 
             HashSet<string> ignoredPropertyTypes = new();
             List<ConstructorSummary> constructors = new();
@@ -88,7 +93,7 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
                     if (attr.ArgumentList == null) continue;
                     foreach (AttributeArgumentSyntax arg in attr.ArgumentList.Arguments) {
                         if (arg.Expression is LiteralExpressionSyntax { Token: { Value: { } } } lit) {
-                            string alias = lit.Token.Value.ToString();
+                            string alias = lit.Token.Value.ToString()!;
                             if (ignoredPropertyTypes.Contains(alias)) continue;
                             ignoredPropertyTypes.Add(alias);
                         }

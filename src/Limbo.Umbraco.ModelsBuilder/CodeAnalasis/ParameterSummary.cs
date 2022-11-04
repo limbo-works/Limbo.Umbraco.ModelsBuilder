@@ -24,7 +24,7 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
         /// </summary>
         /// <param name="syntax">The syntax describing the parameter.</param>
         public ParameterSummary(ParameterSyntax syntax) {
-            Type = syntax.Type.ToString();
+            Type = syntax.Type!.ToString();
             Name = syntax.Identifier.ToString();
         }
 

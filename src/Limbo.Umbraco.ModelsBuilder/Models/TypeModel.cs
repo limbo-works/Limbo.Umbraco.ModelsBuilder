@@ -50,7 +50,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Models {
         /// <summary>
         /// Gets the friendly name of the content type.
         /// </summary>
-        public string Name => ContentType.Name;
+        public string Name => ContentType.Name!;
 
         /// <summary>
         /// Gets or sets the desired namespace of the generated model.
@@ -70,7 +70,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Models {
         /// <summary>
         /// Gets or sets the parent model.
         /// </summary>
-        public TypeModel ParentType { get; set; }
+        public TypeModel? ParentType { get; set; }
 
         /// <summary>
         /// Gets or sets the compositions of the model.
@@ -96,7 +96,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Models {
         /// Gets or sets the desired path to the generated model. If left empty, the path will automatically be
         /// determined when generating the model.
         /// </summary>
-        public string Path { get; set; }
+        public string? Path { get; set; }
 
         /// <summary>
         /// Gets or sets a list of directories for the model. The directories can be used to nest the model in sub

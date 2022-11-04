@@ -83,7 +83,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Settings {
             UseDirectories = appSettings.UseDirectories;
             DeleteGeneratedFiles = appSettings.DeleteGeneratedFiles;
             EnableLogging = appSettings.EnableLogging;
-
+            Containers = new List<IModelsContainer>();
             EditorConfig = new EditorConfigSettings();
 
         }

@@ -21,7 +21,7 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
         /// <summary>
         /// Gets the name of the underlying property on the content type if this property has a <see cref="ImplementPropertyTypeAttribute"/>.
         /// </summary>
-        public string ImplementsPropertyType { get; }
+        public string? ImplementsPropertyType { get; }
 
         /// <summary>
         /// Initializes a new instance based on the specified property declaration <paramref name="syntax"/>.

@@ -37,7 +37,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Components {
             Type type = typeof(BuilderCollectionBase<IDashboard>);
 
             // Get a reference to the internal "_items"
-            FieldInfo field = type.GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance);
+            FieldInfo? field = type.GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance);
             if (field == null) return;
 
             // Get the field value (return if not the expected type)

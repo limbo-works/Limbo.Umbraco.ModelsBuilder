@@ -26,7 +26,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Models.Api {
         public bool IsOutOfDate { get; }
 
         [JsonProperty("lastBuildDate")]
-        public EssentialsTime LastBuildDate { get; }
+        public EssentialsTime? LastBuildDate { get; }
 
         [JsonProperty("links")]
         public List<StatusLink> Links { get; }

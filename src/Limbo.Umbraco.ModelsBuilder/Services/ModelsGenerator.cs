@@ -31,7 +31,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <summary>
         /// Event called before models are returned by the <see cref="GetModels(ModelsGeneratorSettings)"/> method.
         /// </summary>
-        public event EventHandler<GetModelsEventArgs> GetModelsReturning;
+        public event EventHandler<GetModelsEventArgs>? GetModelsReturning;
 
         #region Constructors
 
@@ -184,7 +184,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             foreach (IPropertyType propertyType in contentType.CompositionPropertyTypes) {
 
                 // Get the published property type as well
-                IPublishedPropertyType ppt = pct.GetPropertyType(propertyType.Alias);
+                IPublishedPropertyType? ppt = pct.GetPropertyType(propertyType.Alias);
                 if (ppt == null) throw new Exception("Published property type not found.");
 
                 // Append the property model to the type model
@@ -217,7 +217,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
                 foreach (IPropertyType propertyType in memberType.CompositionPropertyTypes) {
 
                     // Get the published property type as well
-                    IPublishedPropertyType ppt = pct.GetPropertyType(propertyType.Alias);
+                    IPublishedPropertyType? ppt = pct.GetPropertyType(propertyType.Alias);
                     if (ppt == null) throw new Exception("Published property type not found.");
 
                     // Append the property model to the type model
@@ -252,7 +252,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
                 foreach (IPropertyType propertyType in mediaType.CompositionPropertyTypes) {
 
                     // Get the published property type as well
-                    IPublishedPropertyType ppt = pct.GetPropertyType(propertyType.Alias);
+                    IPublishedPropertyType? ppt = pct.GetPropertyType(propertyType.Alias);
                     if (ppt == null) throw new Exception("Published property type not found.");
 
                     // Append the property model to the type model
@@ -281,7 +281,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             foreach (TypeModel type in types) {
 
                 if (type.ContentType.ParentId > 0) {
-                    if (lookup.TryGetValue(type.ContentType.ParentId, out TypeModel parentModel)) {
+                    if (lookup.TryGetValue(type.ContentType.ParentId, out TypeModel? parentModel)) {
                         type.ParentType = parentModel;
                     }
                 }
@@ -289,7 +289,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
                 IEnumerable<IContentTypeComposition> compositionTypes = type.ContentType.ContentTypeComposition;
 
                 foreach (IContentTypeComposition composition in compositionTypes) {
-                    if (!lookup.TryGetValue(composition.Id, out TypeModel typeModel)) continue;
+                    if (!lookup.TryGetValue(composition.Id, out TypeModel? typeModel)) continue;
                     type.Compositions.Add(typeModel);
                     typeModel.IsComposition = true;
                 }

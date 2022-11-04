@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Umbraco.Cms.Core.Composing;
@@ -29,27 +30,25 @@ namespace Limbo.Umbraco.ModelsBuilder.Extensions {
 
         }
 
-        internal static IUmbracoBuilder AddUmbracoOptions<TOptions>(this IUmbracoBuilder builder, Action<OptionsBuilder<TOptions>> configure = null) where TOptions : class {
+        internal static IUmbracoBuilder AddUmbracoOptions<TOptions>(this IUmbracoBuilder builder) where TOptions : class {
 
             var umbracoOptionsAttribute = typeof(TOptions).GetCustomAttribute<UmbracoOptionsAttribute>();
             if (umbracoOptionsAttribute is null) {
                 throw new ArgumentException($"{typeof(TOptions)} do not have the UmbracoOptionsAttribute.");
             }
 
-            var optionsBuilder = builder.Services.AddOptions<TOptions>()
+            builder.Services.AddOptions<TOptions>()
                 .Bind(
                     builder.Config.GetSection(umbracoOptionsAttribute.ConfigurationKey),
                     o => o.BindNonPublicProperties = umbracoOptionsAttribute.BindNonPublicProperties
                 )
                 .ValidateDataAnnotations();
 
-            configure?.Invoke(optionsBuilder);
-
             return builder;
 
         }
 
-        public static bool HasPropertyType(this TypeModel subject, string propertyAlias, out TypeModel type) {
+        public static bool HasPropertyType(this TypeModel subject, string propertyAlias, [NotNullWhen(true)] out TypeModel? type) {
 
             //IPublishedPropertyType pt = subject.PublishedContentType.GetPropertyType(propertyAlias);
             var pt = subject.ContentType.PropertyTypes.FirstOrDefault(x => x.Alias == propertyAlias);

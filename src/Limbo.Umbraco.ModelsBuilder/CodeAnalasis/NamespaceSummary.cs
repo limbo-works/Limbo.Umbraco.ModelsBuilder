@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
 
@@ -6,6 +7,8 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
     /// Class representing a summary about a namespace.
     /// </summary>
     public class NamespaceSummary {
+
+        #region Properties
 
         /// <summary>
         /// Gets the name of the namespace.
@@ -16,6 +19,21 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
         /// Gets a list of the classes in the namespace.
         /// </summary>
         public List<ClassSummary> Classes { get; set; }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance based on the specified <paramref name="namespaceDeclarationSyntax"/>.
+        /// </summary>
+        /// <param name="namespaceDeclarationSyntax">The syntax describing the namespace.</param>
+        public NamespaceSummary(NamespaceDeclarationSyntax namespaceDeclarationSyntax) {
+            Name = namespaceDeclarationSyntax.Name.ToString();
+            Classes = new List<ClassSummary>();
+        }
+
+        #endregion
 
     }
 

@@ -15,7 +15,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Models.Json {
         /// <summary>
         /// Gets or sets the name of the property.
         /// </summary>
-        public string PropertyName { get; set; }
+        public string? PropertyName { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="NullValueHandling"/> option of the property.

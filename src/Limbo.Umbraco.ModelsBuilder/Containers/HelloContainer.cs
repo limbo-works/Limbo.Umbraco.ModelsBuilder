@@ -8,9 +8,9 @@ namespace Limbo.Umbraco.ModelsBuilder.Containers {
 
         public ContentTypeKind Type { get; set; }
 
-        public int[] RootIds { get; set; }
+        public int[]? RootIds { get; set; }
 
-        public string[] Directories { get; set; }
+        public string[]? Directories { get; set; }
 
     }
 
