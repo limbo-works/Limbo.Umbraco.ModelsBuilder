@@ -8,14 +8,13 @@ using System.Reflection;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.Configuration.Models;
 using Umbraco.Cms.Core.DependencyInjection;
-using Umbraco.Cms.Core.Models.PublishedContent;
 
 namespace Limbo.Umbraco.ModelsBuilder.Extensions {
 
     internal static class ModelsBuilderExtensions {
 
         public static bool HasValue<T>(this T input) {
-            return HasValue<T>(input, out _);
+            return HasValue(input, out _);
         }
 
         public static bool HasValue<T>(this T input, out T result) {
@@ -51,7 +50,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Extensions {
         }
 
         public static bool HasPropertyType(this TypeModel subject, string propertyAlias, out TypeModel type) {
-            
+
             //IPublishedPropertyType pt = subject.PublishedContentType.GetPropertyType(propertyAlias);
             var pt = subject.ContentType.PropertyTypes.FirstOrDefault(x => x.Alias == propertyAlias);
 

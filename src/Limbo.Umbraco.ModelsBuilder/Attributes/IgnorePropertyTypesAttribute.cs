@@ -7,12 +7,12 @@ namespace Limbo.Umbraco.ModelsBuilder.Attributes {
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class IgnorePropertyTypesAttribute : Attribute {
-        
+
         /// <summary>
         /// Gets the aliases of the ignored property types.
         /// </summary>
         public string[] PropertyAliases { get; }
-        
+
         /// <summary>
         /// Initializes a new instance based on the specified <paramref name="propertyAlias"/>.
         /// </summary>
@@ -21,7 +21,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Attributes {
             if (string.IsNullOrWhiteSpace(propertyAlias)) throw new ArgumentNullException(nameof(propertyAlias));
             PropertyAliases = new[] { propertyAlias };
         }
-        
+
         /// <summary>
         /// Initializes a new instance based on <paramref name="propertyAlias1"/> and <paramref name="propertyAlias2"/>.
         /// </summary>

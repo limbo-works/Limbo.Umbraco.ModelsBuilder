@@ -10,9 +10,9 @@ namespace Limbo.Umbraco.ModelsBuilder.Settings {
     /// </summary>
     [UmbracoOptions(Constants.Configuration.ConfigModelsBuilder, BindNonPublicProperties = true)]
     public class LimboModelsBuilderSettings : ModelsBuilderSettings {
-        
+
         #region Properties
-        
+
         /// <summary>
         /// Gets or sets whether models should be added to nested directories based on their type - eg. so regular
         /// content types are placed in a <c>Content</c> sub directory. Default is <c>true</c>.

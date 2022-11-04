@@ -18,7 +18,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Settings {
         /// models generation process.
         /// </summary>
         public string DefaultNamespace { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value for the models directory.
         /// </summary>
@@ -55,7 +55,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Settings {
         #endregion
 
         #region Constructors
-        
+
         /// <summary>
         /// Initializes a new instance based on the specified <paramref name="defaultNamespace"/> and <paramref name="defaultModelsPath"/>.
         /// </summary>

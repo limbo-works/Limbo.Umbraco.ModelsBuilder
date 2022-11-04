@@ -23,7 +23,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Composers {
             builder.AddUmbracoOptions<LimboModelsBuilderSettings>();
 
             builder.Components().Append<ModelsBuilderComponent>();
-            
+
             builder.ManifestFilters().Append<ModelsBuilderManifest>();
 
         }

@@ -4,12 +4,12 @@ using Limbo.Umbraco.ModelsBuilder.Settings;
 using System.Collections.Generic;
 
 namespace Limbo.Umbraco.ModelsBuilder.Events {
-    
+
     /// <summary>
     /// Event arguments that is broadcasted by the <see cref="ModelsGenerator.GetModels(ModelsGeneratorSettings)"/> method.
     /// </summary>
     public class GetModelsEventArgs {
-        
+
         /// <summary>
         /// Gets or sets the list of models.
         /// </summary>

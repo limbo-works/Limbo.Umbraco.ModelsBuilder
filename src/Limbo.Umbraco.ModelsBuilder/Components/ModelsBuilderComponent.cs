@@ -29,14 +29,14 @@ namespace Limbo.Umbraco.ModelsBuilder.Components {
         public void Terminate() { }
 
         private void DisableDefaultDashboard() {
-            
+
             // Return right away if the option is set to false
             if (!_modelsBuilderSettings.DisableDefaultDashboard) return;
 
             // Get the type of the collection
             Type type = typeof(BuilderCollectionBase<IDashboard>);
 
-            // Get a reference to the internal "_items" 
+            // Get a reference to the internal "_items"
             FieldInfo field = type.GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance);
             if (field == null) return;
 

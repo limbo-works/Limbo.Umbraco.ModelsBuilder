@@ -2,7 +2,7 @@
 using System.Text;
 
 namespace Limbo.Umbraco.ModelsBuilder.Logging {
-    
+
     /// <summary>
     /// Class representing a log.
     /// </summary>

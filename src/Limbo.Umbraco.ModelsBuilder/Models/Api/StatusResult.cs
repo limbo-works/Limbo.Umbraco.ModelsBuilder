@@ -2,33 +2,32 @@
 using Newtonsoft.Json;
 using Skybrud.Essentials.Time;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 using Umbraco.Cms.Core.Configuration.Models;
 using Umbraco.Cms.Infrastructure.ModelsBuilder;
 
 #pragma warning disable 1591
 
 namespace Limbo.Umbraco.ModelsBuilder.Models.Api {
-    
+
     public class StatusResult {
 
         #region Properties
 
         [JsonProperty("success")]
         public bool IsSuccessful { get; }
-        
+
         [JsonProperty("version")]
         public string Version { get; }
-        
+
         [JsonProperty("mode")]
         public string Mode { get; }
-        
+
         [JsonProperty("isOutOfDate")]
         public bool IsOutOfDate { get; }
-        
+
         [JsonProperty("lastBuildDate")]
         public EssentialsTime LastBuildDate { get; }
-        
+
         [JsonProperty("links")]
         public List<StatusLink> Links { get; }
 
@@ -70,4 +69,5 @@ namespace Limbo.Umbraco.ModelsBuilder.Models.Api {
         #endregion
 
     }
+
 }

@@ -24,6 +24,7 @@
         /// Indicates that the model is a member type.
         /// </summary>
         Member
+
     }
 
 }

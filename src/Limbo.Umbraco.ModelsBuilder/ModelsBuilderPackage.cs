@@ -3,7 +3,7 @@ using System;
 using Umbraco.Cms.Core.Semver;
 
 namespace Limbo.Umbraco.ModelsBuilder {
-    
+
     /// <summary>
     /// Static class with various information and constants about the package.
     /// </summary>
@@ -38,7 +38,7 @@ namespace Limbo.Umbraco.ModelsBuilder {
         /// Gets the URL of the issue tracker for this package.
         /// </summary>
         public const string IssuesUrl = "https://github.com/limbo-works/Limbo.Umbraco.ModelsBuilder/issues";
-        
+
         /// <summary>
         /// Gets the URL of the documentation for this package.
         /// </summary>

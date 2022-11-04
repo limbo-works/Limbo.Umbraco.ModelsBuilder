@@ -85,7 +85,7 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
 
             foreach (NamespaceDeclarationSyntax ns in root.Members.OfType<NamespaceDeclarationSyntax>()) {
 
-                NamespaceSummary nss = new NamespaceSummary {
+                NamespaceSummary nss = new() {
                     Name = ns.Name.ToString(),
                     Classes = new List<ClassSummary>()
                 };
@@ -94,7 +94,7 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
 
                     if (h is ClassDeclarationSyntax cs) {
 
-                        ClassSummary summary = new ClassSummary(cs);
+                        ClassSummary summary = new(cs);
 
                         string className = cs.Identifier.ToString();
 
@@ -117,7 +117,7 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
             return file;
 
         }
-        
+
         /// <summary>
         /// Gets a summary about the C# file at the specified <paramref name="path"/>.
         /// </summary>

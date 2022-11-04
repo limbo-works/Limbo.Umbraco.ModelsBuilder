@@ -7,7 +7,7 @@ using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.PublishedContent;
 
 namespace Limbo.Umbraco.ModelsBuilder.Models {
-    
+
     /// <summary>
     /// Class representing a type.
     /// </summary>
@@ -20,7 +20,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Models {
         /// </summary>
         [JsonIgnore]
         public IContentTypeComposition ContentType { get; }
-        
+
         /// <summary>
         /// Gets a reference to the underlying <see cref="IPublishedContentType"/> the type was based on.
         /// </summary>
@@ -41,12 +41,12 @@ namespace Limbo.Umbraco.ModelsBuilder.Models {
         /// Gets the GUID key of the underlying content type.
         /// </summary>
         public Guid Key => ContentType.Key;
-        
+
         /// <summary>
         /// Gets the alias of the content type.
         /// </summary>
         public string Alias => ContentType.Alias;
-        
+
         /// <summary>
         /// Gets the friendly name of the content type.
         /// </summary>
@@ -56,7 +56,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Models {
         /// Gets or sets the desired namespace of the generated model.
         /// </summary>
         public string Namespace { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the CLR name of the generated model.
         /// </summary>
@@ -86,7 +86,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Models {
         /// Gets or sets whether the type is a composition.
         /// </summary>
         public bool IsComposition { get; set; }
-        
+
         /// <summary>
         /// Gets or sets whether the type is an element type.
         /// </summary>

@@ -9,7 +9,7 @@
         /// Indicates that spaces should be used for indentation.
         /// </summary>
         Space,
-        
+
         /// <summary>
         /// Indicates that tabs should be used for indentation.
         /// </summary>

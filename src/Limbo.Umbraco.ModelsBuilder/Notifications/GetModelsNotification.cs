@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using Umbraco.Cms.Core.Notifications;
 
 namespace Limbo.Umbraco.ModelsBuilder.Notifications {
-    
+
     /// <summary>
     /// Notification that is broadcasted by the <see cref="ModelsGenerator.GetModels(ModelsGeneratorSettings)"/> method.
     /// </summary>
     public class GetModelsNotification : INotification {
-        
+
         /// <summary>
         /// Gets or sets the list of models.
         /// </summary>

@@ -3,7 +3,7 @@
 // ReSharper disable PossibleNullReferenceException
 
 namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
-    
+
     /// <summary>
     /// Class representing a summary about a constructor or method parameter.
     /// </summary>
@@ -13,7 +13,7 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
         /// Gets the type of the parameter.
         /// </summary>
         public string Type { get; }
-        
+
         /// <summary>
         /// Gets the name of the parameter.
         /// </summary>

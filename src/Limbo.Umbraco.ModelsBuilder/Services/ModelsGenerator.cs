@@ -19,7 +19,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
     /// Primary class for the models generator. The class is available via dependency injection as a transitient service.
     /// </summary>
     public class ModelsGenerator {
-        
+
         private readonly ModelsGeneratorDependencies _dependencies;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IContentTypeService _contentTypeService;
@@ -54,13 +54,13 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         #region Member methods
 
         void OnGetModelsReturning(ref List<TypeModel> models, ModelsGeneratorSettings settings) {
-            
+
             // Initialize the event arguments
             GetModelsEventArgs args = new(models, settings);
-            
+
             // Invoke the event handlers (if any)
             GetModelsReturning?.Invoke(this, args);
-            
+
             // Set "models" in case an event handler replaced the list
             models = args.Models;
 
@@ -69,7 +69,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
             // Publish/broadcast the notification via the event aggregator
             _dependencies.EventAggregator.Publish(notification);
-            
+
             // Set "models" in case a notification handler replaced the list
             models = args.Models;
 
@@ -127,7 +127,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             BuildModelRelations(types, settings);
 
             UpdateModels(types, settings);
-            
+
             OnGetModelsReturning(ref types, settings);
 
             foreach (TypeModel type in types) {
@@ -136,7 +136,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
                 // and if so, we shouldn't overwrite the value
                 if (!string.IsNullOrWhiteSpace(type.Path)) continue;
 
-                // 
+                //
                 List<string> path = new() { settings.DefaultModelsPath };
 
 
@@ -166,7 +166,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         }
 
         /// <summary>
-        /// Internal method used for appending a single content type 
+        /// Internal method used for appending a single content type
         /// </summary>
         /// <param name="list">The list to which the content type should be added.</param>
         /// <param name="contentType">The content type.</param>
@@ -196,7 +196,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             list.Add(type);
 
         }
-        
+
         /// <summary>
         /// Internal method used for appending all member types to the specified <paramref name="list"/>
         /// </summary>
@@ -205,26 +205,26 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         protected virtual void AppendMemberTypes(List<TypeModel> list, ModelsGeneratorSettings settings) {
 
             foreach (IMemberType memberType in _memberTypeService.GetAll()) {
-                
+
                 // The published content type let's us get additional information about the content type, so we need to
                 // retrieve this as well
                 IPublishedContentType pct = _publishedContentTypeFactory.CreateContentType(memberType);
-                
+
                 // Initialize a new type model
                 TypeModel type = new(memberType, pct, settings);
-                
+
                 // Run through all the properties and add them to the type model
                 foreach (IPropertyType propertyType in memberType.CompositionPropertyTypes) {
-                    
+
                     // Get the published property type as well
                     IPublishedPropertyType ppt = pct.GetPropertyType(propertyType.Alias);
                     if (ppt == null) throw new Exception("Published property type not found.");
-                    
+
                     // Append the property model to the type model
                     type.Properties.Add(new PropertyModel(propertyType, ppt));
 
                 }
-                
+
                 // Append the type model to the list of types
                 list.Add(type);
 
@@ -240,26 +240,26 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         protected virtual void AppendMediaTypes(List<TypeModel> list, ModelsGeneratorSettings settings) {
 
             foreach (IMediaType mediaType in _mediaTypeService.GetAll()) {
-                
+
                 // The published content type let's us get additional information about the content type, so we need to
                 // retrieve this as well
                 IPublishedContentType pct = _publishedContentTypeFactory.CreateContentType(mediaType);
-                
+
                 // Initialize a new type model
                 TypeModel type = new(mediaType, pct, settings);
-                
+
                 // Run through all the properties and add them to the type model
                 foreach (IPropertyType propertyType in mediaType.CompositionPropertyTypes) {
-                    
+
                     // Get the published property type as well
                     IPublishedPropertyType ppt = pct.GetPropertyType(propertyType.Alias);
                     if (ppt == null) throw new Exception("Published property type not found.");
-                    
+
                     // Append the property model to the type model
                     type.Properties.Add(new PropertyModel(propertyType, ppt));
 
                 }
-                
+
                 // Append the type model to the list of types
                 list.Add(type);
 

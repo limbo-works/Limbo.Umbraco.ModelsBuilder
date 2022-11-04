@@ -1,11 +1,10 @@
 ﻿using Limbo.Umbraco.ModelsBuilder.Services;
 using Limbo.Umbraco.ModelsBuilder.Settings;
-using Microsoft.CodeAnalysis.CSharp;
 using Umbraco.Cms.Core.Hosting;
 using Umbraco.Cms.Core.Notifications;
 
 namespace Limbo.Umbraco.ModelsBuilder.Notifications {
-    
+
     /// <summary>
     /// Notification that is broadcasted by the <see cref="ModelsGenerator.GetDefaultSettings"/> method.
     /// </summary>
@@ -15,12 +14,12 @@ namespace Limbo.Umbraco.ModelsBuilder.Notifications {
         /// Get a reference to the models generator settings
         /// </summary>
         public ModelsGeneratorSettings Settings { get; set; }
-        
+
         /// <summary>
         /// Gets a reference to the settings as specified in the <c>appSettings.json</c> file.
         /// </summary>
         public LimboModelsBuilderSettings AppSettings { get; }
-        
+
         /// <summary>
         /// Gets a reference to the current hosting environment.
         /// </summary>

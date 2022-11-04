@@ -21,7 +21,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Models.Json {
         /// Gets or sets the <see cref="NullValueHandling"/> option of the property.
         /// </summary>
         public NullValueHandling NullValueHandling { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the <see cref="DefaultValueHandling"/> option of the property.
         /// </summary>
