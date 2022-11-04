@@ -2,10 +2,9 @@
 
     const vm = this;
 
-    vm.update = function () {
+    vm.update = function (success) {
 
         vm.loading = true;
-        vm.reloadButtonState = "busy";
 
         $q.all([
             $timeout(250),
@@ -15,6 +14,7 @@
             vm.reloadButtonState = "init";
             vm.status = data[1].data;
             if (vm.status.lastBuildDate) vm.status.lastBuildDateFrom = moment(vm.status.lastBuildDate).locale("en").fromNow();
+            if (success) success();
         });
 
     };
@@ -33,10 +33,14 @@
             $timeout(250),
             $http.get(Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + "/backoffice/Limbo/ModelsBuilder/GenerateModels")
         ]).then(function () {
-            vm.loading = false;
-            vm.generateButtonState = "init";
-            vm.status = data[1].data;
-            if (vm.status.lastBuildDate) vm.status.lastBuildDateFrom = moment(vm.status.lastBuildDate).locale("en").fromNow();
+
+            // Depending on a few different factors (eg. how the website is hosted), the response
+            // might not include an updated models status, so we need to make a another request to
+            // get the status
+            vm.update(function () {
+                vm.generateButtonState = "init";
+            });
+
         });
 
     };
