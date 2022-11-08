@@ -18,9 +18,9 @@
                 </umb-button>
             </div>
             <h3 class="bold">Limbo Models Builder</h3>
-            <div class="alert alert-danger" ng-if="!vm.status.lastBuildDate">Models status is currently unknown.</div>
-            <div class="alert alert-danger" ng-if="vm.status.lastBuildDate && vm.status.isOutOfDate">Models are <strong>out-of-date</strong>.</div>
-            <div class="alert alert-success" ng-if="vm.status.lastBuildDate && !vm.status.isOutOfDate">Models are <strong>up-to-date</strong>.</div>
+            <div class="alert alert-danger" ng-if="vm.loaded && !vm.status.lastBuildDate">Models status is currently unknown.</div>
+            <div class="alert alert-danger" ng-if="vm.loaded && vm.status.lastBuildDate && vm.status.isOutOfDate">Models are <strong>out-of-date</strong>.</div>
+            <div class="alert alert-success" ng-if="vm.loaded && vm.status.lastBuildDate && !vm.status.isOutOfDate">Models are <strong>up-to-date</strong>.</div>
             <div ng-show="vm.status">
                 <table class="table details">
                     <tr>

@@ -25,3 +25,6 @@
 .limbo-models-builder .links i.fa {
   margin-right: 5px;
 }
+.limbo-models-builder .umb-box-content {
+  min-height: 150px;
+}

@@ -2,6 +2,8 @@
 
     const vm = this;
 
+    vm.loaded = false;
+
     vm.update = function (success) {
 
         vm.loading = true;
@@ -13,6 +15,7 @@
             vm.loading = false;
             vm.reloadButtonState = "init";
             vm.status = data[1].data;
+            vm.loaded = true;
             if (vm.status.lastBuildDate) vm.status.lastBuildDateFrom = moment(vm.status.lastBuildDate).locale("en").fromNow();
             if (success) success();
         });
