@@ -837,10 +837,10 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
             WriteJsonNetPropertySettings(writer, model, property, settings);
 
-            // The [MaybeNull] attribute should be added to the property if either the "MayBeNull" property is either
+            // The [MaybeNull] attribute should be added to the property if either the "MaybeNull" property is either
             // explicitly set to "true", or set to "null" and "ValueType" doesn't represent a value type
             bool maybeNull = property.MaybeNull is true || property.MaybeNull is null && !property.ValueType.IsValueType;
-            if (maybeNull) writer.WriteLine("        [global::System.Diagnostics.CodeAnalysis.MaybeNull]");
+            if (maybeNull) writer.WriteLine($"{indent1}[global::System.Diagnostics.CodeAnalysis.MaybeNull]");
 
             writer.WriteLine($"{indent1}[ImplementPropertyType(\"{property.Alias}\")]");
             writer.WriteLine($"{indent1}public new {valueTypeName} {property.ClrName}");
@@ -896,10 +896,10 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
                 string valueTypeName = GetValueTypeName(model, property.ValueType, models);
 
-                // The [MaybeNull] attribute should be added to the method if either the "MayBeNull" property is either
+                // The [MaybeNull] attribute should be added to the method if either the "MaybeNull" property is either
                 // explicitly set to "true", or set to "null" and "ValueType" doesn't represent a value type
                 bool maybeNull = property.MaybeNull is true || property.MaybeNull is null && !property.ValueType.IsValueType;
-                if (maybeNull) writer.WriteLine("        [return: global::System.Diagnostics.CodeAnalysis.MaybeNull]");
+                if (maybeNull) writer.WriteLine($"{indent1}[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]");
 
                 writer.WriteLine($"{indent1}public static {valueTypeName} Get{property.ClrName}(I{model.ClrName} that)");
                 writer.WriteLine($"{indent2}=> that.Value<{valueTypeName}>(\"{property.Alias}\");");
