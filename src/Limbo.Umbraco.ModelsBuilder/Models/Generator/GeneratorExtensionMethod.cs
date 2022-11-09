@@ -23,9 +23,9 @@ namespace Limbo.Umbraco.ModelsBuilder.Models.Generator {
             string indent1 = "".PadLeft(8);
             string indent2 = "".PadLeft(12);
 
-            // The [MaybeNull] attribute should be added to the method if either the "MayBeNull" property is either
+            // The [MaybeNull] attribute should be added to the method if either the "MaybeNull" property is either
             // explicitly set to "true", or set to "null" and "ValueType" doesn't represent a value type
-            if (Property.MayBeNull is true || Property.MayBeNull is null && !Property.ValueType.IsValueType) {
+            if (Property.MaybeNull is true || Property.MaybeNull is null && !Property.ValueType.IsValueType) {
                 writer.Write(indent1);
                 writer.Write("[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]");
                 writer.WriteLine();

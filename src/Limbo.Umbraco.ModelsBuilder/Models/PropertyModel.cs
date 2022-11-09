@@ -59,11 +59,11 @@ namespace Limbo.Umbraco.ModelsBuilder.Models {
         public PropertyStaticMethod StaticMethod { get; set; }
 
         /// <summary>
-        /// Gets or sets whether the value of this property may be null. If the <see cref="MayBeNull"/> is set to
+        /// Gets or sets whether the value of this property may be null. If the <see cref="MaybeNull"/> is set to
         /// <see typelang="null"/>, Limbo Models Builder will automatically detect whether the value may be null based
         /// on <see cref="ValueType"/>.
         /// </summary>
-        public bool? MayBeNull { get; set; }
+        public bool? MaybeNull { get; set; }
 
         #endregion
 

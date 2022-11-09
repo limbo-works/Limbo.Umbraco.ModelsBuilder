@@ -825,8 +825,8 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
             // The [MaybeNull] attribute should be added to the property if either the "MayBeNull" property is either
             // explicitly set to "true", or set to "null" and "ValueType" doesn't represent a value type
-            bool mayBeNull = property.MayBeNull is true || property.MayBeNull is null && !property.ValueType.IsValueType;
-            if (mayBeNull) writer.WriteLine("        [global::System.Diagnostics.CodeAnalysis.MaybeNull]");
+            bool maybeNull = property.MaybeNull is true || property.MaybeNull is null && !property.ValueType.IsValueType;
+            if (maybeNull) writer.WriteLine("        [global::System.Diagnostics.CodeAnalysis.MaybeNull]");
 
             writer.WriteLine($"{indent1}[ImplementPropertyType(\"{property.Alias}\")]");
             writer.WriteLine($"{indent1}public new {valueTypeName} {property.ClrName}");
@@ -884,8 +884,8 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
                 // The [MaybeNull] attribute should be added to the method if either the "MayBeNull" property is either
                 // explicitly set to "true", or set to "null" and "ValueType" doesn't represent a value type
-                bool mayBeNull = property.MayBeNull is true || property.MayBeNull is null && !property.ValueType.IsValueType;
-                if (mayBeNull) writer.WriteLine("        [return: global::System.Diagnostics.CodeAnalysis.MaybeNull]");
+                bool maybeNull = property.MaybeNull is true || property.MaybeNull is null && !property.ValueType.IsValueType;
+                if (maybeNull) writer.WriteLine("        [return: global::System.Diagnostics.CodeAnalysis.MaybeNull]");
 
                 writer.WriteLine($"{indent1}public static {valueTypeName} Get{property.ClrName}(I{model.ClrName} that)");
                 writer.WriteLine($"{indent2}=> that.Value<{valueTypeName}>(\"{property.Alias}\");");
