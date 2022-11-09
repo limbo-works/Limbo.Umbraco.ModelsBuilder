@@ -631,6 +631,11 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
                 // Get the name of the property's value type
                 string valueTypeName = GetValueTypeName(model, property.ValueType, models);
 
+                // The [MaybeNull] attribute should be added to the property if either the "MaybeNull" property is either
+                // explicitly set to "true", or set to "null" and "ValueType" doesn't represent a value type
+                bool maybeNull = property.MaybeNull is true || property.MaybeNull is null && !property.ValueType.IsValueType;
+                if (maybeNull) writer.WriteLine($"{indent2}[global::System.Diagnostics.CodeAnalysis.MaybeNull]");
+
                 writer.WriteLine($"{indent2}{valueTypeName} {property.ClrName} {{ get; }}");
                 writer.WriteLine();
 
