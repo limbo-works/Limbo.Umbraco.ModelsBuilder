@@ -276,7 +276,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
             if (type is ModelType modelType) {
                 if (models.TryGetModel(modelType.ContentTypeAlias, out var actualTypeName)) {
-                    return actualTypeName.Namespace == model.Namespace ? actualTypeName.ClrName : actualTypeName.Namespace + "." + actualTypeName.ClrName;
+                    return actualTypeName.Namespace == model.Namespace ? actualTypeName.ClrName : "global::" + actualTypeName.Namespace + "." + actualTypeName.ClrName;
                 }
                 throw new InvalidOperationException($"Don't know how to map ModelType with content type alias \"{modelType.ContentTypeAlias}\".");
             }
@@ -292,11 +292,8 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             } else {
                 prefix = type.Namespace switch {
                     "Umbraco.Core.Models.PublishedContent" => string.Empty,
-                    _ => $"{type.Namespace}."
+                    _ => $"global::{type.Namespace}."
                 };
-                if (prefix.StartsWith("Umbraco.")) {
-                    prefix = "global::" + prefix;
-                }
             }
 
             if (type.GenericTypeArguments.Length == 0) {
