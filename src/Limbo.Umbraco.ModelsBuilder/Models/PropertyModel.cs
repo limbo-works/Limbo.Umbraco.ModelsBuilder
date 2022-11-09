@@ -41,7 +41,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Models {
         /// <summary>
         /// Gets or sets the JSON.net settings for this property.
         /// </summary>
-        public JsonNetPropertySettings? JsonNetSettings { get; set; }
+        public JsonNetPropertySettings JsonNetSettings { get; set; }
 
         /// <summary>
         /// Gets the alias of the property editor associated with this property.
