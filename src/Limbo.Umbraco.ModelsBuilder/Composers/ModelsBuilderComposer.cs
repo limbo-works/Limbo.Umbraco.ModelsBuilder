@@ -11,7 +11,7 @@ using Umbraco.Cms.Core.DependencyInjection;
 
 namespace Limbo.Umbraco.ModelsBuilder.Composers {
 
-    public class ModelsComposer : IComposer {
+    public class ModelsBuilderComposer : IComposer {
 
         public void Compose(IUmbracoBuilder builder) {
 
