@@ -26,6 +26,8 @@ using Umbraco.Cms.Infrastructure.ModelsBuilder;
 using Umbraco.Extensions;
 using IHostingEnvironment = Umbraco.Cms.Core.Hosting.IHostingEnvironment;
 
+// ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+
 #pragma warning disable 1591
 
 // ReSharper disable PatternAlwaysOfType
