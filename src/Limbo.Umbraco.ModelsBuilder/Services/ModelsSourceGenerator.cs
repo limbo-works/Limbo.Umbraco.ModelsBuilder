@@ -671,28 +671,29 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="settings">The models generator settings.</param>
         protected virtual void WriteHelpers(TextWriter writer, TypeModel model, ModelsGeneratorSettings settings) {
 
-            string indent = "".PadLeft(2 * settings.EditorConfig.IndentSize, ' ');
+            string indent1 = "".PadLeft(2 * settings.EditorConfig.IndentSize, ' ');
+            string indent2 = "".PadLeft(3 * settings.EditorConfig.IndentSize, ' ');
 
-            writer.WriteLine($"{indent}#region Helpers");
+            writer.WriteLine($"{indent1}#region Helpers");
             writer.WriteLine();
 
-            writer.WriteLine($"{indent}public new const string ModelTypeAlias = \"{model.Alias}\";");
+            writer.WriteLine($"{indent1}public new const string ModelTypeAlias = \"{model.Alias}\";");
             writer.WriteLine();
 
-            writer.WriteLine($"{indent}public new const PublishedItemType ModelItemType = PublishedItemType.{model.PublishedContentType.ItemType};");
+            writer.WriteLine($"{indent1}public new const PublishedItemType ModelItemType = PublishedItemType.{model.PublishedContentType.ItemType};");
             writer.WriteLine();
 
-            writer.WriteLine($"{indent}[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]");
-            writer.WriteLine($"{indent}public new static IPublishedContentType GetModelContentType(IPublishedSnapshotAccessor publishedSnapshotAccessor)");
-            writer.WriteLine($"{indent}{indent}=> PublishedModelUtility.GetModelContentType(publishedSnapshotAccessor, ModelItemType, ModelTypeAlias);");
+            writer.WriteLine($"{indent1}[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]");
+            writer.WriteLine($"{indent1}public new static IPublishedContentType GetModelContentType(IPublishedSnapshotAccessor publishedSnapshotAccessor)");
+            writer.WriteLine($"{indent1}{indent1}=> PublishedModelUtility.GetModelContentType(publishedSnapshotAccessor, ModelItemType, ModelTypeAlias);");
             writer.WriteLine();
 
-            writer.WriteLine($"{indent}[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]");
-            writer.WriteLine($"{indent}public static IPublishedPropertyType GetModelPropertyType<TValue>(IPublishedSnapshotAccessor publishedSnapshotAccessor, Expression<Func<{model.ClrName}, TValue>> selector)");
-            writer.WriteLine($"{indent}{indent}=> PublishedModelUtility.GetModelPropertyType(GetModelContentType(publishedSnapshotAccessor), selector);");
+            writer.WriteLine($"{indent1}[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]");
+            writer.WriteLine($"{indent1}public static IPublishedPropertyType GetModelPropertyType<TValue>(IPublishedSnapshotAccessor publishedSnapshotAccessor, Expression<Func<{model.ClrName}, TValue>> selector)");
+            writer.WriteLine($"{indent2}=> PublishedModelUtility.GetModelPropertyType(GetModelContentType(publishedSnapshotAccessor), selector);");
             writer.WriteLine();
 
-            writer.WriteLine($"{indent}#endregion");
+            writer.WriteLine($"{indent1}#endregion");
             writer.WriteLine();
 
         }
@@ -791,6 +792,9 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="ignoredPropertyTypes">A hash set with the ignored property types.</param>
         protected virtual void WriteProperty(TextWriter writer, TypeModel model, PropertyModel property, HashSet<string> ignoredPropertyTypes, ClassSummary? partialClass, TypeModelList models, ModelsGeneratorSettings settings) {
 
+            string indent1 = "".PadLeft(2 * settings.EditorConfig.IndentSize, ' ');
+            string indent2 = "".PadLeft(3 * settings.EditorConfig.IndentSize, ' ');
+
             // Gets the name of the value type
             string valueTypeName = GetValueTypeName(model, property.ValueType, models);
 
@@ -819,8 +823,9 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
             WriteJsonNetPropertySettings(writer, model, property, settings);
 
-            writer.WriteLine("        [ImplementPropertyType(\"" + property.Alias + "\")]");
-            writer.Write("        public new " + valueTypeName + " " + property.ClrName + " => ");
+            writer.WriteLine($"{indent1}[ImplementPropertyType(\"{property.Alias}\")]");
+            writer.WriteLine($"{indent1}public new {valueTypeName} {property.ClrName}");
+            writer.Write($"{indent2}=> ");
 
             if (useStaticMethod) {
 
@@ -844,7 +849,8 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
         protected virtual void WriteStaticMethods(TextWriter writer, TypeModel model, HashSet<string> ignoredPropertyTypes, ClassSummary? partialClass, TypeModelList models, ModelsGeneratorSettings settings) {
 
-            string indent = "".PadLeft(2 * settings.EditorConfig.IndentSize, ' ');
+            string indent1 = "".PadLeft(2 * settings.EditorConfig.IndentSize, ' ');
+            string indent2 = "".PadLeft(3 * settings.EditorConfig.IndentSize, ' ');
 
             // Find all properties that need a static getter method
             List<PropertyModel> properties = new();
@@ -864,19 +870,20 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             // Return if we didn't find any properties
             if (properties.Count == 0) return;
 
-            writer.WriteLine($"{indent}#region Static methods");
+            writer.WriteLine($"{indent1}#region Static methods");
             writer.WriteLine();
 
             foreach (PropertyModel property in properties) {
 
                 string valueTypeName = GetValueTypeName(model, property.ValueType, models);
 
-                writer.WriteLine($"{indent}public static {valueTypeName} Get{property.ClrName}(I{model.ClrName} that) => that.Value<{valueTypeName}>(\"{property.Alias}\");");
+                writer.WriteLine($"{indent1}public static {valueTypeName} Get{property.ClrName}(I{model.ClrName} that)");
+                writer.WriteLine($"{indent2}=> that.Value<{valueTypeName}>(\"{property.Alias}\");");
                 writer.WriteLine();
 
             }
 
-            writer.WriteLine($"{indent}#endregion");
+            writer.WriteLine($"{indent1}#endregion");
             writer.WriteLine();
 
         }
