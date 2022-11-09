@@ -476,6 +476,8 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
         private void WriteExtensionMethodsClass(TextWriter writer, TypeModel model, HashSet<string> ignoredPropertyTypes, ClassSummary? partialClass, TypeModelList models, ModelsGeneratorSettings settings) {
 
+            string indent1 = "".PadLeft(1 * settings.EditorConfig.IndentSize, ' ');
+
             List<GeneratorExtensionMethod> extensionMethods = new();
 
             // Determine the class name
@@ -502,16 +504,16 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             if (extensionMethods.Count == 0) return;
 
             // Write the start of the class
-            writer.WriteLine($"    public static class {model.ClrName}Extensions {{");
+            writer.WriteLine($"{indent1}public static class {model.ClrName}Extensions {{");
             writer.WriteLine();
 
             // Write the extension methods
             foreach (GeneratorExtensionMethod extensionMethod in extensionMethods) {
-                extensionMethod.WriteTo(writer);
+                extensionMethod.WriteTo(writer, this, settings);
             }
 
             // Write the end of the class
-            writer.WriteLine("    }");
+            writer.WriteLine($"{indent1}}}");
             writer.WriteLine();
 
         }
@@ -535,7 +537,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             writer.WriteLine("//");
             writer.WriteLine("//    " + name + " v" + version);
             writer.WriteLine("//");
-            writer.WriteLine("//   Changes to this file will be lost if the code is regenerated.");
+            writer.WriteLine("//    Changes to this file will be lost if the code is regenerated.");
             writer.WriteLine("// </auto-generated>");
             writer.WriteLine("//------------------------------------------------------------------------------");
             writer.WriteLine();
@@ -581,7 +583,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="model">The current model.</param>
         /// <param name="settings">The models generator settings.</param>
         protected virtual void WriteNamespaceStart(TextWriter writer, TypeModel model, ModelsGeneratorSettings settings) {
-            writer.WriteLine("namespace " + model.Namespace + " {");
+            writer.WriteLine($"namespace {model.Namespace} {{");
             writer.WriteLine();
         }
 
@@ -606,13 +608,16 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="ignoredPropertyTypes">A hash set with the ignored property types.</param>
         protected virtual void WriteCompositionInterface(TextWriter writer, TypeModel model, HashSet<string> ignoredPropertyTypes, TypeModelList models, ModelsGeneratorSettings settings) {
 
+            string indent1 = GetIndent(settings, 1);
+            string indent2 = GetIndent(settings, 2);
+
             // Interface is only needed for composition types
             if (!model.IsComposition) return;
 
             string name = model.ClrName;
             string baseType = model.IsElementType ? "IPublishedElement" : "IPublishedContent";
 
-            writer.WriteLine($"    public partial interface I{name} : {baseType} {{");
+            writer.WriteLine($"{indent1}public partial interface I{name} : {baseType} {{");
             writer.WriteLine();
 
             foreach (PropertyModel property in model.Properties) {
@@ -626,12 +631,12 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
                 // Get the name of the property's value type
                 string valueTypeName = GetValueTypeName(model, property.ValueType, models);
 
-                writer.WriteLine($"        {valueTypeName} {property.ClrName} {{ get; }}");
+                writer.WriteLine($"{indent2}{valueTypeName} {property.ClrName} {{ get; }}");
                 writer.WriteLine();
 
             }
 
-            writer.WriteLine("    }");
+            writer.WriteLine($"{indent1}}}");
             writer.WriteLine();
 
         }
@@ -646,8 +651,10 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="inherits">A list of inherits (base type and interfaces).</param>
         protected virtual void WriteClassStart(TextWriter writer, TypeModel model, List<string> inherits, ClassSummary? partialClass, ModelsGeneratorSettings settings) {
 
-            writer.WriteLine($"    [PublishedModel(\"{model.Alias}\")]");
-            writer.WriteLine($"    public partial class {model.ClrName}{(inherits.Any() ? " : " + string.Join(", ", inherits) : "")} {{");
+            string indent1 = GetIndent(settings, 1);
+
+            writer.WriteLine($"{indent1}[PublishedModel(\"{model.Alias}\")]");
+            writer.WriteLine($"{indent1}public partial class {model.ClrName}{(inherits.Any() ? " : " + string.Join(", ", inherits) : "")} {{");
             writer.WriteLine();
 
         }
@@ -659,8 +666,8 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="model">The current model.</param>
         /// <param name="settings">The models generator settings.</param>
         protected virtual void WriteClassEnd(TextWriter writer, TypeModel model, ModelsGeneratorSettings settings) {
-            string indent = "".PadLeft(1 * settings.EditorConfig.IndentSize, ' ');
-            writer.Write(indent);
+            string indent1 = GetIndent(settings, 1);
+            writer.Write(indent1);
             writer.WriteLine('}');
             writer.WriteLine();
         }
@@ -673,8 +680,8 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="settings">The models generator settings.</param>
         protected virtual void WriteHelpers(TextWriter writer, TypeModel model, ModelsGeneratorSettings settings) {
 
-            string indent1 = "".PadLeft(2 * settings.EditorConfig.IndentSize, ' ');
-            string indent2 = "".PadLeft(3 * settings.EditorConfig.IndentSize, ' ');
+            string indent1 = GetIndent(settings, 2);
+            string indent2 = GetIndent(settings, 3);
 
             writer.WriteLine($"{indent1}#region Helpers");
             writer.WriteLine();
@@ -687,7 +694,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
             writer.WriteLine($"{indent1}[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]");
             writer.WriteLine($"{indent1}public new static IPublishedContentType GetModelContentType(IPublishedSnapshotAccessor publishedSnapshotAccessor)");
-            writer.WriteLine($"{indent1}{indent1}=> PublishedModelUtility.GetModelContentType(publishedSnapshotAccessor, ModelItemType, ModelTypeAlias);");
+            writer.WriteLine($"{indent2}=> PublishedModelUtility.GetModelContentType(publishedSnapshotAccessor, ModelItemType, ModelTypeAlias);");
             writer.WriteLine();
 
             writer.WriteLine($"{indent1}[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]");
@@ -716,15 +723,15 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             // Get the type of the first parameter
             string t = model.IsElementType ? "IPublishedElement" : "IPublishedContent";
 
-            string indent = "".PadLeft(2 * settings.EditorConfig.IndentSize, ' ');
+            string indent1 = GetIndent(settings, 2);
 
-            writer.WriteLine($"{indent}#region Constructors");
+            writer.WriteLine($"{indent1}#region Constructors");
             writer.WriteLine();
 
-            writer.WriteLine($"        public {model.ClrName}({t} content, IPublishedValueFallback publishedValueFallback) : base(content, publishedValueFallback) {{ }}");
+            writer.WriteLine($"{indent1}public {model.ClrName}({t} content, IPublishedValueFallback publishedValueFallback) : base(content, publishedValueFallback) {{ }}");
             writer.WriteLine();
 
-            writer.WriteLine($"{indent}#endregion");
+            writer.WriteLine($"{indent1}#endregion");
             writer.WriteLine();
 
         }
@@ -740,7 +747,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="ignoredPropertyTypes">A hash set with the ignored property types.</param>
         protected virtual void WriteProperties(TextWriter writer, TypeModel model, HashSet<string> ignoredPropertyTypes, ClassSummary? partialClass, TypeModelList models, ModelsGeneratorSettings settings) {
 
-            string indent = "".PadLeft(2 * settings.EditorConfig.IndentSize, ' ');
+            string indent1 = GetIndent(settings, 2);
 
             // This is an extra, seemingly unnecessary step, but in order to prevent the region from being generated if
             // there are no properties to write, we need create a list of the properties to write, and then check
@@ -768,7 +775,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             // Return if there are no properties to write
             if (properties.Count == 0) return;
 
-            writer.WriteLine($"{indent}#region Properties");
+            writer.WriteLine($"{indent1}#region Properties");
             writer.WriteLine();
 
             foreach (PropertyModel property in properties) {
@@ -777,7 +784,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
             }
 
-            writer.WriteLine($"{indent}#endregion");
+            writer.WriteLine($"{indent1}#endregion");
             writer.WriteLine();
 
         }
@@ -794,8 +801,8 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <param name="ignoredPropertyTypes">A hash set with the ignored property types.</param>
         protected virtual void WriteProperty(TextWriter writer, TypeModel model, PropertyModel property, HashSet<string> ignoredPropertyTypes, ClassSummary? partialClass, TypeModelList models, ModelsGeneratorSettings settings) {
 
-            string indent1 = "".PadLeft(2 * settings.EditorConfig.IndentSize, ' ');
-            string indent2 = "".PadLeft(3 * settings.EditorConfig.IndentSize, ' ');
+            string indent1 = GetIndent(settings, 2);
+            string indent2 = GetIndent(settings, 3);
 
             // Gets the name of the value type
             string valueTypeName = GetValueTypeName(model, property.ValueType, models);
@@ -856,8 +863,8 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
         protected virtual void WriteStaticMethods(TextWriter writer, TypeModel model, HashSet<string> ignoredPropertyTypes, ClassSummary? partialClass, TypeModelList models, ModelsGeneratorSettings settings) {
 
-            string indent1 = "".PadLeft(2 * settings.EditorConfig.IndentSize, ' ');
-            string indent2 = "".PadLeft(3 * settings.EditorConfig.IndentSize, ' ');
+            string indent1 = GetIndent(settings, 2);
+            string indent2 = GetIndent(settings, 3);
 
             // Find all properties that need a static getter method
             List<PropertyModel> properties = new();
@@ -910,13 +917,12 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         protected virtual void WriteJsonNetPropertySettings(TextWriter writer, TypeModel model, PropertyModel property, ModelsGeneratorSettings settings) {
 
             JsonNetPropertySettings? json = property.JsonNetSettings;
-            var editor = settings.EditorConfig;
             if (json == null) return;
 
-            string indent = "".PadLeft(2 * editor.IndentSize, ' ');
+            string indent1 = GetIndent(settings, 2);
 
             if (json.Ignore) {
-                writer.Write(indent);
+                writer.Write(indent1);
                 writer.WriteLine("[Newtonsoft.Json.JsonIgnore]");
                 return;
             }
@@ -933,7 +939,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
             if (!hej.Any()) return;
 
-            writer.Write(indent);
+            writer.Write(indent1);
             writer.WriteLine("[Newtonsoft.Json.JsonProperty(" + string.Join(", ", hej) + ")]");
 
         }
@@ -975,6 +981,18 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
             // Write the contents to the disk
             File.WriteAllText(Path.Combine(dir, filename), log.ToString());
+
+        }
+
+        /// <summary>
+        /// Returns indentation based on the specified <paramref name="settings"/> and <paramref name="indent"/>.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <param name="indent">The indent.</param>
+        /// <returns>The calculated indentation.</returns>
+        public virtual string GetIndent(ModelsGeneratorSettings settings, int indent) {
+            char chr = settings.EditorConfig.IndentStyle == EditorConfigIndentStyle.Tab ? '\t' : ' ';
+            return "".PadLeft(indent * settings.EditorConfig.IndentSize, chr);
 
         }
 

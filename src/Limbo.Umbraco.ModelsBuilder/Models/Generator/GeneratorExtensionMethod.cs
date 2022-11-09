@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using Limbo.Umbraco.ModelsBuilder.Services;
+using Limbo.Umbraco.ModelsBuilder.Settings;
 
 #pragma warning disable 1591
 
@@ -18,10 +20,10 @@ namespace Limbo.Umbraco.ModelsBuilder.Models.Generator {
             ValueTypeName = valueTypeName;
         }
 
-        public virtual void WriteTo(TextWriter writer) {
+        public virtual void WriteTo(TextWriter writer, ModelsSourceGenerator generator, ModelsGeneratorSettings settings) {
 
-            string indent1 = "".PadLeft(8);
-            string indent2 = "".PadLeft(12);
+            string indent1 = generator.GetIndent(settings, 2);
+            string indent2 = generator.GetIndent(settings, 3);
 
             // The [MaybeNull] attribute should be added to the method if either the "MaybeNull" property is either
             // explicitly set to "true", or set to "null" and "ValueType" doesn't represent a value type
