@@ -6,7 +6,6 @@ using Limbo.Umbraco.ModelsBuilder.Models;
 using Limbo.Umbraco.ModelsBuilder.Models.Generator;
 using Limbo.Umbraco.ModelsBuilder.Settings;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Skybrud.Essentials.Reflection;
@@ -62,15 +61,12 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
 
         #region Constructors
 
-        public ModelsSourceGenerator(IWebHostEnvironment webHostEnvironment,
-            IHostingEnvironment hostingEnvironment,
-            IOptions<LimboModelsBuilderSettings> modelsBuilderSettings, OutOfDateModelsStatus outOfDateModels,
-            ModelsGenerator modelsGenerator) {
-            _modelsBuilderSettings = modelsBuilderSettings.Value;
-            _webHostEnvironment = webHostEnvironment;
-            _hostingEnvironment = hostingEnvironment;
-            _outOfDateModels = outOfDateModels;
-            _modelsGenerator = modelsGenerator;
+        public ModelsSourceGenerator(ModelsSourceGeneratorDependencies dependencies) {
+            _modelsBuilderSettings = dependencies.ModelsBuilderSettings;
+            _webHostEnvironment = dependencies.WebHostEnvironment;
+            _hostingEnvironment = dependencies.HostingEnvironment;
+            _outOfDateModels = dependencies.OutOfDateModels;
+            _modelsGenerator = dependencies.ModelsGenerator;
         }
 
         #endregion
