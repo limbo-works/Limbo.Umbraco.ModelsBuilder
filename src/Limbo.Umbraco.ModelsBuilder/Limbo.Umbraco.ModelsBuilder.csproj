@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <VersionPrefix>2.0.0-alpha002</VersionPrefix>
+    <VersionPrefix>2.0.0</VersionPrefix>
     <VersionSuffix Condition="'$(Configuration)'=='Debug'">$([System.DateTime]::UtcNow.ToString(`yyyyMMddHHmm`))</VersionSuffix>
     <Company>Limbo</Company>
     <Authors>Anders Bjerner</Authors>
@@ -23,6 +23,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/limbo-works/Limbo.Umbraco.ModelsBuilder</PackageProjectUrl>
     <PackageIcon>Limbo.png</PackageIcon>
+    <PackageReadmeFile>NUGET.md</PackageReadmeFile>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/limbo-works/Limbo.Umbraco.ModelsBuilder</RepositoryUrl>
   </PropertyGroup>
@@ -45,9 +46,10 @@
     <None Include="wwwroot\Styles\Default.less" />
   </ItemGroup>
 
-  <!-- Include package icon for NuGet -->
+  <!-- Include package icon and README for the NuGet -->
   <ItemGroup>
     <Content Include="../build/Limbo.png" Pack="true" PackagePath="\" />
+    <None Include="..\..\NUGET.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <!-- Generate XML documentation -->
