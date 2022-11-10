@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Limbo.Umbraco.ModelsBuilder.Attributes {
 
@@ -11,7 +12,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Attributes {
         /// <summary>
         /// Gets the aliases of the ignored property types.
         /// </summary>
-        public string[] PropertyAliases { get; }
+        public IReadOnlyList<string> PropertyAliases { get; }
 
         /// <summary>
         /// Initializes a new instance based on the specified <paramref name="propertyAlias"/>.
