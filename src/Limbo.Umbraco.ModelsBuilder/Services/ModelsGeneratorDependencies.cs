@@ -15,7 +15,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
     public class ModelsGeneratorDependencies {
 
         #region Properties
-        
+
         /// <summary>
         /// Gets a reference to the current <see cref="IEventAggregator"/>.
         /// </summary>
@@ -25,27 +25,27 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// Gets a reference to the current <see cref="IHostingEnvironment"/>.
         /// </summary>
         public IHostingEnvironment HostingEnvironment { get; }
-        
+
         /// <summary>
         /// Gets a reference to the current <see cref="IContentTypeService"/>.
         /// </summary>
         public IContentTypeService ContentTypeService { get; }
-        
+
         /// <summary>
         /// Gets a reference to the current <see cref="IMemberTypeService"/>.
         /// </summary>
         public IMemberTypeService MemberTypeService { get; }
-        
+
         /// <summary>
         /// Gets a reference to the current <see cref="IMediaTypeService"/>.
         /// </summary>
         public IMediaTypeService MediaTypeService { get; }
-        
+
         /// <summary>
         /// Gets a reference to the current <see cref="IPublishedContentTypeFactory"/>.
         /// </summary>
         public IPublishedContentTypeFactory PublishedContentTypeFactory { get; }
-        
+
         /// <summary>
         /// Gets a reference to the current <see cref="LimboModelsBuilderSettings"/>.
         /// </summary>
