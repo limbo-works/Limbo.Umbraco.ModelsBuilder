@@ -19,7 +19,7 @@
   <!-- Information for the NuGet package -->
   <PropertyGroup>
     <PackageId>Limbo.Umbraco.ModelsBuilder</PackageId>
-    <PackageTags>Skybrud, Limbo, Umbraco, Models Builder</PackageTags>
+    <PackageTags>Skybrud, Limbo, Umbraco, Models Builder, Umbraco-Marketplace</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/limbo-works/Limbo.Umbraco.ModelsBuilder</PackageProjectUrl>
     <PackageIcon>Limbo.png</PackageIcon>
