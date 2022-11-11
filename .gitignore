@@ -2,3 +2,4 @@
 src/Limbo.Umbraco.ModelsBuilder/bin/
 src/Limbo.Umbraco.ModelsBuilder/obj/
 *.suo
+src/.vs/*

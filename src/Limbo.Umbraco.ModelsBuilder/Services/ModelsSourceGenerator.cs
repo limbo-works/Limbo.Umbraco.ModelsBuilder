@@ -199,7 +199,10 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
         /// <returns>An instance of <see cref="List{String}"/>.</returns>
         protected virtual List<string> GetDefaultImports() {
             return new() {
+                "System",
+                "System.Linq.Expressions",
                 "Umbraco.Cms.Core.Models.PublishedContent",
+                "Umbraco.Cms.Core.PublishedCache",
                 "Umbraco.Cms.Infrastructure.ModelsBuilder",
                 "Umbraco.Extensions"
             };
@@ -505,6 +508,17 @@ namespace Limbo.Umbraco.ModelsBuilder.Services {
             writer.WriteLine();
 
             writer.WriteLine($"{indent}public new const string ModelTypeAlias = \"{model.Alias}\";");
+            writer.WriteLine($"{indent}public new const PublishedItemType ModelItemType = PublishedItemType.{model.PublishedContentType.ItemType.ToString()};");
+            writer.WriteLine();
+
+            writer.WriteLine($"{indent}[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]");
+            writer.WriteLine($"{indent}public new static IPublishedContentType GetModelContentType(IPublishedSnapshotAccessor publishedSnapshotAccessor)");
+            writer.WriteLine($"{indent}{indent}=> PublishedModelUtility.GetModelContentType(publishedSnapshotAccessor, ModelItemType, ModelTypeAlias);");
+            writer.WriteLine();
+
+            writer.WriteLine($"{indent}[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]");
+            writer.WriteLine($"{indent}public static IPublishedPropertyType GetModelPropertyType<TValue>(IPublishedSnapshotAccessor publishedSnapshotAccessor, Expression<Func<{model.ClrName}, TValue>> selector)");
+            writer.WriteLine($"{indent}{indent}=> PublishedModelUtility.GetModelPropertyType(GetModelContentType(publishedSnapshotAccessor), selector);");
             writer.WriteLine();
 
             writer.WriteLine($"{indent}#endregion");

@@ -22,7 +22,8 @@ Coming soon. Meanwhile, have a look at the following sections in this README fil
 
 - [Configuration](#configuration)
 - [Events](#events)
-- [Notifcations](#notifcations)
+- [Notifications](#notifications)
+- [Usage Tips](#usage)
 
 ## Configuration
 
@@ -76,7 +77,11 @@ This means that any files matching the pattern will automatically be nested unde
 
 ## Building models
 
-The plan is that models should be build from the backoffice (like Umbraco 9 supports via the models mode). The dashboard for this hasn't been implemented yet, so the models can be build by accessing the `/umbraco/backoffice/Limbo/ModelsBuilder/GenerateModels` endpoint.
+The package adds a new dashboard to the *Settings* section. The dashboard then let's you see a quick status about your generated models, as well as generate your models in case they are not up-to-date:
+
+![image](https://user-images.githubusercontent.com/3634580/155564176-8adb8147-cfb2-44d5-b548-42c5b4d1ec88.png)
+
+The dashboard uses an authenticated endpoint, which you may also call directly by accessing the `/umbraco/backoffice/Limbo/ModelsBuilder/GenerateModels`.
 
 A new generation of the models may also be initiated programmatically:
 
@@ -179,7 +184,7 @@ namespace UmbracoNineTests.ModelsBuilder {
 }
 ```
 
-## Notifcations
+## Notifications
 
 ### GetDefaultSettingsNotification
 
@@ -266,4 +271,56 @@ namespace UmbracoNineTests.ModelsBuilder {
     }
 
 }
+```
+## Usage
+
+### Strongly-Type All the Things
+
+Using the generated models, not only can you access the property data in a strongly-typed fashion, but you can also access information about the Content Type and Properties - no more magic strings!
+
+Some examples:
+
+`MyContentType.ModelTypeAlias` returns the string representation of the Content Type's alias. This can help in code where you are checking the type of an IPublishedContent:
+
+```csharp
+if(currentPage.ContentType.Alias == MyContentType.ModelTypeAlias)
+{
+	//Do stuff ...
+}
+else if(currentPage.ContentType.Alias == MyOtherType.ModelTypeAlias)
+{
+	//Do something else ...
+}
+else 
+{
+	//No match, it is some other Content Type
+}
+```
+
+If you want more than just the alias, use `MyContentType.GetModelContentType()` which returns an `IPublishedContentType`:
+
+```csharp
+
+@using Umbraco.Cms.Core.PublishedCache;
+@inject IPublishedSnapshotAccessor  PublishedSnapshotAccessor 
+
+...
+
+var theDocType = MyContentType.GetModelContentType(PublishedSnapshotAccessor);
+var publishedItemType = theDocType.ItemType;
+```
+
+`MyContentType.GetModelPropertyType()` returns an `IPublishedPropertyType` for a specified property from the Content Type. Once you have the property, you can get its string alias or other information about the property:
+
+```csharp
+
+@using Umbraco.Cms.Core.PublishedCache;
+@inject IPublishedSnapshotAccessor  PublishedSnapshotAccessor 
+
+...
+
+var theProperty = MyContentType.GetModelPropertyType(PublishedSnapshotAccessor, n=> n.MySpecialProperty);
+
+var propAlias = theProperty.Alias;
+var propEditor = theProperty.EditorAlias;
 ```
