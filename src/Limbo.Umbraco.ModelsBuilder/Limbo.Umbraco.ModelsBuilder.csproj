@@ -13,15 +13,15 @@
     <Authors>Anders Bjerner</Authors>
     <Copyright>Copyright © 2022</Copyright>
     <Title>Limbo Models Builder</Title>
-    <Description>Custom models builder for Umbraco 9.</Description>
+    <Description>Custom models builder for Umbraco.</Description>
   </PropertyGroup>
 
   <!-- Information for the NuGet package -->
   <PropertyGroup>
     <PackageId>Limbo.Umbraco.ModelsBuilder</PackageId>
-    <PackageTags>Skybrud, Limbo, Umbraco, Models Builder</PackageTags>
+    <PackageTags>Skybrud, Limbo, Umbraco, Models Builder, Umbraco-Marketplace</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/limbo-works/Limbo.Umbraco.ModelsBuilder</PackageProjectUrl>
+    <PackageProjectUrl>https://packages.limbo.works/limbo.umbraco.modelsbuilder/v1/</PackageProjectUrl>
     <PackageIcon>Limbo.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/limbo-works/Limbo.Umbraco.ModelsBuilder</RepositoryUrl>
