@@ -42,7 +42,7 @@ namespace Limbo.Umbraco.ModelsBuilder {
         /// <summary>
         /// Gets the URL of the documentation for this package.
         /// </summary>
-        public const string DocumentationUrl = "https://packages.limbo.works/5557c07c";
+        public const string DocumentationUrl = "https://packages.limbo.works/limbo.umbraco.modelsbuilder/v2/docs/";
 
 
     }

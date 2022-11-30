@@ -5,7 +5,7 @@
 ### Links
 
 - [See the package on GitHub](https://github.com/limbo-works/Limbo.Umbraco.ModelsBuilder)
-- [See the documentation](https://packages.limbo.works/5557c07c)
+- [See the documentation](https://packages.limbo.works/limbo.umbraco.modelsbuilder/v2/docs/)
 
 ### Screenshots
 
