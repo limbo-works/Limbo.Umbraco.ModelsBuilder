@@ -9,16 +9,16 @@
 
 ## Installation
 
-Via <a href="https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder/2.0.0" target="_blank">NuGet</a>:
+Via <a href="https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder/2.0.1" target="_blank">NuGet</a>:
 
 ```
-dotnet add package Limbo.Umbraco.ModelsBuilder --version 2.0.0
+dotnet add package Limbo.Umbraco.ModelsBuilder --version 2.0.1
 ```
 
 or:
 
 ```
-Install-Package Limbo.Umbraco.ModelsBuilder -Version 2.0.0
+Install-Package Limbo.Umbraco.ModelsBuilder -Version 2.0.1
 ```
 
 
