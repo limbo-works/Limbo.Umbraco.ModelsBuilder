@@ -10,7 +10,9 @@ namespace Limbo.Umbraco.ModelsBuilder.Manifests {
 
         public void Filter(List<PackageManifest> manifests) {
             manifests.Add(new PackageManifest {
-                PackageName = ModelsBuilderPackage.Alias.ToKebabCase(),
+                AllowPackageTelemetry = true,
+                PackageName = ModelsBuilderPackage.Name,
+                Version = ModelsBuilderPackage.InformationalVersion,
                 BundleOptions = BundleOptions.Independent,
                 Scripts = new[] {
                     $"/App_Plugins/{ModelsBuilderPackage.Alias}/Scripts/Controllers/Dashboard.js"

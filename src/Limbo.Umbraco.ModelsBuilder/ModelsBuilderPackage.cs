@@ -1,5 +1,6 @@
 ﻿using Skybrud.Essentials.Reflection;
 using System;
+using System.Diagnostics;
 using Umbraco.Cms.Core.Semver;
 
 namespace Limbo.Umbraco.ModelsBuilder {
@@ -25,9 +26,14 @@ namespace Limbo.Umbraco.ModelsBuilder {
         public static readonly Version Version = typeof(ModelsBuilderPackage).Assembly.GetName().Version!;
 
         /// <summary>
+        /// Gets the informational version of the package.
+        /// </summary>
+        public static readonly string InformationalVersion = ReflectionUtils.GetInformationalVersion<ModelsBuilderPackage>();
+
+        /// <summary>
         /// Gets the semantic version of the package.
         /// </summary>
-        public static readonly SemVersion SemVersion = SemVersion.Parse(ReflectionUtils.GetInformationalVersion<ModelsBuilderPackage>());
+        public static readonly SemVersion SemVersion = SemVersion.Parse(InformationalVersion);
 
         /// <summary>
         /// Gets the URL of the GitHub repository for this package.
@@ -43,7 +49,6 @@ namespace Limbo.Umbraco.ModelsBuilder {
         /// Gets the URL of the documentation for this package.
         /// </summary>
         public const string DocumentationUrl = "https://packages.limbo.works/limbo.umbraco.modelsbuilder/v2/docs/";
-
 
     }
 
