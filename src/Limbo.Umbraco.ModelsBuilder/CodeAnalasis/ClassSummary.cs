@@ -76,7 +76,7 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
         /// </summary>
         /// <param name="syntax">The class declaration syntax describing the class.</param>
         /// <param name="namespaceSyntax">The syntax for the parent namespace.</param>
-        public ClassSummary(ClassDeclarationSyntax syntax, NamespaceDeclarationSyntax namespaceSyntax) {
+        public ClassSummary(ClassDeclarationSyntax syntax, BaseNamespaceDeclarationSyntax namespaceSyntax) {
 
             Name = syntax.Identifier.ToString();
             Namespace = namespaceSyntax.Name.ToString();

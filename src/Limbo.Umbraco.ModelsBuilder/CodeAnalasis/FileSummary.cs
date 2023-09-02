@@ -37,6 +37,11 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
         /// </summary>
         public List<NamespaceSummary> Namespaces { get; }
 
+        /// <summary>
+        /// Gets a list with the top-level classes of the file. If you're using block-scoped namespaces, this list will be empty, and you need to use <see cref="Namespaces"/> property instead.
+        /// </summary>
+        public List<ClassSummary> Classes { get; }
+
         #endregion
 
         #region Constructors
@@ -46,6 +51,7 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
             Name = System.IO.Path.GetFileName(path);
             Usings = root.Usings.Select(x => x.Name.ToString()).ToList();
             Namespaces = new List<NamespaceSummary>();
+            Classes = new List<ClassSummary>();
         }
 
         #endregion
@@ -77,7 +83,7 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
         #endregion
 
         #region Static methods
-
+        
         /// <summary>
         /// Loads the C# file at <paramref name="path"/> and returns a summary about the file.
         /// </summary>
@@ -90,7 +96,7 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
 
             FileSummary file = new(path, root);
 
-            foreach (NamespaceDeclarationSyntax ns in root.Members.OfType<NamespaceDeclarationSyntax>()) {
+            foreach (BaseNamespaceDeclarationSyntax ns in root.Members.OfType<BaseNamespaceDeclarationSyntax>()) {
 
                 NamespaceSummary nss = new(ns);
 

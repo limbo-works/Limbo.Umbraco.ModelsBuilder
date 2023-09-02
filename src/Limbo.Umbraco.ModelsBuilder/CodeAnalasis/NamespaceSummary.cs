@@ -28,7 +28,7 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis {
         /// Initializes a new instance based on the specified <paramref name="namespaceDeclarationSyntax"/>.
         /// </summary>
         /// <param name="namespaceDeclarationSyntax">The syntax describing the namespace.</param>
-        public NamespaceSummary(NamespaceDeclarationSyntax namespaceDeclarationSyntax) {
+        public NamespaceSummary(BaseNamespaceDeclarationSyntax namespaceDeclarationSyntax) {
             Name = namespaceDeclarationSyntax.Name.ToString();
             Classes = new List<ClassSummary>();
         }
