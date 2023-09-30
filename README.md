@@ -1,4 +1,9 @@
-# Limbo Models Builder [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md) [![NuGet](https://img.shields.io/nuget/vpre/Limbo.Umbraco.ModelsBuilder.svg)](https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder) [![NuGet](https://img.shields.io/nuget/dt/Limbo.Umbraco.ModelsBuilder.svg)](https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder) [![Umbraco Marketplace](https://img.shields.io/badge/umbraco-marketplace-%233544B1)](https://marketplace.umbraco.com/package/limbo.umbraco.modelsbuilder)
+# Limbo Models Builder
+
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
+[![NuGet](https://img.shields.io/nuget/vpre/Limbo.Umbraco.ModelsBuilder.svg)](https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder)
+[![NuGet](https://img.shields.io/nuget/dt/Limbo.Umbraco.ModelsBuilder.svg)](https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder)
+[![Umbraco Marketplace](https://img.shields.io/badge/umbraco-marketplace-%233544B1)](https://marketplace.umbraco.com/package/limbo.umbraco.modelsbuilder)
 
 
 `Limbo.Umbraco.ModelsBuilder` is a custom models builder for Umbraco 9+ we use internally at [**@limbo-works**](https://github.com/limbo-works). It's purpose is to add additional features compared to what is available today in the build-in ModelsBuilder in Umbraco 9+ and the older community ModelsBuilder (which doesn't work for Umbraco 9+).
@@ -9,16 +14,16 @@
 
 ## Installation
 
-Via [**NuGet**](https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder/2.0.3):
+Via [**NuGet**](https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder/2.0.4):
 
 ```
-dotnet add package Limbo.Umbraco.ModelsBuilder --version 2.0.3
+dotnet add package Limbo.Umbraco.ModelsBuilder --version 2.0.4
 ```
 
 or:
 
 ```
-Install-Package Limbo.Umbraco.ModelsBuilder -Version 2.0.3
+Install-Package Limbo.Umbraco.ModelsBuilder -Version 2.0.4
 ```
 
 
