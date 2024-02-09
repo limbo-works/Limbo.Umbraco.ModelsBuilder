@@ -2,16 +2,14 @@
 
 #pragma warning disable 1591
 
-namespace Limbo.Umbraco.ModelsBuilder.Containers {
+namespace Limbo.Umbraco.ModelsBuilder.Containers;
 
-    public class HelloContainer {
+public class HelloContainer {
 
-        public ContentTypeKind Type { get; set; }
+    public ContentTypeKind Type { get; set; }
 
-        public int[]? RootIds { get; set; }
+    public int[]? RootIds { get; set; }
 
-        public string[]? Directories { get; set; }
-
-    }
+    public string[]? Directories { get; set; }
 
 }

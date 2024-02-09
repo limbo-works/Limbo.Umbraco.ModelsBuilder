@@ -2,14 +2,12 @@
 
 #pragma warning disable 1591
 
-namespace Limbo.Umbraco.ModelsBuilder.Containers {
+namespace Limbo.Umbraco.ModelsBuilder.Containers;
 
-    public interface IModelsContainer {
+public interface IModelsContainer {
 
-        string Directory { get; }
+    string Directory { get; }
 
-        bool Include(TypeModel type);
-
-    }
+    bool Include(TypeModel type);
 
 }

@@ -1,22 +1,20 @@
-﻿using Limbo.Umbraco.ModelsBuilder.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Limbo.Umbraco.ModelsBuilder.Models;
 
 #pragma warning disable 1591
 
-namespace Limbo.Umbraco.ModelsBuilder.Containers {
+namespace Limbo.Umbraco.ModelsBuilder.Containers;
 
-    public class ContainerModel {
+public class ContainerModel {
 
-        public string Directory { get; }
+    public string Directory { get; }
 
-        public TypeModel[] Types { get; }
+    public TypeModel[] Types { get; }
 
-        public ContainerModel(string directory, IEnumerable<TypeModel> types) {
-            Directory = directory;
-            Types = types.ToArray();
-        }
-
+    public ContainerModel(string directory, IEnumerable<TypeModel> types) {
+        Directory = directory;
+        Types = types.ToArray();
     }
 
 }

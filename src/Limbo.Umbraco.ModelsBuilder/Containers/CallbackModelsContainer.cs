@@ -1,25 +1,23 @@
-﻿using Limbo.Umbraco.ModelsBuilder.Models;
-using System;
+﻿using System;
+using Limbo.Umbraco.ModelsBuilder.Models;
 
 #pragma warning disable 1591
 
-namespace Limbo.Umbraco.ModelsBuilder.Containers {
+namespace Limbo.Umbraco.ModelsBuilder.Containers;
 
-    public class CallbackModelsContainer : IModelsContainer {
+public class CallbackModelsContainer : IModelsContainer {
 
-        private readonly Func<TypeModel, bool> _callback;
+    private readonly Func<TypeModel, bool> _callback;
 
-        public string Directory { get; set; }
+    public string Directory { get; set; }
 
-        public CallbackModelsContainer(string directory, Func<TypeModel, bool> callback) {
-            _callback = callback;
-            Directory = directory;
-        }
+    public CallbackModelsContainer(string directory, Func<TypeModel, bool> callback) {
+        _callback = callback;
+        Directory = directory;
+    }
 
-        public virtual bool Include(TypeModel type) {
-            return _callback(type);
-        }
-
+    public virtual bool Include(TypeModel type) {
+        return _callback(type);
     }
 
 }

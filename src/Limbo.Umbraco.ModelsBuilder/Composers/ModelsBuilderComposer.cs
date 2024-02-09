@@ -9,25 +9,23 @@ using Umbraco.Cms.Core.DependencyInjection;
 
 #pragma warning disable 1591
 
-namespace Limbo.Umbraco.ModelsBuilder.Composers {
+namespace Limbo.Umbraco.ModelsBuilder.Composers;
 
-    public class ModelsBuilderComposer : IComposer {
+public class ModelsBuilderComposer : IComposer {
 
-        public void Compose(IUmbracoBuilder builder) {
+    public void Compose(IUmbracoBuilder builder) {
 
-            builder.Services
-                .AddSingleton<ModelsGenerator>()
-                .AddSingleton<ModelsGeneratorDependencies>()
-                .AddSingleton<ModelsSourceGenerator>()
-                .AddSingleton<ModelsSourceGeneratorDependencies>();
+        builder.Services
+            .AddSingleton<ModelsGenerator>()
+            .AddSingleton<ModelsGeneratorDependencies>()
+            .AddSingleton<ModelsSourceGenerator>()
+            .AddSingleton<ModelsSourceGeneratorDependencies>();
 
-            builder.AddUmbracoOptions<LimboModelsBuilderSettings>();
+        builder.AddUmbracoOptions<LimboModelsBuilderSettings>();
 
-            builder.Components().Append<ModelsBuilderComponent>();
+        builder.Components().Append<ModelsBuilderComponent>();
 
-            builder.ManifestFilters().Append<ModelsBuilderManifest>();
-
-        }
+        builder.ManifestFilters().Append<ModelsBuilderManifest>();
 
     }
 

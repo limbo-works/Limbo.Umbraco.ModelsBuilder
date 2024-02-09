@@ -1,69 +1,67 @@
-﻿using Limbo.Umbraco.ModelsBuilder.Models.Api;
+﻿using System;
+using Limbo.Umbraco.ModelsBuilder.Models.Api;
 using Limbo.Umbraco.ModelsBuilder.Services;
 using Limbo.Umbraco.ModelsBuilder.Settings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
 using Umbraco.Cms.Infrastructure.ModelsBuilder;
 using Umbraco.Cms.Web.BackOffice.Controllers;
 using Umbraco.Cms.Web.Common.Attributes;
 
 #pragma warning disable 1591
 
-namespace Limbo.Umbraco.ModelsBuilder.Controllers {
+namespace Limbo.Umbraco.ModelsBuilder.Controllers;
 
-    [PluginController("Limbo")]
-    public class ModelsBuilderController : UmbracoAuthorizedApiController {
+[PluginController("Limbo")]
+public class ModelsBuilderController : UmbracoAuthorizedApiController {
 
-        private readonly ILogger<ModelsBuilderController> _logger;
-        private readonly OutOfDateModelsStatus _outOfDateModelsStatus;
-        private readonly LimboModelsBuilderSettings _modelsBuilderSettings;
-        private readonly ModelsSourceGenerator _sourceGenerator;
+    private readonly ILogger<ModelsBuilderController> _logger;
+    private readonly OutOfDateModelsStatus _outOfDateModelsStatus;
+    private readonly LimboModelsBuilderSettings _modelsBuilderSettings;
+    private readonly ModelsSourceGenerator _sourceGenerator;
 
-        public ModelsBuilderController(ILogger<ModelsBuilderController> logger, OutOfDateModelsStatus outOfDateModelsStatus,
-            IOptions<LimboModelsBuilderSettings> modelsBuilderSettings, ModelsSourceGenerator sourceGenerator) {
-            _logger = logger;
-            _outOfDateModelsStatus = outOfDateModelsStatus;
-            _modelsBuilderSettings = modelsBuilderSettings.Value;
-            _sourceGenerator = sourceGenerator;
-        }
+    public ModelsBuilderController(ILogger<ModelsBuilderController> logger, OutOfDateModelsStatus outOfDateModelsStatus,
+        IOptions<LimboModelsBuilderSettings> modelsBuilderSettings, ModelsSourceGenerator sourceGenerator) {
+        _logger = logger;
+        _outOfDateModelsStatus = outOfDateModelsStatus;
+        _modelsBuilderSettings = modelsBuilderSettings.Value;
+        _sourceGenerator = sourceGenerator;
+    }
 
-        [HttpGet]
-        public object GetStatus() {
+    [HttpGet]
+    public object GetStatus() {
 
-            try {
+        try {
 
-                return new StatusResult(_modelsBuilderSettings, _outOfDateModelsStatus, _sourceGenerator);
+            return new StatusResult(_modelsBuilderSettings, _outOfDateModelsStatus, _sourceGenerator);
 
-            } catch (Exception ex) {
+        } catch (Exception ex) {
 
-                _logger.LogError(ex, "Failed getting status.");
+            _logger.LogError(ex, "Failed getting status.");
 
-                return new { success = false };
-
-            }
+            return new { success = false };
 
         }
 
-        [HttpGet]
-        public object GenerateModels() {
+    }
 
-            try {
+    [HttpGet]
+    public object GenerateModels() {
 
-                // Generate the source code and save the models to disk
-                _sourceGenerator.BuildModels();
+        try {
 
-                // Return a new status result
-                return GetStatus();
+            // Generate the source code and save the models to disk
+            _sourceGenerator.BuildModels();
 
-            } catch (Exception ex) {
+            // Return a new status result
+            return GetStatus();
 
-                _logger.LogError(ex, "Failed building models.");
+        } catch (Exception ex) {
 
-                return new { success = false };
+            _logger.LogError(ex, "Failed building models.");
 
-            }
+            return new { success = false };
 
         }
 
