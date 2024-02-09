@@ -1,5 +1,5 @@
 ﻿using System;
-using Skybrud.Essentials.Reflection;
+using System.Diagnostics;
 using Umbraco.Cms.Core.Semver;
 
 namespace Limbo.Umbraco.ModelsBuilder;
@@ -27,7 +27,9 @@ public class ModelsBuilderPackage {
     /// <summary>
     /// Gets the informational version of the package.
     /// </summary>
-    public static readonly string InformationalVersion = ReflectionUtils.GetInformationalVersion<ModelsBuilderPackage>();
+    public static readonly string InformationalVersion = FileVersionInfo
+        .GetVersionInfo(typeof(ModelsBuilderPackage).Assembly.Location).ProductVersion!
+        .Split('+')[0];
 
     /// <summary>
     /// Gets the semantic version of the package.
