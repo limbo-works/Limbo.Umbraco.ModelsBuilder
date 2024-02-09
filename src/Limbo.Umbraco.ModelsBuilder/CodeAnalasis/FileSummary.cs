@@ -49,7 +49,7 @@ public class FileSummary {
     private FileSummary(string path, CompilationUnitSyntax root) {
         Path = path;
         Name = System.IO.Path.GetFileName(path);
-        Usings = root.Usings.Select(x => x.Name.ToString()).ToList();
+        Usings = (from x in root.Usings where x.Name != null select x.Name!.ToString()).ToList();
         Namespaces = new List<NamespaceSummary>();
         Classes = new List<ClassSummary>();
     }
