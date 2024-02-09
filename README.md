@@ -1,6 +1,6 @@
 # Limbo Models Builder
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/limbo-works/Limbo.Umbraco.ModelsBuilder/blob/v2/main/LICENSE.md)
 [![NuGet](https://img.shields.io/nuget/vpre/Limbo.Umbraco.ModelsBuilder.svg)](https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder)
 [![NuGet](https://img.shields.io/nuget/dt/Limbo.Umbraco.ModelsBuilder.svg)](https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder)
 [![Umbraco Marketplace](https://img.shields.io/badge/umbraco-marketplace-%233544B1)](https://marketplace.umbraco.com/package/limbo.umbraco.modelsbuilder)
@@ -14,16 +14,16 @@
 
 ## Installation
 
-Via [**NuGet**](https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder/2.0.4):
+Via [**NuGet**](https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder/2.0.5):
 
 ```
-dotnet add package Limbo.Umbraco.ModelsBuilder --version 2.0.4
+dotnet add package Limbo.Umbraco.ModelsBuilder --version 2.0.5
 ```
 
 or:
 
 ```
-Install-Package Limbo.Umbraco.ModelsBuilder -Version 2.0.4
+Install-Package Limbo.Umbraco.ModelsBuilder -Version 2.0.5
 ```
 
 
