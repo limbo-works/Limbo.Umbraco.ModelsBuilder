@@ -52,6 +52,12 @@ public class ModelsGeneratorSettings {
     /// </summary>
     public bool EnableLogging { get; set; }
 
+    /// <summary>
+    /// Gets or sets whether the current version of the <c>Limbo.Umbraco.ModelsBuilder</c> package should be include in
+    /// the file header of the generated model files.
+    /// </summary>
+    public bool IncludeVersionInFileHeaders { get; set; }
+
     #endregion
 
     #region Constructors
@@ -68,6 +74,7 @@ public class ModelsGeneratorSettings {
         DefaultModelsPath = defaultModelsPath;
         Containers = new List<IModelsContainer>();
         EditorConfig = new EditorConfigSettings();
+        IncludeVersionInFileHeaders = true;
     }
 
     /// <summary>
@@ -85,6 +92,7 @@ public class ModelsGeneratorSettings {
         EnableLogging = appSettings.EnableLogging;
         Containers = new List<IModelsContainer>();
         EditorConfig = new EditorConfigSettings();
+        IncludeVersionInFileHeaders = appSettings.IncludeVersionInFileHeaders;
 
     }
 

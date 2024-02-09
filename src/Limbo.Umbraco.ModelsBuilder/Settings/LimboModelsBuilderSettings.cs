@@ -42,6 +42,12 @@ public class LimboModelsBuilderSettings : ModelsBuilderSettings {
     /// </summary>
     public bool EnableLogging { get; set; }
 
+    /// <summary>
+    /// Gets or sets whether the current version of the <c>Limbo.Umbraco.ModelsBuilder</c> package should be include in
+    /// the file header of the generated model files. Default is <see langword="true"/>.
+    /// </summary>
+    public bool IncludeVersionInFileHeaders { get; set; } = true;
+
     #endregion
 
 }
