@@ -9,14 +9,9 @@ icon: fa fa-download
 
 ## Umbraco 13
 
-To install the package, either use the .NET CLI:
-
-```
-dotnet add package Limbo.Umbraco.ModelsBuilder --version 13.0.0
-```
-
-or the NuGet Package Manager:
-
-```
-Install-Package Limbo.Umbraco.ModelsBuilder -Version 13.0.0
-```
+<div class="installation" version="13">
+    To install the package, either use the .NET CLI:
+    <pre class="install-dotnet-cli">dotnet add package Limbo.Umbraco.ModelsBuilder</pre>
+    or the NuGet Package Manager:
+    <pre class="install-nuget">Install-Package Limbo.Umbraco.ModelsBuilder</pre>
+</div>
