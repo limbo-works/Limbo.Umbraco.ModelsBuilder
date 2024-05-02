@@ -265,7 +265,7 @@ public class ModelsSourceGenerator {
     /// <summary>
     /// Gets the name of the specified <paramref name="type"/> .
     /// </summary>
-    /// <param name="model">The model whos name to return.</param>
+    /// <param name="model">The model whose name to return.</param>
     /// <param name="type">The type.</param>
     /// <param name="models">A list of all models.</param>
     /// <returns>A string representing the name of the model.</returns>
@@ -485,7 +485,9 @@ public class ModelsSourceGenerator {
             if (property.IsIgnored || ignoredPropertyTypes.Contains(property.Alias)) continue;
 
             // If the model has a custom partial class, and the property has been manually added there, we shouldn't add it here
-            if (partialClass != null && partialClass.HasProperty(property.ClrName)) continue;
+            if (partialClass != null && partialClass.TryGetProperty(property.ClrName, out PropertySummary? propertySummary)) {
+                if (propertySummary.Syntax.ExplicitInterfaceSpecifier == null) continue;
+            }
 
             // Get the name of the property's value type
             string valueTypeName = GetValueTypeName(model, property.ValueType, models);
@@ -759,8 +761,12 @@ public class ModelsSourceGenerator {
             // If the model has a custom partial class, and the property type is ignored through a [IgnorePropertyType] attribute
             if (partialClass != null && partialClass.IgnoredPropertyTypes.Contains(property.Alias)) continue;
 
-            // If the model has a custom partial class, and it has a property with the same CLR name, we shouldn't add it here
-            if (partialClass != null && partialClass.HasProperty(property.ClrName)) continue;
+            // If the model has a custom partial class, and it has a property with the same CLR name, we shouldn't add
+            // it here. The property may however provide an implementation for a specific interface, in which case we
+            // still need to add the property to avoid compile errors
+            if (partialClass != null && partialClass.TryGetProperty(property.ClrName, out PropertySummary? ps)) {
+                if (ps.Syntax.ExplicitInterfaceSpecifier == null) continue;
+            }
 
             // If the model has a custom partial class, and a property indicates that it implements this property, we shouldn't add it here
             if (partialClass != null && partialClass.Properties.Any(x => x.ImplementsPropertyType == property.Alias)) continue;
@@ -853,7 +859,7 @@ public class ModelsSourceGenerator {
         string indent2 = GetIndent(settings, 3);
 
         // Find all properties that need a static getter method
-        List<PropertyModel> properties = new();
+        List<PropertyModel> properties = [];
         foreach (PropertyModel property in model.Properties) {
 
             if (property.StaticMethod != PropertyStaticMethod.Always && (property.StaticMethod != PropertyStaticMethod.Auto || !model.IsComposition)) continue;
