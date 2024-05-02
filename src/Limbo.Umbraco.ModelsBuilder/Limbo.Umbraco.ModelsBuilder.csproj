@@ -12,7 +12,9 @@
     <Company>Limbo</Company>
     <Authors>Anders Bjerner</Authors>
     <Copyright>Copyright © $([System.DateTime]::UtcNow.ToString(`yyyy`))</Copyright>
+    <Product>Limbo Models Builder</Product>
     <Title>Limbo Models Builder</Title>
+    <AssemblyTitle>Limbo Models Builder</AssemblyTitle>
     <Description>Custom models builder for Umbraco.</Description>
   </PropertyGroup>
 
@@ -21,12 +23,20 @@
     <PackageId>Limbo.Umbraco.ModelsBuilder</PackageId>
     <PackageTags>Skybrud, Limbo, Umbraco, Models Builder, Umbraco-Marketplace</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://packages.limbo.works/limbo.umbraco.modelsbuilder/v2/</PackageProjectUrl>
+    <PackageProjectUrl>https://packages.limbo.works/limbo.umbraco.modelsbuilder/v13/</PackageProjectUrl>
     <PackageIcon>Limbo.png</PackageIcon>
     <PackageReadmeFile>NUGET.md</PackageReadmeFile>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/limbo-works/Limbo.Umbraco.ModelsBuilder</RepositoryUrl>
   </PropertyGroup>
+
+  <!-- Include additional metadata in the assembly -->
+  <ItemGroup>
+    <AssemblyMetadata Include="PackageProjectUrl" Value="https://packages.limbo.works/limbo.umbraco.modelsbuilder/" />
+    <AssemblyMetadata Include="DocumentationUrl" Value="https://packages.limbo.works/limbo.umbraco.modelsbuilder/docs/v13/" />
+    <AssemblyMetadata Include="NuGetUrl" Value="https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder" />
+    <AssemblyMetadata Include="UmbracoMarketplaceUrl" Value="https://marketplace.umbraco.com/package/limbo.umbraco.modelsbuilder" />
+  </ItemGroup>
 
   <!-- Include NuGet dependencies -->
   <ItemGroup>
