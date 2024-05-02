@@ -39,7 +39,7 @@ public class PropertySummary {
         Name = syntax.Identifier.ToString();
 
         foreach (AttributeListSyntax hai in syntax.AttributeLists) {
-            foreach (var attr in hai.Attributes) {
+            foreach (AttributeSyntax attr in hai.Attributes) {
                 if (attr.ArgumentList == null) continue;
                 if (!string.IsNullOrWhiteSpace(ImplementsPropertyType)) continue;
                 foreach(AttributeArgumentSyntax arg in attr.ArgumentList.Arguments) {

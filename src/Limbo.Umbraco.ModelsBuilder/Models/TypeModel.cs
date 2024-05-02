@@ -28,7 +28,7 @@ public class TypeModel {
     public IPublishedContentType PublishedContentType { get; }
 
     /// <summary>
-    /// Gets the kind of the model - eg. <see cref="ContentTypeKind.Element"/>.
+    /// Gets the kind of the model - e.g. <see cref="ContentTypeKind.Element"/>.
     /// </summary>
     public ContentTypeKind Kind { get; }
 

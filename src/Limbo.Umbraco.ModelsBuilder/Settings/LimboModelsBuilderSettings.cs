@@ -14,10 +14,10 @@ public class LimboModelsBuilderSettings : ModelsBuilderSettings {
     #region Properties
 
     /// <summary>
-    /// Gets or sets whether models should be added to nested directories based on their type - eg. so regular
-    /// content types are placed in a <c>Content</c> sub directory. Default is <c>true</c>.
+    /// Gets or sets whether models should be added to nested directories based on their type - e.g. so regular
+    /// content types are placed in a <c>Content</c> subdirectory. Default is <c>true</c>.
     ///
-    /// Notice that even if set to <c>false</c>, each type may have individual settings (eg. if set through events).
+    /// Notice that even if set to <c>false</c>, each type may have individual settings (e.g. if set through events).
     /// </summary>
     public bool UseDirectories { get; set; } = true;
 
@@ -43,7 +43,7 @@ public class LimboModelsBuilderSettings : ModelsBuilderSettings {
     public bool EnableLogging { get; set; }
 
     /// <summary>
-    /// Gets or sets whether the current version of the <c>Limbo.Umbraco.ModelsBuilder</c> package should be include in
+    /// Gets or sets whether the current version of the <c>Limbo.Umbraco.ModelsBuilder</c> package should be included in
     /// the file header of the generated model files. Default is <see langword="true"/>.
     /// </summary>
     public bool IncludeVersionInFileHeaders { get; set; } = true;

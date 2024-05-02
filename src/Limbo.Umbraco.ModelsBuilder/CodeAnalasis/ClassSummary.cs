@@ -55,11 +55,8 @@ public class ClassSummary {
     /// <summary>
     /// Gets whether the class has a suitable constructor for ModelsBuilder.
     /// </summary>
-    public bool HasPublishedContentConstructor {
-        get {
-            return Constructors.Any(x => x.Parameters.Length == 2 && x.Parameters[0].Type == "IPublishedContent" && x.Parameters[1].Type == "IPublishedValueFallback");
-        }
-    }
+    public bool HasPublishedContentConstructor => Constructors
+        .Any(x => x.Parameters is [{ Type: "IPublishedContent" }, { Type: "IPublishedValueFallback" }]);
 
     /// <summary>
     /// Gets a list of the properties of the class.
@@ -89,23 +86,21 @@ public class ClassSummary {
 
         Name = syntax.Identifier.ToString();
         Namespace = namespaceSyntax.Name.ToString();
-        BaseTypes = syntax.BaseList?.Types.Select(x => x.ToString()).ToList() ?? new List<string>();
+        BaseTypes = syntax.BaseList?.Types.Select(x => x.ToString()).ToList() ?? [];
 
-        HashSet<string> ignoredPropertyTypes = new();
-        List<ConstructorSummary> constructors = new();
-        List<PropertySummary> properties = new();
-        List<MethodSummary> methods = new();
+        HashSet<string> ignoredPropertyTypes = [];
+        List<ConstructorSummary> constructors = [];
+        List<PropertySummary> properties = [];
+        List<MethodSummary> methods = [];
 
         foreach (AttributeListSyntax atrrList in syntax.AttributeLists) {
             foreach (AttributeSyntax attr in atrrList.Attributes) {
                 if (attr.Name.ToString() != "IgnorePropertyType") continue;
                 if (attr.ArgumentList == null) continue;
                 foreach (AttributeArgumentSyntax arg in attr.ArgumentList.Arguments) {
-                    if (arg.Expression is LiteralExpressionSyntax { Token: { Value: { } } } lit) {
-                        string alias = lit.Token.Value.ToString()!;
-                        if (ignoredPropertyTypes.Contains(alias)) continue;
-                        ignoredPropertyTypes.Add(alias);
-                    }
+                    if (arg.Expression is not LiteralExpressionSyntax { Token: { Value: not null } token }) continue;
+                    string alias = token.Value.ToString()!;
+                    ignoredPropertyTypes.Add(alias);
                 }
             }
         }

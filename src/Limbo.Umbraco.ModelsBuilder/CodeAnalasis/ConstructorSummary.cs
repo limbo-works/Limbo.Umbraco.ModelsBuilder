@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis;
@@ -16,7 +17,7 @@ public class ConstructorSummary {
     /// <summary>
     /// Gets an array of the parameters of the constructor.
     /// </summary>
-    public ParameterSummary[] Parameters { get; }
+    public IReadOnlyList<ParameterSummary> Parameters { get; }
 
     /// <summary>
     /// Initializes a new instance based on the specified constructor declaration <paramref name="syntax"/>.

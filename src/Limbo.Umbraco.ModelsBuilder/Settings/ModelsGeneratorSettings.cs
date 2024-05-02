@@ -26,8 +26,8 @@ public class ModelsGeneratorSettings {
     public string DefaultModelsPath { get; set; }
 
     /// <summary>
-    /// Gets or sets whether the model types should be saved in a nested directory structure (eg. so that element
-    /// types are saved in a <c>Elements</c> sub directory. Default is <c>true</c>.
+    /// Gets or sets whether the model types should be saved in a nested directory structure (e.g. so that element
+    /// types are saved in a <c>Elements</c> subdirectory). Default is <c>true</c>.
     /// </summary>
     public bool UseDirectories { get; set; } = true;
 
@@ -53,7 +53,7 @@ public class ModelsGeneratorSettings {
     public bool EnableLogging { get; set; }
 
     /// <summary>
-    /// Gets or sets whether the current version of the <c>Limbo.Umbraco.ModelsBuilder</c> package should be include in
+    /// Gets or sets whether the current version of the <c>Limbo.Umbraco.ModelsBuilder</c> package should be included in
     /// the file header of the generated model files.
     /// </summary>
     public bool IncludeVersionInFileHeaders { get; set; }

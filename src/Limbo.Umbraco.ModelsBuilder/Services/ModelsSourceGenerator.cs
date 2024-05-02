@@ -16,7 +16,6 @@ using Limbo.Umbraco.ModelsBuilder.Settings;
 using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Skybrud.Essentials.Reflection;
 using Skybrud.Essentials.Time;
 using Skybrud.Essentials.Time.Iso8601;
 using Umbraco.Cms.Core.Extensions;
@@ -126,7 +125,7 @@ public class ModelsSourceGenerator {
     /// <param name="log">The current <see cref="ModelsBuilderLog"/> instance.</param>
     protected virtual void SaveModels(IEnumerable<TypeModel> models, ModelsGeneratorSettings settings, ModelsBuilderLog? log) {
 
-        // Create a new list for the models so we can quickly look them up later
+        // Create a new list for the models so that we can quickly look them up later
         TypeModelList list = models as TypeModelList ?? new TypeModelList(models);
 
         foreach (TypeModel model in list) {
@@ -248,7 +247,7 @@ public class ModelsSourceGenerator {
             // Close the stream
             fs.Close();
 
-            // Convert the bytes to an UTF-8 encoded string
+            // Convert the bytes to a UTF-8 encoded string
             string contents = Encoding.UTF8.GetString(buffer);
 
             // Does the first 512 bytes contains the ModelsBuilder header?
@@ -266,7 +265,7 @@ public class ModelsSourceGenerator {
     /// <summary>
     /// Gets the name of the specified <paramref name="type"/> .
     /// </summary>
-    /// <param name="model">The model who's name to return.</param>
+    /// <param name="model">The model whos name to return.</param>
     /// <param name="type">The type.</param>
     /// <param name="models">A list of all models.</param>
     /// <returns>A string representing the name of the model.</returns>
@@ -350,7 +349,7 @@ public class ModelsSourceGenerator {
             }
         }
 
-        return new HashSet<string>(temp);
+        return [..temp];
 
     }
 
@@ -359,14 +358,14 @@ public class ModelsSourceGenerator {
     /// </summary>
     /// <returns>An instance of <see cref="List{String}"/>.</returns>
     protected virtual List<string> GetDefaultImports() {
-        return new() {
+        return [
             "System",
             "System.Linq.Expressions",
             "Umbraco.Cms.Core.Models.PublishedContent",
             "Umbraco.Cms.Core.PublishedCache",
             "Umbraco.Cms.Infrastructure.ModelsBuilder",
             "Umbraco.Extensions"
-        };
+        ];
     }
 
     /// <summary>
@@ -496,7 +495,7 @@ public class ModelsSourceGenerator {
 
         }
 
-        // Dont add the clas if there are no extension methods to write
+        // Don't add the clas if there are no extension methods to write
         if (extensionMethods.Count == 0) return;
 
         // Write the start of the class
@@ -515,7 +514,7 @@ public class ModelsSourceGenerator {
     }
 
     /// <summary>
-    /// Internal method used for writing something to the start of the file - eg. a file header comment.
+    /// Internal method used for writing something to the start of the file - e.g. a file header comment.
     /// </summary>
     /// <param name="writer">The writer.</param>
     /// <param name="model">The current model.</param>
@@ -715,7 +714,7 @@ public class ModelsSourceGenerator {
     /// <param name="settings">The models generator settings.</param>
     protected virtual void WriteConstructor(TextWriter writer, TypeModel model, ClassSummary? partialClass, ModelsGeneratorSettings settings) {
 
-        // If there is a custom partial for the model, and it already has a constructor with the require signature,
+        // If there is a custom partial for the model, and it already has a constructor with the required signature,
         // we shouldn't add one to the generated partial
         if (partialClass is { HasPublishedContentConstructor: true }) return;
 
@@ -806,28 +805,16 @@ public class ModelsSourceGenerator {
         // Gets the name of the value type
         string valueTypeName = GetValueTypeName(model, property.ValueType, models);
 
-        // Get the declaring type of the property. This mey be different than "model" when using compositions
+        // Get the declaring type of the property. This may be different from "model" when using compositions
         if (!model.HasPropertyType(property.Alias, out TypeModel? declaringType)) {
             throw new Exception("Property type not found. This shouldn't happen.");
         }
 
-        bool useStaticMethod;
-        switch (property.StaticMethod) {
-
-            case PropertyStaticMethod.Always:
-                useStaticMethod = true;
-                break;
-
-            case PropertyStaticMethod.Auto:
-                useStaticMethod = declaringType != model || model.IsComposition;
-                break;
-
-            case PropertyStaticMethod.Never:
-            default:
-                useStaticMethod = false;
-                break;
-
-        }
+        bool useStaticMethod = property.StaticMethod switch {
+            PropertyStaticMethod.Always => true,
+            PropertyStaticMethod.Auto => declaringType != model || model.IsComposition,
+            _ => false,
+        };
 
         WriteJsonNetPropertySettings(writer, model, property, settings);
 
@@ -971,7 +958,7 @@ public class ModelsSourceGenerator {
         // Nothing to save if "log" is null
         if (log == null) return;
 
-        // Get the path to the logs directory (and create it if doesn't exist)
+        // Get the path to the logs directory (and create it if it doesn't exist)
         string dir = _webHostEnvironment.MapPathContentRoot($"~/Limbo/{ModelsBuilderPackage.Alias}/Logs");
         if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
 

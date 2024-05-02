@@ -137,12 +137,12 @@ public class ModelsGenerator {
             if (!string.IsNullOrWhiteSpace(type.Path)) continue;
 
             //
-            List<string> path = new() { settings.DefaultModelsPath };
+            List<string> path = [settings.DefaultModelsPath];
 
 
             if (type.Directories != null) path.AddRange(type.Directories);
             path.Add($"{type.ClrName}.generated.cs");
-            type.Path = Path.Combine(path.ToArray());
+            type.Path = Path.Combine([.. path]);
 
             //throw new Exception("\r\n" + settings.DefaultModelsPath + "\r\n" + type.Path);
 
@@ -173,7 +173,7 @@ public class ModelsGenerator {
     /// <param name="settings">The models generator settings.</param>
     protected virtual void AppendContentType(List<TypeModel> list, IContentType contentType, ModelsGeneratorSettings settings) {
 
-        // The published content type let's us get additional information about the content type, so we need to
+        // The published content type lets us get additional information about the content type, so we need to
         // retrieve this as well
         IPublishedContentType pct = _publishedContentTypeFactory.CreateContentType(contentType);
 
@@ -206,7 +206,7 @@ public class ModelsGenerator {
 
         foreach (IMemberType memberType in _memberTypeService.GetAll()) {
 
-            // The published content type let's us get additional information about the content type, so we need to
+            // The published content type lets us get additional information about the content type, so we need to
             // retrieve this as well
             IPublishedContentType pct = _publishedContentTypeFactory.CreateContentType(memberType);
 
@@ -241,7 +241,7 @@ public class ModelsGenerator {
 
         foreach (IMediaType mediaType in _mediaTypeService.GetAll()) {
 
-            // The published content type let's us get additional information about the content type, so we need to
+            // The published content type lets us get additional information about the content type, so we need to
             // retrieve this as well
             IPublishedContentType pct = _publishedContentTypeFactory.CreateContentType(mediaType);
 
@@ -302,7 +302,7 @@ public class ModelsGenerator {
     /// Internal method used for updating the model definitions a bit before they are returned.
     ///
     /// If the <see cref="ModelsGeneratorSettings.UseDirectories"/> option is set to <c>true</c>, this method will
-    /// created a nested directory structure to match the type and purpose of the models.
+    /// create a nested directory structure to match the type and purpose of the models.
     ///
     /// The method will also ensure that propery types with certain Skybrud property editors are ignored, as they
     /// don't really hold a value or serve a purpose beyond the backoffice.
