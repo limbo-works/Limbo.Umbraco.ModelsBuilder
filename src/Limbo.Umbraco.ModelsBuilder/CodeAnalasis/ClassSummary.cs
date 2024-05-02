@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
@@ -157,6 +158,28 @@ public class ClassSummary {
     /// <returns><c>true</c> if the method exist; otherwise, <c>false</c>.</returns>
     public bool HasMethod(string name) {
         return Methods.Any(x => x.Name == name);
+    }
+
+    /// <summary>
+    /// Attemtps to get the property with the specified <paramref name="name"/>.
+    /// </summary>
+    /// <param name="name">The name of the property.</param>
+    /// <param name="result">When this method returns, holds the matched property if successful; otherwise, <see langword="null"/>.</param>
+    /// <returns><see langword="true"/> if successful; otherwise, <see langword="false"/>.</returns>
+    public bool TryGetProperty(string name, [NotNullWhen(true)] out PropertySummary? result) {
+        result = Properties.FirstOrDefault(x => x.Name == name);
+        return result != null;
+    }
+
+    /// <summary>
+    /// Attemtps to get the method with the specified <paramref name="name"/>.
+    /// </summary>
+    /// <param name="name">The name of the property.</param>
+    /// <param name="result">When this method returns, holds the matched property if successful; otherwise, <see langword="null"/>.</param>
+    /// <returns><see langword="true"/> if successful; otherwise, <see langword="false"/>.</returns>
+    public bool TryGetMethod(string name, [NotNullWhen(true)] out MethodSummary? result) {
+        result = Methods.FirstOrDefault(x => x.Name == name);
+        return result != null;
     }
 
     #endregion
