@@ -9,6 +9,11 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis;
 public class ConstructorSummary {
 
     /// <summary>
+    /// Gets a reference to the <see cref="ConstructorDeclarationSyntax"/> this instance was based on.
+    /// </summary>
+    public ConstructorDeclarationSyntax Syntax { get; }
+
+    /// <summary>
     /// Gets an array of the parameters of the constructor.
     /// </summary>
     public ParameterSummary[] Parameters { get; }
@@ -18,6 +23,7 @@ public class ConstructorSummary {
     /// </summary>
     /// <param name="syntax">The declaration syntax describing the constructor.</param>
     public ConstructorSummary(ConstructorDeclarationSyntax syntax) {
+        Syntax = syntax;
         Parameters = syntax.ParameterList.Parameters.Select(x => new ParameterSummary(x)).ToArray();
     }
 

@@ -11,6 +11,11 @@ public class NamespaceSummary {
     #region Properties
 
     /// <summary>
+    /// Gets a reference to the <see cref="BaseNamespaceDeclarationSyntax"/> this instance was based on.
+    /// </summary>
+    public BaseNamespaceDeclarationSyntax Syntax { get; }
+
+    /// <summary>
     /// Gets the name of the namespace.
     /// </summary>
     public string Name { get; set; }
@@ -25,11 +30,12 @@ public class NamespaceSummary {
     #region Constructors
 
     /// <summary>
-    /// Initializes a new instance based on the specified <paramref name="namespaceDeclarationSyntax"/>.
+    /// Initializes a new instance based on the specified <paramref name="syntax"/>.
     /// </summary>
-    /// <param name="namespaceDeclarationSyntax">The syntax describing the namespace.</param>
-    public NamespaceSummary(BaseNamespaceDeclarationSyntax namespaceDeclarationSyntax) {
-        Name = namespaceDeclarationSyntax.Name.ToString();
+    /// <param name="syntax">The syntax describing the namespace.</param>
+    public NamespaceSummary(BaseNamespaceDeclarationSyntax syntax) {
+        Syntax = syntax;
+        Name = syntax.Name.ToString();
         Classes = new List<ClassSummary>();
     }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
@@ -13,10 +14,17 @@ public class ClassSummary {
     #region Properties
 
     /// <summary>
-    /// Gets a reference to the underlying <see cref="ClassDeclarationSyntax"/>.
+    /// Alias of <see cref="Syntax"/>.
     /// </summary>
     [JsonIgnore]
-    public ClassDeclarationSyntax Source { get; }
+    [Obsolete("Use the 'Syntax' property instead.")]
+    public ClassDeclarationSyntax Source => Syntax;
+
+    /// <summary>
+    /// Gets a reference to the <see cref="ClassDeclarationSyntax"/> this instance was based on.
+    /// </summary>
+    [JsonIgnore]
+    public ClassDeclarationSyntax Syntax { get; }
 
     /// <summary>
     /// Gets the namespace of the class.
@@ -121,7 +129,7 @@ public class ClassSummary {
 
         }
 
-        Source = syntax;
+        Syntax = syntax;
         IgnoredPropertyTypes = ignoredPropertyTypes;
         Constructors = constructors;
         Properties = properties;

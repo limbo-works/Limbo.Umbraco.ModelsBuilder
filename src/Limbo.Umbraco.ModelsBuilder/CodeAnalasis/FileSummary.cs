@@ -22,6 +22,11 @@ public class FileSummary {
     public string Path { get; }
 
     /// <summary>
+    /// Gets a reference to the <see cref="CompilationUnitSyntax"/> this instance was based on.
+    /// </summary>
+    public CompilationUnitSyntax Syntax { get; }
+
+    /// <summary>
     /// Gets the name of the file.
     /// </summary>
     public string Name { get; }
@@ -46,10 +51,11 @@ public class FileSummary {
 
     #region Constructors
 
-    private FileSummary(string path, CompilationUnitSyntax root) {
+    private FileSummary(string path, CompilationUnitSyntax syntax) {
         Path = path;
+        Syntax = syntax;
         Name = System.IO.Path.GetFileName(path);
-        Usings = (from x in root.Usings where x.Name != null select x.Name!.ToString()).ToList();
+        Usings = (from x in syntax.Usings where x.Name != null select x.Name!.ToString()).ToList();
         Namespaces = new List<NamespaceSummary>();
         Classes = new List<ClassSummary>();
     }

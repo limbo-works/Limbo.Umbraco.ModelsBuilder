@@ -9,6 +9,11 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis;
 public class PropertySummary {
 
     /// <summary>
+    /// Gets a reference to the <see cref="PropertyDeclarationSyntax"/> this instance was based on.
+    /// </summary>
+    public PropertyDeclarationSyntax Syntax { get; }
+
+    /// <summary>
     /// Gets the type of the property.
     /// </summary>
     public string Type { get; }
@@ -29,6 +34,7 @@ public class PropertySummary {
     /// <param name="syntax">The declaration syntax describing the property.</param>
     public PropertySummary(PropertyDeclarationSyntax syntax) {
 
+        Syntax = syntax;
         Type = syntax.Type.ToString();
         Name = syntax.Identifier.ToString();
 

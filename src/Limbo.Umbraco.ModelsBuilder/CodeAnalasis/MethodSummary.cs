@@ -8,7 +8,7 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis;
 public class MethodSummary {
 
     /// <summary>
-    /// Gets a reference to the <see cref="MethodDeclarationSyntax"/> this summary is about.
+    /// Gets a reference to the <see cref="MethodDeclarationSyntax"/> this instance was based on.
     /// </summary>
     public MethodDeclarationSyntax Syntax { get; }
 

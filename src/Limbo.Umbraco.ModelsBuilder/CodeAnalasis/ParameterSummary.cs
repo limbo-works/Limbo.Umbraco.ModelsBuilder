@@ -10,6 +10,11 @@ namespace Limbo.Umbraco.ModelsBuilder.CodeAnalasis;
 public class ParameterSummary {
 
     /// <summary>
+    /// Gets a reference to the <see cref="ParameterSyntax"/> this instance was based on.
+    /// </summary>
+    public ParameterSyntax Syntax { get; }
+
+    /// <summary>
     /// Gets the type of the parameter.
     /// </summary>
     public string Type { get; }
@@ -24,6 +29,7 @@ public class ParameterSummary {
     /// </summary>
     /// <param name="syntax">The syntax describing the parameter.</param>
     public ParameterSummary(ParameterSyntax syntax) {
+        Syntax = syntax;
         Type = syntax.Type!.ToString();
         Name = syntax.Identifier.ToString();
     }
