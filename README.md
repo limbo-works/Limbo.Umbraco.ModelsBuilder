@@ -4,6 +4,7 @@
 [![NuGet](https://img.shields.io/nuget/vpre/Limbo.Umbraco.ModelsBuilder.svg)](https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder)
 [![NuGet](https://img.shields.io/nuget/dt/Limbo.Umbraco.ModelsBuilder.svg)](https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder)
 [![Umbraco Marketplace](https://img.shields.io/badge/umbraco-marketplace-%233544B1)](https://marketplace.umbraco.com/package/limbo.umbraco.modelsbuilder)
+[![Limbo.Umbraco.ModelsBuilder at packages.limbo.works](https://img.shields.io/badge/limbo-packages-blue)](https://packages.limbo.works/limbo.umbraco.modelsbuilder/)
 
 
 `Limbo.Umbraco.ModelsBuilder` is a custom models builder for Umbraco 9+ we use internally at [**@limbo-works**](https://github.com/limbo-works). It's purpose is to add additional features compared to what is available today in the build-in ModelsBuilder in Umbraco 9+ and the older community ModelsBuilder (which doesn't work for Umbraco 9+).
@@ -14,18 +15,18 @@
 
 ## Installation
 
-#### Via [**NuGet**](https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder/13.0.0)
+#### Via [**NuGet**](https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder)
 
 .NET CLI:
 
 ```
-dotnet add package Limbo.Umbraco.ModelsBuilder --version 13.0.0
+dotnet add package Limbo.Umbraco.ModelsBuilder --version 13.0.1
 ```
 
 NuGet Package Manager:
 
 ```
-Install-Package Limbo.Umbraco.ModelsBuilder -Version 13.0.0
+Install-Package Limbo.Umbraco.ModelsBuilder -Version 13.0.1
 ```
 
 
