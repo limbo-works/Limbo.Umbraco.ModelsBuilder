@@ -334,9 +334,9 @@ public class ModelsSourceGenerator {
         // TODO: Check parent types and compositions
 
         Type? type = GetClrType(model);
-        if (type == null) return new HashSet<string>();
+        if (type == null) return [];
 
-        List<string> temp = new();
+        List<string> temp = [];
 
         foreach (var attr in type.GetCustomAttributes<IgnorePropertyTypeAttribute>()) {
             if (string.IsNullOrWhiteSpace(attr.PropertyAlias)) continue;
@@ -501,7 +501,7 @@ public class ModelsSourceGenerator {
 
         string indent1 = "".PadLeft(1 * settings.EditorConfig.IndentSize, ' ');
 
-        List<GeneratorExtensionMethod> extensionMethods = new();
+        List<GeneratorExtensionMethod> extensionMethods = [];
 
         // Determine the class name
         string className = $"{(model.IsComposition ? "I" : string.Empty)}{model.ClrName}";
@@ -691,7 +691,7 @@ public class ModelsSourceGenerator {
         string indent1 = GetIndent(settings, 1);
 
         writer.WriteLine($"{indent1}[PublishedModel(\"{model.Alias}\")]");
-        writer.WriteLine($"{indent1}public partial class {model.ClrName}{(inherits.Any() ? " : " + string.Join(", ", inherits) : "")} {{");
+        writer.WriteLine($"{indent1}public partial class {model.ClrName}{(inherits.Count == 0 ? "" : " : " + string.Join(", ", inherits))} {{");
         writer.WriteLine();
 
     }
@@ -789,7 +789,7 @@ public class ModelsSourceGenerator {
         // This is an extra, seemingly unnecessary step, but in order to prevent the region from being generated if
         // there are no properties to write, we need create a list of the properties to write, and then check
         // whether that list has any items
-        List<PropertyModel> properties = new();
+        List<PropertyModel> properties = [];
         foreach (PropertyModel property in model.Properties) {
 
             // Skip the property if it already has been flagged as ignored
@@ -956,7 +956,7 @@ public class ModelsSourceGenerator {
             return;
         }
 
-        List<string> hej = new();
+        List<string> hej = [];
 
         if (!string.IsNullOrWhiteSpace(json.PropertyName)) {
             hej.Add($"\"{json.PropertyName}\"");
@@ -966,7 +966,7 @@ public class ModelsSourceGenerator {
         if (json.NullValueHandling != default) { hej.Add($"NullValueHandling = Newtonsoft.Json.NullValueHandling.{json.NullValueHandling}"); }
         if (json.DefaultValueHandling != default) { hej.Add($"DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.{json.DefaultValueHandling}"); }
 
-        if (!hej.Any()) return;
+        if (hej.Count == 0) return;
 
         writer.Write(indent1);
         writer.WriteLine("[Newtonsoft.Json.JsonProperty(" + string.Join(", ", hej) + ")]");
