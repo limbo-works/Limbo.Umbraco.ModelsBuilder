@@ -16,6 +16,7 @@ using Limbo.Umbraco.ModelsBuilder.Settings;
 using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Skybrud.Essentials.Strings.Extensions;
 using Skybrud.Essentials.Time;
 using Skybrud.Essentials.Time.Iso8601;
 using Umbraco.Cms.Core.Extensions;
@@ -385,7 +386,7 @@ public class ModelsSourceGenerator {
         }
 
         List<string> imports = GetDefaultImports();
-        List<string> inherits = new();
+        List<string> inherits = [];
 
         // If the partial class already has a base type, we shouldn't try adding one
         string? partialBaseType = partialClass?.BaseTypes.FirstOrDefault(x => !Regex.IsMatch(x, "^I[A-Z]"));
@@ -402,26 +403,36 @@ public class ModelsSourceGenerator {
             }
         }
 
-        // Ensure compositions are added to the inherits (when we need to)
-        foreach (TypeModel composition in model.Compositions) {
+        // The interfaces that we need to add to the generated class depends on whether the content type is a
+        // composition. As we also generate an interface for each type that is a composition, the class should only
+        // implement that interface and not any interface for compositions as those are added to the interface
+        // instead
+        if (model.IsComposition) {
 
-            // Get the CLR name of the interface
-            string clrName = $"I{composition.ClrName}";
+            // Class should implement the corresponding interface
+            inherits.Add($"I{model.ClrName}");
 
-            // If the model has a custom partial which already implements the composition interface, we don't add
-            // it again here
-            if (partialClass != null && partialClass.BaseTypes.Contains(clrName)) continue;
+        } else {
 
-            // Append the inteface to the list of inherits
-            inherits.Add(clrName);
+            // Ensure compositions are added to the inherits (when we need to)
+            foreach (TypeModel composition in model.Compositions) {
 
-            // If the composition is in a different namespace, we add that namespace to the imports
-            if (composition.Namespace != model.Namespace) imports.Add(composition.Namespace);
+                // Get the CLR name of the interface
+                string clrName = $"I{composition.ClrName}";
+
+                // If the model has a custom partial which already implements the composition interface, we don't add
+                // it again here
+                if (partialClass != null && partialClass.BaseTypes.Contains(clrName)) continue;
+
+                // Append the inteface to the list of inherits
+                inherits.Add(clrName);
+
+                // If the composition is in a different namespace, we add that namespace to the imports
+                if (composition.Namespace != model.Namespace) imports.Add(composition.Namespace);
+
+            }
 
         }
-
-        // If the type is a composition, the generated class should implement the composition's interface
-        if (model.IsComposition) inherits.Add($"I{model.ClrName}");
 
         // Ignored property types is a bit special, as we can check the attributes of the CLR type. The attributes
         // are not likely to be specified on the generated class, but whether they have been added on the generated
@@ -432,9 +443,26 @@ public class ModelsSourceGenerator {
         // properties from the CLR type, we can't know whether the property/attribute is defined in the gnerated
         // class or the custom partial (at least I don't think we can), so we need another approach for these
 
+        // In case we're referencing other models (e.g. when using compositions) located in a different namespace, we
+        // need to add a using statement for that namespace
+        foreach (PropertyModel property in model.Properties) {
 
+            // Get the declaring type of the property. This may be different from "model" when using compositions
+            if (!model.HasPropertyType(property.Alias, out TypeModel? declaringType)) {
+                throw new Exception("Property type not found. This shouldn't happen.");
+            }
 
+            bool useStaticMethod = property.StaticMethod switch {
+                PropertyStaticMethod.Always => true,
+                PropertyStaticMethod.Auto => declaringType != model || model.IsComposition,
+                _ => false,
+            };
 
+            if (useStaticMethod && model.Namespace != declaringType.Namespace) {
+                imports.Add(declaringType.Namespace);
+            }
+
+        }
 
         StringBuilder sb = new();
         using TextWriter writer = new StringWriter(sb);
@@ -612,7 +640,16 @@ public class ModelsSourceGenerator {
         string name = model.ClrName;
         string baseType = model.IsElementType ? "IPublishedElement" : "IPublishedContent";
 
-        writer.WriteLine($"{indent1}public partial interface I{name} : {baseType} {{");
+        // Since compositions themselves may be based on other compositions, the generated interface should
+        // implement the interfaces for those compositions. In theory a composition could have a composition that
+        // also has another composition on its own, but we don't really need to handle that there as each interface
+        // will implement the interfaces for its own compositions
+        string implements = model.Compositions
+            .Select(composition => $", I{composition.ClrName}")
+            .OrderBy(x => x)
+            .Join("");
+
+        writer.WriteLine($"{indent1}public partial interface I{name} : {baseType}{implements} {{");
         writer.WriteLine();
 
         foreach (PropertyModel property in model.Properties) {
