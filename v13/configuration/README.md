@@ -31,7 +31,9 @@ Regardless of this option being enabled or not, the directory to which the indiv
 
 Defaults to <c>true</c>. This options lets you disable the dashboard of the embedded Models Builder, as the dashboard has little purpose when using this package instead.
 
+### Include version in file headers
 
+The `IncludeVersionInFileHeaders` setting specifies whether generated `.cs` files should include the Models Builder version number in the file header. Default is `true`.
 
 
 
