@@ -899,6 +899,9 @@ public class ModelsSourceGenerator {
         List<PropertyModel> properties = [];
         foreach (PropertyModel property in model.Properties) {
 
+            // Skip the property if it already has been flagged as ignored
+            if (property.IsIgnored || ignoredPropertyTypes.Contains(property.Alias)) continue;
+
             if (property.StaticMethod != PropertyStaticMethod.Always && (property.StaticMethod != PropertyStaticMethod.Auto || !model.IsComposition)) continue;
             if (!model.HasPropertyType(property.Alias, out TypeModel? declaringType)) throw new Exception("Property type not found. This shouldn't happen.");
             if (declaringType != model) continue;
