@@ -20,13 +20,13 @@
 .NET CLI:
 
 ```
-dotnet add package Limbo.Umbraco.ModelsBuilder --version 13.0.2
+dotnet add package Limbo.Umbraco.ModelsBuilder --version 13.0.3
 ```
 
 NuGet Package Manager:
 
 ```
-Install-Package Limbo.Umbraco.ModelsBuilder -Version 13.0.2
+Install-Package Limbo.Umbraco.ModelsBuilder -Version 13.0.3
 ```
 
 
