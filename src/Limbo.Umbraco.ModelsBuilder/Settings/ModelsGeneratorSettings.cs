@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Limbo.Umbraco.ModelsBuilder.Containers;
+using Microsoft.AspNetCore.Hosting;
 using Umbraco.Cms.Core.Hosting;
 using Umbraco.Extensions;
 
@@ -81,11 +82,11 @@ public class ModelsGeneratorSettings {
     /// Initializes a new instance based on the specified <paramref name="appSettings"/>.
     /// </summary>
     /// <param name="appSettings">The ModelsBuilder settings from the <c>appsettings.json</c> file.</param>
-    /// <param name="hostingEnvironment">The current hosting environment.</param>
-    public ModelsGeneratorSettings(LimboModelsBuilderSettings appSettings, IHostingEnvironment hostingEnvironment) {
+    /// <param name="webHostEnvironment">The current web host environment.</param>
+    public ModelsGeneratorSettings(LimboModelsBuilderSettings appSettings, IWebHostEnvironment webHostEnvironment) {
 
         // Update the settings instance based on the configuration
-        DefaultModelsPath = appSettings.ModelsDirectoryAbsolute(hostingEnvironment);
+        DefaultModelsPath = appSettings.ModelsDirectoryAbsolute(webHostEnvironment);
         DefaultNamespace = appSettings.ModelsNamespace;
         UseDirectories = appSettings.UseDirectories;
         DeleteGeneratedFiles = appSettings.DeleteGeneratedFiles;

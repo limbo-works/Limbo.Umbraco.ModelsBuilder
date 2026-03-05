@@ -23,11 +23,6 @@ public class ModelsSourceGeneratorDependencies {
     public IWebHostEnvironment WebHostEnvironment { get; }
 
     /// <summary>
-    /// Gets a reference to the current <see cref="IHostingEnvironment"/>.
-    /// </summary>
-    public IHostingEnvironment HostingEnvironment { get; }
-
-    /// <summary>
     /// Gets a reference to the current <see cref="LimboModelsBuilderSettings"/>.
     /// </summary>
     public LimboModelsBuilderSettings ModelsBuilderSettings => _modelsBuilderSettings.Value;
@@ -61,7 +56,6 @@ public class ModelsSourceGeneratorDependencies {
         ModelsGenerator modelsGenerator) {
         _modelsBuilderSettings = modelsBuilderSettings;
         WebHostEnvironment = webHostEnvironment;
-        HostingEnvironment = hostingEnvironment;
         OutOfDateModels = outOfDateModels;
         ModelsGenerator = modelsGenerator;
     }

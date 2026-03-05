@@ -41,7 +41,6 @@ public class ModelsSourceGenerator {
 
     private readonly LimboModelsBuilderSettings _modelsBuilderSettings;
     private readonly IWebHostEnvironment _webHostEnvironment;
-    private readonly IHostingEnvironment _hostingEnvironment;
     private readonly OutOfDateModelsStatus _outOfDateModels;
     private readonly ModelsGenerator _modelsGenerator;
 
@@ -64,7 +63,6 @@ public class ModelsSourceGenerator {
     public ModelsSourceGenerator(ModelsSourceGeneratorDependencies dependencies) {
         _modelsBuilderSettings = dependencies.ModelsBuilderSettings;
         _webHostEnvironment = dependencies.WebHostEnvironment;
-        _hostingEnvironment = dependencies.HostingEnvironment;
         _outOfDateModels = dependencies.OutOfDateModels;
         _modelsGenerator = dependencies.ModelsGenerator;
     }
@@ -182,7 +180,7 @@ public class ModelsSourceGenerator {
     protected void DeleteGenerateFiles(ModelsBuilderLog? log) {
 
         // Determine the full path to the models directory
-        string path = _modelsBuilderSettings.ModelsDirectoryAbsolute(_hostingEnvironment);
+        string path = _modelsBuilderSettings.ModelsDirectoryAbsolute(_webHostEnvironment);
 
         // Initialize a new DirectoryInfo instance
         DirectoryInfo directory = new(path);
@@ -977,14 +975,14 @@ public class ModelsSourceGenerator {
     }
 
     public virtual void SaveLastBuildDate() {
-        string modelsDirectory = _modelsBuilderSettings.ModelsDirectoryAbsolute(_hostingEnvironment);
+        string modelsDirectory = _modelsBuilderSettings.ModelsDirectoryAbsolute(_webHostEnvironment);
         if (!Directory.Exists(modelsDirectory)) Directory.CreateDirectory(modelsDirectory);
         File.WriteAllText(Path.Combine(modelsDirectory, "lastBuild.flag"), EssentialsTime.UtcNow.ToString(Iso8601Constants.DateTimeMilliseconds) + Environment.NewLine);
     }
 
     public virtual EssentialsTime? GetLastBuildDate() {
 
-        string modelsDirectory = _modelsBuilderSettings.ModelsDirectoryAbsolute(_hostingEnvironment);
+        string modelsDirectory = _modelsBuilderSettings.ModelsDirectoryAbsolute(_webHostEnvironment);
 
         string path = Path.Combine(modelsDirectory, "lastBuild.flag");
         if (!File.Exists(path)) return null;

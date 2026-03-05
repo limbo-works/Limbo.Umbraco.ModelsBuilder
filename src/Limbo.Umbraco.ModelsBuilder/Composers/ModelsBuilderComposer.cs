@@ -1,6 +1,6 @@
 ﻿using Limbo.Umbraco.ModelsBuilder.Components;
 using Limbo.Umbraco.ModelsBuilder.Extensions;
-using Limbo.Umbraco.ModelsBuilder.Manifests;
+//using Limbo.Umbraco.ModelsBuilder.Manifests;
 using Limbo.Umbraco.ModelsBuilder.Services;
 using Limbo.Umbraco.ModelsBuilder.Settings;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,7 +25,7 @@ public class ModelsBuilderComposer : IComposer {
 
         builder.Components().Append<ModelsBuilderComponent>();
 
-        builder.ManifestFilters().Append<ModelsBuilderManifest>();
+        //builder.ManifestFilters().Append<ModelsBuilderManifest>();
 
     }
 

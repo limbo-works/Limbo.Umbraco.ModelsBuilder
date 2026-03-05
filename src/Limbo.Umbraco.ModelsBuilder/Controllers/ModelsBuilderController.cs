@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Umbraco.Cms.Infrastructure.ModelsBuilder;
-using Umbraco.Cms.Web.BackOffice.Controllers;
 using Umbraco.Cms.Web.Common.Attributes;
 
 #pragma warning disable 1591
@@ -14,7 +13,7 @@ using Umbraco.Cms.Web.Common.Attributes;
 namespace Limbo.Umbraco.ModelsBuilder.Controllers;
 
 [PluginController("Limbo")]
-public class ModelsBuilderController : UmbracoAuthorizedApiController {
+public class ModelsBuilderController : Controller {
 
     private readonly ILogger<ModelsBuilderController> _logger;
     private readonly OutOfDateModelsStatus _outOfDateModelsStatus;

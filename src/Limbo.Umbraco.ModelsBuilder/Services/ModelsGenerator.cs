@@ -6,6 +6,7 @@ using Limbo.Umbraco.ModelsBuilder.Events;
 using Limbo.Umbraco.ModelsBuilder.Models;
 using Limbo.Umbraco.ModelsBuilder.Notifications;
 using Limbo.Umbraco.ModelsBuilder.Settings;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using Skybrud.Essentials.Common;
 using Umbraco.Cms.Core.Hosting;
@@ -21,7 +22,7 @@ namespace Limbo.Umbraco.ModelsBuilder.Services;
 public class ModelsGenerator {
 
     private readonly ModelsGeneratorDependencies _dependencies;
-    private readonly IHostingEnvironment _hostingEnvironment;
+    private readonly IWebHostEnvironment _webHostEnvironment;
     private readonly IContentTypeService _contentTypeService;
     private readonly IMemberTypeService _memberTypeService;
     private readonly IMediaTypeService _mediaTypeService;
@@ -41,7 +42,7 @@ public class ModelsGenerator {
     /// <param name="dependencies">The dependencies for this class.</param>
     public ModelsGenerator(ModelsGeneratorDependencies dependencies) {
         _dependencies = dependencies;
-        _hostingEnvironment = dependencies.HostingEnvironment;
+        _webHostEnvironment = dependencies.WebHostEnvironment;
         _contentTypeService = dependencies.ContentTypeService;
         _memberTypeService = dependencies.MemberTypeService;
         _mediaTypeService = dependencies.MediaTypeService;
@@ -85,10 +86,10 @@ public class ModelsGenerator {
         LimboModelsBuilderSettings appSettings = _modelsBuilderSettings.Value;
 
         // Initialize a new settings instance
-        ModelsGeneratorSettings settings = new(appSettings, _hostingEnvironment);
+        ModelsGeneratorSettings settings = new(appSettings, _webHostEnvironment);
 
         // Initialize a new notification
-        GetDefaultSettingsNotification notification = new(settings, appSettings, _hostingEnvironment);
+        GetDefaultSettingsNotification notification = new(settings, appSettings, _webHostEnvironment);
 
         // Publish/broadcast the notification
         _dependencies.EventAggregator.Publish(notification);

@@ -1,7 +1,7 @@
 ﻿using Limbo.Umbraco.ModelsBuilder.Settings;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using Umbraco.Cms.Core.Events;
-using Umbraco.Cms.Core.Hosting;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.Services;
 
@@ -22,9 +22,9 @@ public class ModelsGeneratorDependencies {
     public IEventAggregator EventAggregator { get; }
 
     /// <summary>
-    /// Gets a reference to the current <see cref="IHostingEnvironment"/>.
+    /// Gets a reference to the current <see cref="IWebHostEnvironment"/>.
     /// </summary>
-    public IHostingEnvironment HostingEnvironment { get; }
+    public IWebHostEnvironment WebHostEnvironment { get; }
 
     /// <summary>
     /// Gets a reference to the current <see cref="IContentTypeService"/>.
@@ -59,7 +59,7 @@ public class ModelsGeneratorDependencies {
     /// Initializes a new instance based on the specified dependencies.
     /// </summary>
     /// <param name="eventAggregator"></param>
-    /// <param name="hostingEnvironment"></param>
+    /// <param name="webHostEnvironment"></param>
     /// <param name="contentTypeService"></param>
     /// <param name="memberTypeService"></param>
     /// <param name="mediaTypeService"></param>
@@ -67,14 +67,14 @@ public class ModelsGeneratorDependencies {
     /// <param name="modelsBuilderSettings"></param>
     public ModelsGeneratorDependencies(
         IEventAggregator eventAggregator,
-        IHostingEnvironment hostingEnvironment,
+        IWebHostEnvironment webHostEnvironment,
         IContentTypeService contentTypeService,
         IMemberTypeService memberTypeService,
         IMediaTypeService mediaTypeService,
         IPublishedContentTypeFactory publishedContentTypeFactory,
         IOptions<LimboModelsBuilderSettings> modelsBuilderSettings) {
         EventAggregator = eventAggregator;
-        HostingEnvironment = hostingEnvironment;
+        WebHostEnvironment = webHostEnvironment;
         ContentTypeService = contentTypeService;
         MemberTypeService = memberTypeService;
         MediaTypeService = mediaTypeService;
