@@ -95,7 +95,7 @@ public class ModelsBuilderController : Controller {
 
     #region Private helper methods
 
-    private ActionResult InternalServerError(string message) {
+    private ObjectResult InternalServerError(string message) {
         return StatusCode(500, new ErrorResult { Message = message });
     }
 

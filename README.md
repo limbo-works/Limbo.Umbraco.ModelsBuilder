@@ -15,19 +15,30 @@
 
 ## Installation
 
-#### Via [**NuGet**](https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder)
+### Umbraco 17
 
-.NET CLI:
+Version 17 of this package supports Umbraco version 17. The package is only available via [**NuGet**](https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder). To install the package, you can use either the .NET CLI:
 
 ```
-dotnet add package Limbo.Umbraco.ModelsBuilder --version 17.0.0
+dotnet add package Limbo.Umbraco.ModelsBuilder --version 17.0.0-alpha001
 ```
 
 NuGet Package Manager:
 
 ```
-Install-Package Limbo.Umbraco.ModelsBuilder -Version 17.0.0
+Install-Package Limbo.Umbraco.ModelsBuilder -Version 17.0.0-alpha001
 ```
+
+### Other versions of Umbraco
+
+- [**`v13/main`**](https://github.com/limbo-works/Limbo.Umbraco.ModelsBuilder/tree/v13/main) Umbraco 13
+
+
+
+
+
+
+
 
 
 
