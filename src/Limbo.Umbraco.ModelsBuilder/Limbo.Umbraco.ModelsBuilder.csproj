@@ -23,7 +23,7 @@
     <PackageId>Limbo.Umbraco.ModelsBuilder</PackageId>
     <PackageTags>Skybrud, Limbo, Umbraco, Models Builder, Umbraco-Marketplace</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://packages.limbo.works/limbo.umbraco.modelsbuilder/v13/</PackageProjectUrl>
+    <PackageProjectUrl>https://packages.limbo.works/limbo.umbraco.modelsbuilder/v17/</PackageProjectUrl>
     <PackageIcon>Limbo.png</PackageIcon>
     <PackageReadmeFile>NUGET.md</PackageReadmeFile>
     <RepositoryType>git</RepositoryType>
