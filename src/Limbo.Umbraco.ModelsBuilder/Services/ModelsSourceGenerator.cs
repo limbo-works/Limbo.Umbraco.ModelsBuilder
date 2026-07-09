@@ -61,7 +61,7 @@ public class ModelsSourceGenerator {
     #region Constructors
 
     public ModelsSourceGenerator(ModelsSourceGeneratorDependencies dependencies) {
-        _modelsBuilderSettings = dependencies.ModelsBuilderSettings;
+        _modelsBuilderSettings = dependencies.Settings;
         _webHostEnvironment = dependencies.WebHostEnvironment;
         _outOfDateModels = dependencies.OutOfDateModels;
         _modelsGenerator = dependencies.ModelsGenerator;

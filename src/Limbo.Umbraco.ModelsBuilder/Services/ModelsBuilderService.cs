@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Limbo.Umbraco.ModelsBuilder.Models;
 using Limbo.Umbraco.ModelsBuilder.Settings;
 using Skybrud.Essentials.Time;
@@ -33,29 +32,31 @@ public class ModelsBuilderService {
             Mode = _dependencies.Settings.ModelsMode,
             IsOutOfDate = _dependencies.OutOfDateModelsStatus.IsOutOfDate,
             LastBuildDate = lastBuildDate,
-            Links = new List<StatusLink> {
-                new() {
+            Links = [
+                new StatusLink {
                     Text = "GitHub",
                     Url = ModelsBuilderPackage.GitHubUrl,
                     Target = "_blank",
                     Rel = "noopener noreferrer",
                     Icon = "icon-github"
                 },
-                new() {
+
+                new StatusLink {
                     Text = "Issues",
                     Url = ModelsBuilderPackage.IssuesUrl,
                     Target = "_blank",
                     Rel = "noopener noreferrer",
                     Icon = "icon-bug"
                 },
-                new() {
+
+                new StatusLink {
                     Text = "Documentation",
                     Url = ModelsBuilderPackage.DocumentationUrl,
                     Target = "_blank",
                     Rel = "noopener noreferrer",
                     Icon = "icon-book"
                 }
-            }
+            ]
         };
 
     }

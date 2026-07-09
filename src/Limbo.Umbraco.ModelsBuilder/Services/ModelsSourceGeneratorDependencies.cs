@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using Umbraco.Cms.Infrastructure.ModelsBuilder;
-using IHostingEnvironment = Umbraco.Cms.Core.Hosting.IHostingEnvironment;
 
 namespace Limbo.Umbraco.ModelsBuilder.Services;
 
@@ -25,7 +24,7 @@ public class ModelsSourceGeneratorDependencies {
     /// <summary>
     /// Gets a reference to the current <see cref="LimboModelsBuilderSettings"/>.
     /// </summary>
-    public LimboModelsBuilderSettings ModelsBuilderSettings => _modelsBuilderSettings.Value;
+    public LimboModelsBuilderSettings Settings => _modelsBuilderSettings.Value;
 
     /// <summary>
     /// Gets a reference to the current <see cref="OutOfDateModelsStatus"/>.
@@ -45,12 +44,10 @@ public class ModelsSourceGeneratorDependencies {
     /// Initializes a new instance based on the specified dependencies.
     /// </summary>
     /// <param name="webHostEnvironment"></param>
-    /// <param name="hostingEnvironment"></param>
     /// <param name="modelsBuilderSettings"></param>
     /// <param name="outOfDateModels"></param>
     /// <param name="modelsGenerator"></param>
     public ModelsSourceGeneratorDependencies(IWebHostEnvironment webHostEnvironment,
-        IHostingEnvironment hostingEnvironment,
         IOptions<LimboModelsBuilderSettings> modelsBuilderSettings,
         OutOfDateModelsStatus outOfDateModels,
         ModelsGenerator modelsGenerator) {

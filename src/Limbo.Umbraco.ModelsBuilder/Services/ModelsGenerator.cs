@@ -46,7 +46,7 @@ public class ModelsGenerator {
         _memberTypeService = dependencies.MemberTypeService;
         _mediaTypeService = dependencies.MediaTypeService;
         _publishedContentTypeFactory = dependencies.PublishedContentTypeFactory;
-        _modelsBuilderSettings = dependencies.ModelsBuilderSettings;
+        _modelsBuilderSettings = dependencies.Settings;
     }
 
     #endregion
@@ -114,12 +114,12 @@ public class ModelsGenerator {
     public virtual TypeModelList GetModels(ModelsGeneratorSettings settings) {
 
         // Input validation
-        if (settings == null) throw new ArgumentNullException(nameof(settings));
-        if (string.IsNullOrWhiteSpace(settings.DefaultModelsPath)) throw new PropertyNotSetException(nameof(settings.DefaultModelsPath));
-        if (string.IsNullOrWhiteSpace(settings.DefaultNamespace)) throw new PropertyNotSetException(nameof(settings.DefaultNamespace));
+        ArgumentNullException.ThrowIfNull(settings);
+        PropertyNotSetException.ThrowIfNullOrWhiteSpace(settings.DefaultModelsPath);
+        PropertyNotSetException.ThrowIfNullOrWhiteSpace(settings.DefaultNamespace);
 
         // Create a list of all types
-        List<TypeModel> types = new();
+        List<TypeModel> types = [];
         AppendContentTypes(types, settings);
         AppendMediaTypes(types, settings);
         AppendMemberTypes(types, settings);

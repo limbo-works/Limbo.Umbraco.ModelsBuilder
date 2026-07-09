@@ -49,7 +49,7 @@ public class ModelsGeneratorDependencies {
     /// <summary>
     /// Gets a reference to the current <see cref="LimboModelsBuilderSettings"/>.
     /// </summary>
-    public IOptions<LimboModelsBuilderSettings> ModelsBuilderSettings { get; }
+    public IOptions<LimboModelsBuilderSettings> Settings { get; }
 
     #endregion
 
@@ -79,7 +79,7 @@ public class ModelsGeneratorDependencies {
         MemberTypeService = memberTypeService;
         MediaTypeService = mediaTypeService;
         PublishedContentTypeFactory = publishedContentTypeFactory;
-        ModelsBuilderSettings = modelsBuilderSettings;
+        Settings = modelsBuilderSettings;
     }
 
     #endregion
