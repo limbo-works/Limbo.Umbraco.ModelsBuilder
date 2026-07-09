@@ -33,10 +33,15 @@
   <!-- Include additional metadata in the assembly -->
   <ItemGroup>
     <AssemblyMetadata Include="PackageProjectUrl" Value="https://packages.limbo.works/limbo.umbraco.modelsbuilder/" />
-    <AssemblyMetadata Include="DocumentationUrl" Value="https://packages.limbo.works/limbo.umbraco.modelsbuilder/docs/v13/" />
+    <AssemblyMetadata Include="DocumentationUrl" Value="https://packages.limbo.works/limbo.umbraco.modelsbuilder/docs/v17/" />
     <AssemblyMetadata Include="NuGetUrl" Value="https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder" />
     <AssemblyMetadata Include="UmbracoMarketplaceUrl" Value="https://marketplace.umbraco.com/package/limbo.umbraco.modelsbuilder" />
   </ItemGroup>
+
+  <!-- Ignore vulnerabilities from transient dependencies -->
+  <PropertyGroup>
+    <NuGetAuditMode>direct</NuGetAuditMode>
+  </PropertyGroup>
 
   <!-- Include NuGet dependencies -->
   <ItemGroup>
@@ -44,16 +49,7 @@
     <PackageReference Include="Skybrud.Essentials" Version="1.1.59" />
     <PackageReference Include="Umbraco.Cms.Core" Version="[17.0.0,17.999)" />
     <PackageReference Include="Umbraco.Cms.Web.Website" Version="[17.0.0,17.999)" />
-  </ItemGroup>
-
-  <!-- Backoffice assets -->
-  <ItemGroup>
-    <Content Remove="compilerconfig.json" />
-    <None Include="compilerconfig.json" />
-    <Content Remove="wwwroot\Scripts\Intellisense.js" />
-    <None Include="wwwroot\Scripts\Intellisense.js" />
-    <Content Remove="wwwroot\Styles\Default.less" />
-    <None Include="wwwroot\Styles\Default.less" />
+    <PackageReference Include="Umbraco.Cms.Api.Management" Version="[17.0.0,17.999)" />
   </ItemGroup>
 
   <!-- Include package icon and README for the NuGet -->

@@ -1,6 +1,6 @@
 # Limbo Models Builder
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/limbo-works/Limbo.Umbraco.ModelsBuilder/blob/v13/main/LICENSE.md)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/limbo-works/Limbo.Umbraco.ModelsBuilder/blob/v17/main/LICENSE.md)
 [![NuGet](https://img.shields.io/nuget/vpre/Limbo.Umbraco.ModelsBuilder.svg)](https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder)
 [![NuGet](https://img.shields.io/nuget/dt/Limbo.Umbraco.ModelsBuilder.svg)](https://www.nuget.org/packages/Limbo.Umbraco.ModelsBuilder)
 [![Umbraco Marketplace](https://img.shields.io/badge/umbraco-marketplace-%233544B1)](https://marketplace.umbraco.com/package/limbo.umbraco.modelsbuilder)
@@ -20,13 +20,13 @@
 .NET CLI:
 
 ```
-dotnet add package Limbo.Umbraco.ModelsBuilder --version 13.0.3
+dotnet add package Limbo.Umbraco.ModelsBuilder --version 17.0.0
 ```
 
 NuGet Package Manager:
 
 ```
-Install-Package Limbo.Umbraco.ModelsBuilder -Version 13.0.3
+Install-Package Limbo.Umbraco.ModelsBuilder -Version 17.0.0
 ```
 
 

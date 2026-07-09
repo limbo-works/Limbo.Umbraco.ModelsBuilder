@@ -1,69 +1,104 @@
 ﻿using System;
-using Limbo.Umbraco.ModelsBuilder.Models.Api;
+using System.Threading.Tasks;
+using Asp.Versioning;
+using Limbo.Umbraco.ModelsBuilder.Api;
+using Limbo.Umbraco.ModelsBuilder.Models;
 using Limbo.Umbraco.ModelsBuilder.Services;
 using Limbo.Umbraco.ModelsBuilder.Settings;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Umbraco.Cms.Infrastructure.ModelsBuilder;
-using Umbraco.Cms.Web.Common.Attributes;
+using Skybrud.Essentials.Security.Extensions;
+using Umbraco.Cms.Api.Common.Attributes;
+using Umbraco.Cms.Api.Management.Routing;
+using Umbraco.Cms.Core.Configuration.Models;
+using Umbraco.Cms.Web.Common.Authorization;
 
 #pragma warning disable 1591
 
 namespace Limbo.Umbraco.ModelsBuilder.Controllers;
 
-[PluginController("Limbo")]
+[ApiController]
+[VersionedApiBackOfficeRoute(ModelsBuilderApiConstants.Route)]
+[Authorize(Policy = AuthorizationPolicies.SectionAccessContent)]
+[MapToApi(ModelsBuilderApiConstants.Alias)]
+[ApiVersion("1.0")]
+[ApiExplorerSettings(GroupName = ModelsBuilderApiConstants.GroupName)]
 public class ModelsBuilderController : Controller {
 
     private readonly ILogger<ModelsBuilderController> _logger;
-    private readonly OutOfDateModelsStatus _outOfDateModelsStatus;
-    private readonly LimboModelsBuilderSettings _modelsBuilderSettings;
-    private readonly ModelsSourceGenerator _sourceGenerator;
+    private readonly IOptions<LimboModelsBuilderSettings> _modelsBuilderSettings;
+    private readonly ModelsBuilderService _modelsBuilderService;
 
-    public ModelsBuilderController(ILogger<ModelsBuilderController> logger, OutOfDateModelsStatus outOfDateModelsStatus,
-        IOptions<LimboModelsBuilderSettings> modelsBuilderSettings, ModelsSourceGenerator sourceGenerator) {
+    #region Constructors
+
+    public ModelsBuilderController(ILogger<ModelsBuilderController> logger, IOptions<LimboModelsBuilderSettings> modelsBuilderSettings, ModelsBuilderService modelsBuilderService) {
         _logger = logger;
-        _outOfDateModelsStatus = outOfDateModelsStatus;
-        _modelsBuilderSettings = modelsBuilderSettings.Value;
-        _sourceGenerator = sourceGenerator;
+        _modelsBuilderSettings = modelsBuilderSettings;
+        _modelsBuilderService = modelsBuilderService;
     }
 
+    #endregion
+
+    #region Public API methods
+
     [HttpGet]
-    public object GetStatus() {
+    [Route("serverVariables")]
+    public ActionResult<ServerVariablesResult> GetServerVariables() {
+        return new ServerVariablesResult {
+            Version = ModelsBuilderPackage.InformationalVersion,
+            CacheBuster = ModelsBuilderPackage.InformationalVersion.ToMd5Hash(),
+            Settings = new ServerVariablesSettings {
+                DisableDefaultDashboard = _modelsBuilderSettings.Value.DisableDefaultDashboard
+            }
+        };
+    }
+
+    [HttpGet("status")]
+    public async Task<ActionResult<StatusResult>> GetStatus() {
 
         try {
 
-            return new StatusResult(_modelsBuilderSettings, _outOfDateModelsStatus, _sourceGenerator);
+            return await _modelsBuilderService.GetStatus();
 
         } catch (Exception ex) {
 
             _logger.LogError(ex, "Failed getting status.");
 
-            return new { success = false };
+            return InternalServerError("Failed getting status.");
 
         }
 
     }
 
-    [HttpGet]
-    public object GenerateModels() {
+    [HttpGet("build")]
+    public async Task<ActionResult<StatusResult>> BuildModels() {
+
+        // TODO: should this be a POST request instead?
 
         try {
 
-            // Generate the source code and save the models to disk
-            _sourceGenerator.BuildModels();
-
-            // Return a new status result
-            return GetStatus();
+            return await _modelsBuilderService.BuildModels();
 
         } catch (Exception ex) {
 
             _logger.LogError(ex, "Failed building models.");
 
-            return new { success = false };
+            return InternalServerError("Failed building models.");
 
         }
 
     }
+
+    #endregion
+
+    #region Private helper methods
+
+    private ActionResult InternalServerError(string message) {
+        return StatusCode(500, new ErrorResult { Message = message });
+    }
+
+    #endregion
 
 }

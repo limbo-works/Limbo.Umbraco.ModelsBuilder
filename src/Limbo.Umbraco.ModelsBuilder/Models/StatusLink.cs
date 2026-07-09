@@ -2,7 +2,7 @@
 
 #pragma warning disable 1591
 
-namespace Limbo.Umbraco.ModelsBuilder.Models.Api;
+namespace Limbo.Umbraco.ModelsBuilder.Models;
 
 public class StatusLink {
 

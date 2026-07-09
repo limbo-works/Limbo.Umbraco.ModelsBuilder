@@ -9,7 +9,6 @@ using Limbo.Umbraco.ModelsBuilder.Settings;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using Skybrud.Essentials.Common;
-using Umbraco.Cms.Core.Hosting;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.Services;
@@ -17,7 +16,7 @@ using Umbraco.Cms.Core.Services;
 namespace Limbo.Umbraco.ModelsBuilder.Services;
 
 /// <summary>
-/// Primary class for the models generator. The class is available via dependency injection as a transitient service.
+/// Primary class for the models generator.
 /// </summary>
 public class ModelsGenerator {
 
@@ -269,13 +268,13 @@ public class ModelsGenerator {
     }
 
     /// <summary>
-    /// Intenral method for building the relations between model types and their parents as well as model types and their compositions.
+    /// Internal method for building the relations between model types and their parents as well as model types and their compositions.
     /// </summary>
     /// <param name="types">The list of type models.</param>
     /// <param name="settings">The models generator settings.</param>
     protected virtual void BuildModelRelations(List<TypeModel> types, ModelsGeneratorSettings settings) {
 
-        // Create a new dictionary based on the list (foir faster lookups)
+        // Create a new dictionary based on the list (for faster lookups)
         Dictionary<int, TypeModel> lookup = types.ToDictionary(x => x.Id);
 
         // Build relations between the different types
@@ -305,7 +304,7 @@ public class ModelsGenerator {
     /// If the <see cref="ModelsGeneratorSettings.UseDirectories"/> option is set to <c>true</c>, this method will
     /// create a nested directory structure to match the type and purpose of the models.
     ///
-    /// The method will also ensure that propery types with certain Skybrud property editors are ignored, as they
+    /// The method will also ensure that property types with certain Limbo or Skybrud property editors are ignored, as they
     /// don't really hold a value or serve a purpose beyond the backoffice.
     /// </summary>
     /// <param name="types">The list of type models.</param>
@@ -357,7 +356,6 @@ public class ModelsGenerator {
 
                     case "Skybrud.Separator":
                     case "Skybrud.Umbraco.Redirects":
-                    case "Skybrud.Umbraco.Redirects.OutboundRedirect":
                         property.IsIgnored = true;
                         break;
 

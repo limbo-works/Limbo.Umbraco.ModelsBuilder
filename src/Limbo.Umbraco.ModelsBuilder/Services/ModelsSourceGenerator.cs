@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Limbo.Umbraco.ModelsBuilder.Attributes;
 using Limbo.Umbraco.ModelsBuilder.CodeAnalasis;
 using Limbo.Umbraco.ModelsBuilder.Extensions;
@@ -23,7 +24,6 @@ using Umbraco.Cms.Core.Extensions;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Infrastructure.ModelsBuilder;
 using Umbraco.Extensions;
-using IHostingEnvironment = Umbraco.Cms.Core.Hosting.IHostingEnvironment;
 
 // ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 
@@ -35,7 +35,7 @@ using IHostingEnvironment = Umbraco.Cms.Core.Hosting.IHostingEnvironment;
 namespace Limbo.Umbraco.ModelsBuilder.Services;
 
 /// <summary>
-/// Primary class servering as the models source generator.
+/// Primary class serving as the models source generator.
 /// </summary>
 public class ModelsSourceGenerator {
 
@@ -71,11 +71,11 @@ public class ModelsSourceGenerator {
 
     #region Member methods
 
-    public virtual void BuildModels() {
-        BuildModels(_modelsGenerator.GetDefaultSettings());
+    public virtual async Task<BuildResult> BuildModels() {
+        return await BuildModels(_modelsGenerator.GetDefaultSettings());
     }
 
-    public virtual void BuildModels(ModelsGeneratorSettings settings) {
+    public virtual async Task<BuildResult> BuildModels(ModelsGeneratorSettings settings) {
 
         // Initialize a new log (if logging is enabled)
         ModelsBuilderLog? log = settings is { EnableLogging: true } ? new ModelsBuilderLog() : null;
@@ -98,6 +98,12 @@ public class ModelsSourceGenerator {
         SaveModels(models, settings, log);
 
         SaveToDisk(log);
+
+        // TODO: This is a temporary workaround to ensure that the method is asynchronous. Remove this line when the method is fully implemented.
+        await Task.CompletedTask;
+
+        // Return a successful build result
+        return new BuildResult { IsSuccessful = true };
 
     }
 
@@ -728,13 +734,13 @@ public class ModelsSourceGenerator {
         writer.WriteLine();
 
         writer.WriteLine($"{indent1}[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]");
-        writer.WriteLine($"{indent1}public new static IPublishedContentType GetModelContentType(IPublishedSnapshotAccessor publishedSnapshotAccessor)");
-        writer.WriteLine($"{indent2}=> PublishedModelUtility.GetModelContentType(publishedSnapshotAccessor, ModelItemType, ModelTypeAlias);");
+        writer.WriteLine($"{indent1}public new static IPublishedContentType GetModelContentType(IPublishedContentTypeCache contentTypeCache)");
+        writer.WriteLine($"{indent2}=> PublishedModelUtility.GetModelContentType(contentTypeCache, ModelItemType, ModelTypeAlias);");
         writer.WriteLine();
 
         writer.WriteLine($"{indent1}[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]");
-        writer.WriteLine($"{indent1}public static IPublishedPropertyType GetModelPropertyType<TValue>(IPublishedSnapshotAccessor publishedSnapshotAccessor, Expression<Func<{model.ClrName}, TValue>> selector)");
-        writer.WriteLine($"{indent2}=> PublishedModelUtility.GetModelPropertyType(GetModelContentType(publishedSnapshotAccessor), selector);");
+        writer.WriteLine($"{indent1}public static IPublishedPropertyType GetModelPropertyType<TValue>(IPublishedContentTypeCache contentTypeCache, Expression<Func<{model.ClrName}, TValue>> selector)");
+        writer.WriteLine($"{indent2}=> PublishedModelUtility.GetModelPropertyType(GetModelContentType(contentTypeCache), selector);");
         writer.WriteLine();
 
         writer.WriteLine($"{indent1}#endregion");
@@ -980,14 +986,14 @@ public class ModelsSourceGenerator {
         File.WriteAllText(Path.Combine(modelsDirectory, "lastBuild.flag"), EssentialsTime.UtcNow.ToString(Iso8601Constants.DateTimeMilliseconds) + Environment.NewLine);
     }
 
-    public virtual EssentialsTime? GetLastBuildDate() {
+    public virtual async Task<EssentialsTime?> GetLastBuildDate() {
 
         string modelsDirectory = _modelsBuilderSettings.ModelsDirectoryAbsolute(_webHostEnvironment);
 
         string path = Path.Combine(modelsDirectory, "lastBuild.flag");
         if (!File.Exists(path)) return null;
 
-        string? first = File.ReadAllLines(path).FirstOrDefault();
+        string? first = (await File.ReadAllLinesAsync(path)).FirstOrDefault();
 
         return EssentialsTime.TryParseIso8601(first, out EssentialsTime? time) ? time : null;
 
