@@ -112,7 +112,7 @@ export class LimboModelsBuilderDashboardElement extends UmbElementMixin(LitEleme
 
         try {
             const result = await delayed(DELAY, () => ModelsBuilderService.build());
-            if (result.isSuccessful) {
+            if (result.success) {
                 this.status = {
                     ...result,
                     lastBuildDateFrom: this.#formatFromNow(result.lastBuildDate),
